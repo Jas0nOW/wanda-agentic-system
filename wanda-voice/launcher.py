@@ -46,6 +46,15 @@ def detect_desktop_environment():
     }
 
 
+def module_available(module_name, import_name=None):
+    """Check if a Python module can be imported."""
+    try:
+        __import__(import_name or module_name)
+        return True
+    except Exception:
+        return False
+
+
 def check_wayland_compositor():
     """Check which Wayland compositor is running."""
     # Check for specific compositor environment variables
@@ -113,6 +122,16 @@ def launch_voice_assistant(use_xwayland=False, debug=False):
     print(f"  Compositor: {compositor}")
     print()
 
+    # Wayland safety checks
+    if env_info["session_type"] == "wayland":
+        gi_ok = module_available("gi")
+        evdev_ok = module_available("evdev")
+        if not gi_ok or not evdev_ok:
+            print(
+                f"{YELLOW}Wayland fallback: missing GTK/evdev, switching to simple mode{NC}"
+            )
+            return launch_simple_voice()
+
     # Determine environment setup
     if use_xwayland or env_info["session_type"] != "wayland":
         print(f"{YELLOW}Using X11/XWayland backend{NC}")
@@ -173,8 +192,12 @@ def launch_simple_voice():
     if not voice_dir.exists():
         voice_dir = Path(__file__).parent.parent / "wanda-voice"
 
-    # Use the simple voice_to_text script
-    cmd = [sys.executable, str(voice_dir / "voice_to_text.py")]
+    # Use stdin-based toggle on Wayland when available
+    stdin_script = voice_dir / "voice_to_text_stdin.py"
+    if stdin_script.exists():
+        cmd = [sys.executable, str(stdin_script)]
+    else:
+        cmd = [sys.executable, str(voice_dir / "voice_to_text.py")]
 
     try:
         result = subprocess.run(cmd, cwd=str(voice_dir))
