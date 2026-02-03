@@ -76,18 +76,16 @@ check_hardware() {
     echo "   - RAM: ${RAM_GB}GB"
     echo "   - GPU: ${GPU_TYPE} (${VRAM_GB}GB VRAM)"
     
-    # Recommend Brain
-    echo -e "${YELLOW}Recommended Local Brain:${NC}"
+    # Recommend Brain (SOTA 2026 Updates)
+    echo -e "${YELLOW}Recommended Local Brain (SOTA 2026):${NC}"
     if [ "$VRAM_GB" -ge 16 ] || [ "$RAM_GB" -ge 64 ]; then
-        RECOMMENDED_MODEL="deepseek-r1:32b+ (High-End Master)"
-    elif [ "$VRAM_GB" -ge 10 ] || [ "$RAM_GB" -ge 32 ]; then
-        RECOMMENDED_MODEL="qwen2.5:14b or 32b (Medium-High Power)"
-    elif [ "$VRAM_GB" -ge 6 ] || [ "$RAM_GB" -ge 16 ]; then
-        RECOMMENDED_MODEL="gemma2:9b (SOTA Balance)"
-    elif [ "$RAM_GB" -ge 8 ]; then
-        RECOMMENDED_MODEL="llama3.2:3b (Fast CPU-Hybrid)"
+        RECOMMENDED_MODEL="DeepSeek V4 (upcoming) / Qwen 3 (235B)"
+    elif [ "$RAM_GB" -ge 48 ]; then
+        RECOMMENDED_MODEL="Qwen 2.5 Coder (32B) / Llama 4 Maverick (17B MoE)"
+    elif [ "$VRAM_GB" -ge 8 ] || [ "$RAM_GB" -ge 16 ]; then
+        RECOMMENDED_MODEL="Gemma 3 (27B) / Llama 4 Scout"
     else
-        RECOMMENDED_MODEL="llama3.2:1b (Minimal)"
+        RECOMMENDED_MODEL="Llama 4 Scout (17B MoE - Lightweight Mode)"
     fi
     echo -e "   → ${GREEN}$RECOMMENDED_MODEL${NC}"
 }

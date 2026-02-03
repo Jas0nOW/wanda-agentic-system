@@ -62,12 +62,12 @@ WANDA aims for "JARVIS-level" conversational mastery.
 
 WANDA isn't one model; she is a dynamic selection of brains based on your hardware.
 
-| System Class | RAM/VRAM | Recommended Local LLM | Capabilities |
+| System Class | RAM/VRAM | Recommended Local LLM (SOTA 2026) | Capabilities |
 |---|---|---|---|
-| **S (Low)** | < 8GB RAM / 4GB V| Llama 3.2 (3B) | Basic Tasks, Dictation |
-| **M (Mid)** | 16GB RAM / 8GB V | **Gemma 2 (9B)** / Mistral (7B) | Research, Brainstorming |
-| **MH (Mid-High)** | 32GB+ RAM / 12GB V | **Qwen 2.5 (14B/32B)** / Command-R | Complex Reasoning, Deep Research |
-| **G (High)** | 64GB+ RAM / 24GB V | DeepSeek-R1 / Llama 3.3 (70B) | Full Autonomy, Architecture |
+| **S (Low)** | < 8GB RAM / 4GB V| **Llama 4 Scout (17B MoE)** | Fast, Multimodal, Summarization |
+| **M (Mid)** | 16GB RAM / 8GB V | **Gemma 3 (27B)** / Qwen 2.5 (14B) | SOTA Balance, Image Analysis |
+| **MH (Mid-High)** | 50GB+ RAM / 8GB V | **Qwen 2.5 Coder (32B)** / **Llama 4 Maverick** | Deep Coding, Autonomous Research |
+| **G (High)** | 64GB+ RAM / 24GB V | **DeepSeek V4 (upcoming)** / **Qwen 3 (235B)** | Absolute Sovereign Intelligence |
 
 **Unified Installer:** Detects VRAM/RAM/CPU and installs the optimal "Brain" automatically.
 
