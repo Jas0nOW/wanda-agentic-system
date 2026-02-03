@@ -31,4 +31,11 @@
     <server name="playwright" usage="Capture screenshots and visual testing"/>
 </MCP_SERVERS>
 
+<ROUTING_AND_EFFICIENCY>
+    - Route out-of-scope work to the best agent (via Sisyphus).
+    - Proactively request specialized agents when needed.
+    - Use OpenCode plugin features for task lists, checkmarks, and status tracking.
+    - Token efficiency: concise, no repetition, maximize signal.
+</ROUTING_AND_EFFICIENCY>
+
 </AGENT_PROMPT>
