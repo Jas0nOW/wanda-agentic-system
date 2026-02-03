@@ -1,0 +1,92 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# OH-MY-OPENCODE Configuration v1.0.3
+# ══════════════════════════════════════════════════════════════════════════════
+# 7 Primary Agents | Dual-Role Architecture | Clean System
+# ══════════════════════════════════════════════════════════════════════════════
+
+leader:
+  name: "Orchestrator"
+  model: "{{ORCHESTRATOR_MODEL}}"
+  fallback: "{{ORCHESTRATOR_FALLBACK}}"
+  prompt_file: "config/agents.yaml"
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 7 PRIMARY AGENTS (All Dual-Role: Primary + Subagent)
+# ══════════════════════════════════════════════════════════════════════════════
+agents:
+
+  orchestrator:
+    name: "Orchestrator"
+    symbol: "🎯"
+    layer: 2
+    model: "{{ORCHESTRATOR_MODEL}}"
+    fallback: "{{ORCHESTRATOR_FALLBACK}}"
+    triggers: ["always_active", "/plan", "/ralph-loop"]
+    
+  brainstormer:
+    name: "Brainstormer"
+    symbol: "💡"
+    layer: 1
+    model: "kimi-k2.5-free"
+    fallback: "gemini-3-flash"
+    triggers: ["@brainstormer", "brainstorm", "ideas"]
+    
+  librarian:
+    name: "Librarian"
+    symbol: "📚"
+    layer: 4
+    model: "{{LIBRARIAN_MODEL}}"
+    fallback: "kimi-k2.5-free"
+    triggers: ["@librarian", "remember", "research"]
+    
+  architect:
+    name: "Architect"
+    symbol: "🏗️"
+    layer: 3
+    model: "{{ARCHITECT_MODEL}}"
+    fallback: "gemini-3-flash"
+    triggers: ["@architect", "design", "plan"]
+    
+  developer:
+    name: "Developer"
+    symbol: "👨‍💻"
+    layer: 3
+    model: "{{DEVELOPER_MODEL}}"
+    fallback: "kimi-k2.5-free"
+    triggers: ["@dev", "code", "implement"]
+    
+  audit:
+    name: "Audit"
+    symbol: "🔍"
+    layer: 3
+    model: "{{AUDIT_MODEL}}"
+    fallback: "kimi-k2.5-free"
+    triggers: ["@audit", "@fix", "review", "debug"]
+    
+  writer:
+    name: "Writer"
+    symbol: "✍️"
+    layer: 4
+    model: "{{WRITER_MODEL}}"
+    fallback: "kimi-k2.5-free"
+    triggers: ["@writer", "docs", "readme"]
+
+# ══════════════════════════════════════════════════════════════════════════════
+# DEACTIVATED
+# ══════════════════════════════════════════════════════════════════════════════
+deactivated:
+  - sisyphus  # Merged into Orchestrator
+
+# ══════════════════════════════════════════════════════════════════════════════
+# WORKFLOWS
+# ══════════════════════════════════════════════════════════════════════════════
+workflows:
+  ralph_loop:
+    description: "3-Phase Autopilot: Design → Implement → Verify"
+    phases:
+      - agent: architect
+        name: "Design"
+      - agent: developer
+        name: "Implement"
+      - agent: audit
+        name: "Verify"

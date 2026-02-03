@@ -1,0 +1,382 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# WANDA Agent Configuration v1.0.3
+# ══════════════════════════════════════════════════════════════════════════════
+# 7-Layer Architecture | 7 Primary Agents | Specialized Sub-Agents
+# Edit this file to customize YOUR model assignments
+# ══════════════════════════════════════════════════════════════════════════════
+
+version: "1.0.3"
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 7 PRIMARY AGENTS (User-Controlled)
+# These are your main entry points - each controls sub-agents in their layer
+# ══════════════════════════════════════════════════════════════════════════════
+
+primary_agents:
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 1. ORCHESTRATOR (Main Brain) - Layer 2
+  # Controls everything, routes to all other agents
+  # ────────────────────────────────────────────────────────────────────────────
+  orchestrator:
+    name: "Orchestrator"
+    symbol: "🎯"
+    layer: 2
+    enabled: true
+    is_primary: true
+    is_subagent: true
+    
+    # USER: Change these models to your preference
+    model:
+      primary: "{{ORCHESTRATOR_MODEL}}"
+      fallback: "{{ORCHESTRATOR_FALLBACK}}"
+    
+    role: "Main controller - routes, plans, executes, coordinates ALL agents"
+    triggers: ["always_active", "/plan", "/ralph-loop"]
+    
+    controls_subagents:
+      - metis      # Layer 7
+      - momus      # Layer 7
+      - ledger_creator  # Layer 6
+    
+    mcp_servers: [filesystem, memory, github, docker, brave, context7]
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 2. BRAINSTORMER - Layer 1
+  # Creative ideation WITHOUT code
+  # ────────────────────────────────────────────────────────────────────────────
+  brainstormer:
+    name: "Brainstormer"
+    symbol: "💡"
+    layer: 1
+    enabled: true
+    is_primary: true
+    is_subagent: true
+    
+    model:
+      primary: "kimi-k2.5-free"
+      fallback: "gemini-3-flash"
+    
+    role: "Creative exploration, design thinking, NO code generation"
+    triggers: ["@brainstormer", "brainstorm", "ideas", "creative", "what if"]
+    mcp_servers: [memory]
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 3. LIBRARIAN - Layer 4
+  # Knowledge management, research, context retrieval
+  # ────────────────────────────────────────────────────────────────────────────
+  librarian:
+    name: "Librarian"
+    symbol: "📚"
+    layer: 4
+    enabled: true
+    is_primary: true
+    is_subagent: true
+    
+    model:
+      primary: "{{LIBRARIAN_MODEL}}"
+      fallback: "kimi-k2.5-free"
+    
+    role: "Research, knowledge management, context retrieval, documentation lookup"
+    triggers: ["@librarian", "remember", "recall", "search", "research", "documentation"]
+    
+    controls_subagents:
+      - oracle            # Research (now sub-agent of Librarian)
+      - explore           # Codebase navigation
+      - artifact_searcher # Layer 6
+      - codebase_locator  # Layer 5
+    
+    mcp_servers: [memory, context7, brave, firecrawl]
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 4. ARCHITECT - Layer 3
+  # System design, architecture decisions, technical planning
+  # ────────────────────────────────────────────────────────────────────────────
+  architect:
+    name: "Architect"
+    symbol: "🏗️"
+    layer: 3
+    enabled: true
+    is_primary: true
+    is_subagent: true
+    
+    model:
+      primary: "{{ARCHITECT_MODEL}}"
+      fallback: "gemini-3-flash"
+    
+    role: "System design, ADRs, architecture decisions, technical planning"
+    triggers: ["@architect", "design", "architecture", "plan", "structure", "ADR"]
+    
+    controls_subagents:
+      - codebase_analyzer  # Layer 5 - reads structure for Architect
+    
+    mcp_servers: [memory, filesystem, github, sequential-thinking]
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 5. DEVELOPER - Layer 3
+  # Code implementation, UI, frontend, backend
+  # ────────────────────────────────────────────────────────────────────────────
+  developer:
+    name: "Developer"
+    symbol: "👨‍💻"
+    layer: 3
+    enabled: true
+    is_primary: true
+    is_subagent: true
+    
+    model:
+      primary: "{{DEVELOPER_MODEL}}"
+      fallback: "kimi-k2.5-free"
+    
+    role: "Code implementation, UI/UX, frontend, backend, feature development"
+    triggers: ["@dev", "@developer", "code", "implement", "build", "ui", "frontend", "backend"]
+    
+    controls_subagents:
+      - frontend_ui_ux     # Specialized UI work
+      - multimodal_looker  # Visual analysis
+    
+    mcp_servers: [filesystem, github, git, context7, playwright, vercel]
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 6. AUDIT - Layer 3
+  # Review, debugging, security, bug fixing
+  # ────────────────────────────────────────────────────────────────────────────
+  audit:
+    name: "Audit"
+    symbol: "🔍"
+    layer: 3
+    enabled: true
+    is_primary: true
+    is_subagent: true
+    
+    model:
+      primary: "{{AUDIT_MODEL}}"
+      fallback: "kimi-k2.5-free"
+    
+    role: "Code review, debugging, security analysis, bug fixing, QA"
+    triggers: ["@audit", "@fix", "review", "debug", "fix", "security", "bug", "error"]
+    
+    controls_subagents:
+      - pattern_finder  # Layer 5 - finds patterns for Audit
+    
+    mcp_servers: [filesystem, github, sequential-thinking]
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # 7. WRITER - Layer 4
+  # Documentation, README, technical writing
+  # ────────────────────────────────────────────────────────────────────────────
+  writer:
+    name: "Writer"
+    symbol: "✍️"
+    layer: 4
+    enabled: true
+    is_primary: true
+    is_subagent: true
+    
+    model:
+      primary: "{{WRITER_MODEL}}"
+      fallback: "kimi-k2.5-free"
+    
+    role: "Documentation, README, changelogs, technical writing, tutorials"
+    triggers: ["@writer", "document", "readme", "docs", "changelog", "explain"]
+    mcp_servers: [filesystem, memory]
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SUB-AGENTS (Controlled by Primary Agents)
+# These run automatically when called by their controlling Primary Agent
+# ══════════════════════════════════════════════════════════════════════════════
+
+sub_agents:
+
+  # Layer 3 Sub-Agents ─────────────────────────────────────────────────────────
+  
+  frontend_ui_ux:
+    name: "Frontend-UI-UX"
+    symbol: "🎨"
+    layer: 3
+    controlled_by: developer
+    model:
+      primary: "gemini-3-flash"
+      fallback: "kimi-k2.5-free"
+    role: "Specialized UI/UX design, visual aesthetics, CSS"
+    mcp_servers: [filesystem, playwright, vercel]
+
+  # Layer 4 Sub-Agents ─────────────────────────────────────────────────────────
+  
+  oracle:
+    name: "Oracle"
+    symbol: "🔮"
+    layer: 4
+    controlled_by: librarian
+    model:
+      primary: "gemini-3-flash"
+      fallback: "kimi-k2.5-free"
+    role: "Web research with citations, deep web search"
+    mcp_servers: [brave, firecrawl, context7]
+    
+  explore:
+    name: "Explore"
+    symbol: "🧭"
+    layer: 4
+    controlled_by: librarian
+    model:
+      primary: "gemini-3-flash"
+      fallback: "kimi-k2.5-free"
+    role: "Codebase navigation, file discovery"
+    mcp_servers: [filesystem, github]
+    
+  multimodal_looker:
+    name: "Multimodal-Looker"
+    symbol: "👁️"
+    layer: 4
+    controlled_by: developer
+    model:
+      primary: "gemini-3-flash"
+      fallback: "kimi-k2.5-free"
+    role: "Visual analysis, screenshot comparison, UI review"
+    mcp_servers: [playwright]
+
+  # Layer 5: Research (READ-ONLY) ──────────────────────────────────────────────
+  
+  codebase_locator:
+    name: "Codebase-Locator"
+    symbol: "📍"
+    layer: 5
+    controlled_by: librarian
+    mode: "READ-ONLY"
+    model:
+      primary: "gemini-3-flash"
+      fallback: "kimi-k2.5-free"
+    role: "Fast file search, pattern matching"
+    mcp_servers: [filesystem]
+    
+  codebase_analyzer:
+    name: "Codebase-Analyzer"
+    symbol: "🔬"
+    layer: 5
+    controlled_by: architect
+    mode: "READ-ONLY"
+    model:
+      primary: "gemini-3-flash"
+      fallback: "kimi-k2.5-free"
+    role: "Code structure analysis, dependency mapping"
+    mcp_servers: [filesystem]
+    
+  pattern_finder:
+    name: "Pattern-Finder"
+    symbol: "🎯"
+    layer: 5
+    controlled_by: audit
+    mode: "READ-ONLY"
+    model:
+      primary: "gemini-3-flash"
+      fallback: "kimi-k2.5-free"
+    role: "Find patterns, anti-patterns, convention violations"
+    mcp_servers: [filesystem]
+
+  # Layer 6: Continuity ────────────────────────────────────────────────────────
+  
+  ledger_creator:
+    name: "Ledger-Creator"
+    symbol: "📋"
+    layer: 6
+    controlled_by: orchestrator
+    mode: "background"
+    model:
+      primary: "gemini-3-flash"
+      fallback: "kimi-k2.5-free"
+    role: "Session state tracking, checkpoint creation"
+    mcp_servers: [memory]
+    
+  artifact_searcher:
+    name: "Artifact-Searcher"
+    symbol: "🔎"
+    layer: 6
+    controlled_by: librarian
+    model:
+      primary: "gemini-3-flash"
+      fallback: "kimi-k2.5-free"
+    role: "Find previous artifacts, restore context"
+    mcp_servers: [memory, filesystem]
+
+  # Layer 7: Meta ──────────────────────────────────────────────────────────────
+  
+  metis:
+    name: "Metis"
+    symbol: "🧠"
+    layer: 7
+    controlled_by: orchestrator
+    model:
+      primary: "kimi-k2.5-free"
+      fallback: "gemini-3-flash"
+    role: "Pre-planning, task decomposition, dependency analysis"
+    mcp_servers: [memory, sequential-thinking]
+    
+  momus:
+    name: "Momus"
+    symbol: "⚖️"
+    layer: 7
+    controlled_by: orchestrator
+    model:
+      primary: "kimi-k2.5-free"
+      fallback: "gemini-3-flash"
+    role: "Plan critique, weakness identification, quality gate"
+    mcp_servers: [memory, sequential-thinking]
+
+# ══════════════════════════════════════════════════════════════════════════════
+# DEACTIVATED DUPLICATES
+# These were redundant and merged into existing agents
+# ══════════════════════════════════════════════════════════════════════════════
+
+deactivated:
+  - sisyphus  # Merged into Orchestrator (same routing function)
+  # Note: All other agents are unique and kept!
+
+# ══════════════════════════════════════════════════════════════════════════════
+# MODEL REFERENCE
+# ══════════════════════════════════════════════════════════════════════════════
+
+models:
+  kimi-code-k2p5:
+    description: "Kimi Code K2P5 - Premium orchestration"
+    provider: "moonshot"
+    context: 131072
+    
+  kimi-k2.5-free:
+    description: "Kimi K2.5 Free - Good for most tasks"
+    provider: "moonshot"
+    context: 131072
+    
+  gemini-3-flash:
+    description: "Gemini 3 Flash - Fast, efficient"
+    provider: "google"
+    context: 1000000
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ROUTING & WORKFLOWS
+# ══════════════════════════════════════════════════════════════════════════════
+
+routing:
+  default: orchestrator
+  priority:
+    - orchestrator
+    - audit
+    - developer
+    - architect
+    - librarian
+    - writer
+    - brainstormer
+
+workflows:
+  ralph_loop:
+    description: "3-Phase Autopilot: Design → Implement → Verify"
+    phases:
+      - agent: architect
+        name: "Design"
+        output: "implementation_plan.md"
+      - agent: developer
+        name: "Implement"
+        output: "code changes"
+      - agent: audit
+        name: "Verify"
+        output: "audit_report.md"

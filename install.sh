@@ -412,6 +412,37 @@ process_templates() {
             > "$GEMINI_CONFIG/GEMINI.md"
     fi
     
+    # Process agents.yaml (Smart Model Assignment)
+    if [ -f "$INSTALL_DIR/config/agents.yaml.template" ]; then
+        echo "  - Configuring agents with: "
+        echo "    Orch: $ORCHESTRATOR_MODEL"
+        echo "    Arch: $ARCHITECT_MODEL"
+        echo "    Dev:  $DEVELOPER_MODEL"
+        
+        sed -e "s|{{ORCHESTRATOR_MODEL}}|$ORCHESTRATOR_MODEL|g" \
+            -e "s|{{ORCHESTRATOR_FALLBACK}}|$ORCHESTRATOR_FALLBACK|g" \
+            -e "s|{{ARCHITECT_MODEL}}|$ARCHITECT_MODEL|g" \
+            -e "s|{{DEVELOPER_MODEL}}|$DEVELOPER_MODEL|g" \
+            -e "s|{{LIBRARIAN_MODEL}}|$LIBRARIAN_MODEL|g" \
+            -e "s|{{AUDIT_MODEL}}|$AUDIT_MODEL|g" \
+            -e "s|{{WRITER_MODEL}}|$WRITER_MODEL|g" \
+            "$INSTALL_DIR/config/agents.yaml.template" \
+            > "$INSTALL_DIR/config/agents.yaml"
+    fi
+    
+    # Process oh-my-opencode config
+    if [ -f "$INSTALL_DIR/plugins/oh-my-opencode/config.yaml.template" ]; then
+        sed -e "s|{{ORCHESTRATOR_MODEL}}|$ORCHESTRATOR_MODEL|g" \
+            -e "s|{{ORCHESTRATOR_FALLBACK}}|$ORCHESTRATOR_FALLBACK|g" \
+            -e "s|{{ARCHITECT_MODEL}}|$ARCHITECT_MODEL|g" \
+            -e "s|{{DEVELOPER_MODEL}}|$DEVELOPER_MODEL|g" \
+            -e "s|{{LIBRARIAN_MODEL}}|$LIBRARIAN_MODEL|g" \
+            -e "s|{{AUDIT_MODEL}}|$AUDIT_MODEL|g" \
+            -e "s|{{WRITER_MODEL}}|$WRITER_MODEL|g" \
+            "$INSTALL_DIR/plugins/oh-my-opencode/config.yaml.template" \
+            > "$INSTALL_DIR/plugins/oh-my-opencode/config.yaml"
+    fi
+    
     echo -e "${GREEN}✓ Templates processed${NC}"
 }
 
