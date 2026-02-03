@@ -311,16 +311,27 @@ check_prereqs() {
     command -v python3 >/dev/null 2>&1 || missing+=" python3"
     command -v git >/dev/null 2>&1 || missing+=" git"
     command -v pip >/dev/null 2>&1 || command -v pip3 >/dev/null 2>&1 || missing+=" pip"
+    command -v gh >/dev/null 2>&1 || missing+=" gh (GitHub CLI)"
     
     if [ -n "$missing" ]; then
         echo -e "${RED}Missing required tools:${missing}${NC}"
         echo "Please install them first:"
         if [ "$OS" = "linux" ]; then
-            echo "  sudo apt install python3 python3-pip git"
+            echo "  sudo apt install python3 python3-pip git gh"
+            echo "  (For gh: see https://github.com/cli/cli/blob/trunk/docs/install_linux.md)"
         elif [ "$OS" = "macos" ]; then
-            echo "  brew install python3 git"
+            echo "  brew install python3 git gh"
         fi
         exit 1
+    fi
+    
+    # Check gh auth
+    if command -v gh >/dev/null 2>&1; then
+        if ! gh auth status >/dev/null 2>&1; then
+            echo -e "${YELLOW}Warning: GitHub CLI not logged in.${NC}"
+            echo "Run 'gh auth login' later to enable GitHub Agent capabilities."
+            sleep 2
+        fi
     fi
     
     echo -e "${GREEN}✓ All prerequisites met${NC}"
