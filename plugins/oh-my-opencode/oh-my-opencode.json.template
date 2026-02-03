@@ -1,0 +1,105 @@
+{
+  "$schema": "https://oh-my-opencode.sisyphuslabs.ai/schema.json",
+  "version": "1.0.4",
+  
+  "_comment": "WANDA Agent Configuration - Jas0n's Setup",
+  "_note": "This disables conflicting default agents and configures WANDA agents",
+  
+  "sisyphus_agent": {
+    "disabled": false,
+    "default_builder_enabled": false,
+    "planner_enabled": true,
+    "replace_plan": true
+  },
+  
+  "agents": {
+    "Sisyphus": {
+      "model": "{{ORCHESTRATOR_MODEL}}",
+      "temperature": 0.3,
+      "description": "WANDA Orchestrator - Routes tasks to specialized agents"
+    },
+    "Prometheus (Planner)": {
+      "model": "{{ARCHITECT_MODEL}}",
+      "temperature": 0.4,
+      "description": "Architect - Project structure and design"
+    },
+    "Metis (Plan Consultant)": {
+      "model": "{{ARCHITECT_MODEL}}",
+      "temperature": 0.3
+    },
+    "explore": {
+      "model": "anthropic/claude-haiku-4-5",
+      "temperature": 0.2
+    },
+    "multimodal-looker": {
+      "model": "google/gemini-3-pro-preview"
+    },
+    "oracle": {
+      "model": "{{ORACLE_MODEL}}",
+      "temperature": 0.5
+    },
+    "hephaestus": {
+      "disable": true
+    },
+    "octto": {
+      "disable": true
+    },
+    "commander": {
+      "disable": true
+    },
+    "orchestrator": {
+      "disable": true
+    },
+    "architect": {
+      "disable": true
+    },
+    "developer": {
+      "disable": true
+    },
+    "software_engineer": {
+      "disable": true
+    }
+  },
+  
+  "categories": {
+    "visual-engineering": {
+      "model": "google/gemini-3-pro-preview",
+      "prompt_append": "Use shadcn/ui components and Tailwind CSS. Focus on accessibility."
+    },
+    "ultrabrain": {
+      "model": "openai/gpt-5.2-codex",
+      "variant": "xhigh"
+    },
+    "artistry": {
+      "model": "google/gemini-3-pro-preview",
+      "variant": "max"
+    },
+    "quick": {
+      "model": "anthropic/claude-haiku-4-5"
+    },
+    "unspecified-low": {
+      "model": "anthropic/claude-sonnet-4-5"
+    },
+    "unspecified-high": {
+      "model": "anthropic/claude-opus-4-5",
+      "variant": "max"
+    },
+    "writing": {
+      "model": "google/gemini-3-flash-preview"
+    }
+  },
+  
+  "git_master": {
+    "commit_footer": false,
+    "include_co_authored_by": false
+  },
+  
+  "skills": {
+    "enabled": [
+      "webdev",
+      "read_url",
+      "terminal",
+      "browser_use"
+    ]
+  }
+}

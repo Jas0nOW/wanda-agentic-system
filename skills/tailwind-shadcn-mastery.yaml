@@ -1,0 +1,68 @@
+# Tailwind + shadcn/ui Mastery
+# Modern styling patterns
+
+name: tailwind-shadcn-mastery
+version: 1.0.0
+target_agents: [frontend-ui-ux, atlas]
+description: |
+  Tailwind v4 and shadcn/ui best practices.
+  Focus on design tokens, component composition, and accessibility.
+
+rules:
+  - Use Tailwind v4 syntax (CSS-first configuration)
+  - Prefer shadcn/ui components over raw HTML
+  - Use CSS variables for theming
+  - Implement dark mode via class strategy
+  - Use container queries for component-level responsiveness
+  - Maintain consistent spacing scale
+  - Use semantic color names (primary, secondary, destructive)
+
+component_patterns:
+  button: |
+    import { Button } from "@/components/ui/button"
+    
+    <Button variant="default" size="lg">
+      Action
+    </Button>
+  
+  card: |
+    import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+    
+    <Card>
+      <CardHeader>
+        <CardTitle>Title</CardTitle>
+      </CardHeader>
+      <CardContent>Content here</CardContent>
+    </Card>
+  
+  form: |
+    import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form"
+    
+    <Form {...form}>
+      <FormField
+        control={form.control}
+        name="email"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Email</FormLabel>
+            <FormControl>
+              <Input {...field} />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+    </Form>
+
+color_palette:
+  - "bg-background text-foreground"
+  - "bg-primary text-primary-foreground"
+  - "bg-secondary text-secondary-foreground"
+  - "bg-muted text-muted-foreground"
+  - "bg-accent text-accent-foreground"
+  - "bg-destructive text-destructive-foreground"
+
+anti_patterns:
+  - "Arbitrary values like bg-[#123456]"
+  - "Inline styles"
+  - "!important usage"
+  - "Magic numbers for spacing"

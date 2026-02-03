@@ -1,0 +1,291 @@
+# ==============================================================================
+# WANDA Agent Configuration v1.0.4
+# ==============================================================================
+# 7 Primary Agents + 10 Sub-Agents = 17 Total
+# All agents are configurable with model + fallback
+# ==============================================================================
+
+version: "1.0.4"
+system:
+  name: "WANDA"
+  description: "Workspace-Aware Neural Development Assistant"
+  operator: "{{USER_NAME}}"
+  language: "{{USER_LANGUAGE}}"
+  workspace: "{{USER_WORKSPACE}}"
+
+# ==============================================================================
+# 9 LAYERS (Workflow Phases)
+# ==============================================================================
+layers:
+  - id: 1
+    name: "Brainstorming"
+    description: "Ideation, Creativity, Exploration"
+  - id: 2
+    name: "Planning"
+    description: "Strategy, Task Distribution"
+  - id: 3
+    name: "Architecture"
+    description: "Project Setup, Structure, SSOT"
+  - id: 4
+    name: "Development"
+    description: "Frontend + Backend Implementation"
+  - id: 5
+    name: "Audit"
+    description: "Code Review, Safety, Bugs"
+  - id: 6
+    name: "Refactor"
+    description: "Cleanup, Optimization"
+  - id: 7
+    name: "Testing"
+    description: "Smoke, Integration, E2E"
+  - id: 8
+    name: "User-Approval"
+    description: "User confirms (Final Gate)"
+  - id: 9
+    name: "Deploy"
+    description: "Final Release (only after 8)"
+
+# ==============================================================================
+# PRIMARY AGENTS (7) - User-selectable via @mention
+# ==============================================================================
+primary_agents:
+
+  sisyphus:
+    name: "Sisyphus"
+    role: "Orchestrator"
+    layer: 2
+    type: "PRIMARY"
+    trigger: "always_active"
+    description: "Controls all agents, routes tasks, manages workflow"
+    model: "{{ORCHESTRATOR_MODEL}}"
+    fallback: "{{ORCHESTRATOR_FALLBACK}}"
+    skills:
+      - prompt-engineering-sota
+    prompt_file: "prompts/agents/sisyphus.md"
+
+  brainstormer:
+    name: "Brainstormer"
+    role: "Ideation"
+    layer: 1
+    type: "PRIMARY+SUB"
+    trigger: "@brainstormer"
+    description: "Creative exploration, no code generation, pure ideation"
+    model: "{{BRAINSTORMER_MODEL}}"
+    fallback: "{{BRAINSTORMER_FALLBACK}}"
+    skills:
+      - prompt-engineering-sota
+    prompt_file: "prompts/agents/brainstormer.md"
+
+  prometheus:
+    name: "Prometheus"
+    role: "Architect"
+    layer: 3
+    type: "PRIMARY+SUB"
+    trigger: "@architect"
+    description: "Prepares projects with structure, docs, README, SSOT"
+    model: "{{ARCHITECT_MODEL}}"
+    fallback: "{{ARCHITECT_FALLBACK}}"
+    skills:
+      - nextjs-architecture
+      - api-design-restful
+      - database-patterns
+    prompt_file: "prompts/agents/prometheus.md"
+
+  atlas:
+    name: "Atlas"
+    role: "Developer"
+    layer: 3
+    type: "PRIMARY+SUB"
+    trigger: "@dev"
+    description: "Implementation, Frontend + Backend code"
+    model: "{{DEVELOPER_MODEL}}"
+    fallback: "{{DEVELOPER_FALLBACK}}"
+    skills:
+      - react-best-practices-2026
+      - tailwind-shadcn-mastery
+      - typescript-strict
+      - database-patterns
+    prompt_file: "prompts/agents/atlas.md"
+
+  audit:
+    name: "Audit"
+    role: "Auditor"
+    layer: 3
+    type: "PRIMARY+SUB"
+    trigger: "@audit"
+    description: "Code review, safety, bugs, edge cases"
+    model: "{{AUDIT_MODEL}}"
+    fallback: "{{AUDIT_FALLBACK}}"
+    skills:
+      - security-owasp-2026
+      - performance-core-vitals
+      - testing-vitest-playwright
+    prompt_file: "prompts/agents/audit.md"
+
+  librarian:
+    name: "Librarian"
+    role: "Research"
+    layer: 4
+    type: "PRIMARY+SUB"
+    trigger: "@librarian"
+    description: "Research, documentation lookup, knowledge management"
+    model: "{{LIBRARIAN_MODEL}}"
+    fallback: "{{LIBRARIAN_FALLBACK}}"
+    skills: []
+    prompt_file: "prompts/agents/librarian.md"
+
+  writer:
+    name: "Writer"
+    role: "Documentation"
+    layer: 4
+    type: "PRIMARY+SUB"
+    trigger: "@writer"
+    description: "Writes documentation, README, guides"
+    model: "{{WRITER_MODEL}}"
+    fallback: "{{WRITER_FALLBACK}}"
+    skills:
+      - documentation-jsdoc-md
+      - git-conventional-commits
+    prompt_file: "prompts/agents/writer.md"
+
+# ==============================================================================
+# SUB-AGENTS (10) - Auto-delegated by Primary agents
+# ==============================================================================
+sub_agents:
+
+  frontend_ui_ux:
+    name: "Frontend-UI-UX"
+    role: "UI/UX Specialist"
+    layer: 3
+    type: "SUB"
+    parent: "atlas"
+    description: "UI/UX design, responsive layouts, animations"
+    model: "{{FRONTEND_MODEL}}"
+    fallback: "{{FRONTEND_FALLBACK}}"
+    skills:
+      - react-best-practices-2026
+      - tailwind-shadcn-mastery
+      - accessibility-wcag-aa
+      - responsive-mobile-first
+
+  oracle:
+    name: "Oracle"
+    role: "Deep Research"
+    layer: 4
+    type: "SUB"
+    parent: "librarian"
+    description: "Deep research, complex problem solving"
+    model: "{{ORACLE_MODEL}}"
+    fallback: "{{ORACLE_FALLBACK}}"
+    skills: []
+
+  explore:
+    name: "Explore"
+    role: "Codebase Navigator"
+    layer: 4
+    type: "SUB"
+    parent: "librarian"
+    description: "Navigates codebase, finds files, understands structure"
+    model: "{{EXPLORE_MODEL}}"
+    fallback: "{{EXPLORE_FALLBACK}}"
+    skills: []
+
+  multimodal_looker:
+    name: "Multimodal-Looker"
+    role: "Visual Analysis"
+    layer: 4
+    type: "SUB"
+    parent: "atlas"
+    description: "Analyzes images, screenshots, visual content"
+    model: "{{LOOKER_MODEL}}"
+    fallback: "{{LOOKER_FALLBACK}}"
+    skills: []
+
+  codebase_locator:
+    name: "Codebase-Locator"
+    role: "File Finder"
+    layer: 5
+    type: "SUB"
+    parent: "librarian"
+    description: "Finds files, functions, classes in codebase"
+    model: "{{LOCATOR_MODEL}}"
+    fallback: "{{LOCATOR_FALLBACK}}"
+    skills: []
+
+  codebase_analyzer:
+    name: "Codebase-Analyzer"
+    role: "Code Analysis"
+    layer: 5
+    type: "SUB"
+    parent: "prometheus"
+    description: "Analyzes code structure, dependencies, patterns"
+    model: "{{ANALYZER_MODEL}}"
+    fallback: "{{ANALYZER_FALLBACK}}"
+    skills: []
+
+  pattern_finder:
+    name: "Pattern-Finder"
+    role: "Pattern Detection"
+    layer: 5
+    type: "SUB"
+    parent: "audit"
+    description: "Finds patterns, anti-patterns, refactoring opportunities"
+    model: "{{PATTERN_MODEL}}"
+    fallback: "{{PATTERN_FALLBACK}}"
+    skills: []
+
+  ledger_creator:
+    name: "Ledger-Creator"
+    role: "Session State"
+    layer: 6
+    type: "SUB"
+    parent: "sisyphus"
+    description: "Tracks session state, creates ledgers, maintains context"
+    model: "{{LEDGER_MODEL}}"
+    fallback: "{{LEDGER_FALLBACK}}"
+    skills: []
+
+  artifact_searcher:
+    name: "Artifact-Searcher"
+    role: "Artifact Search"
+    layer: 6
+    type: "SUB"
+    parent: "librarian"
+    description: "Searches artifacts, previous work, context retrieval"
+    model: "{{ARTIFACT_MODEL}}"
+    fallback: "{{ARTIFACT_FALLBACK}}"
+    skills: []
+
+  metis_momus:
+    name: "Metis + Momus"
+    role: "Meta Planning"
+    layer: 7
+    type: "SUB"
+    parent: "sisyphus"
+    description: "Pre-planning (Metis) and Plan-review (Momus)"
+    model: "{{META_MODEL}}"
+    fallback: "{{META_FALLBACK}}"
+    skills: []
+
+# ==============================================================================
+# OLLAMA CONFIGURATION (Optional Enhancer)
+# ==============================================================================
+ollama:
+  enabled: {{USE_OLLAMA}}
+  direct_answer: {{OLLAMA_DIRECT_ANSWER}}
+  models:
+    primary: "{{OLLAMA_PRIMARY}}"
+    fallback: "{{OLLAMA_FALLBACK}}"
+    lightweight: "{{OLLAMA_LIGHT}}"
+  features:
+    - prompt_optimization
+    - tts_preprocessing
+    - direct_answering
+    - privacy_layer
+
+# ==============================================================================
+# HARDWARE PROFILE
+# ==============================================================================
+hardware:
+  profile: "{{HARDWARE_PROFILE}}"
+  tts_model: "{{TTS_MODEL}}"

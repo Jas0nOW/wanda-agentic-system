@@ -1,0 +1,46 @@
+# Documentation with JSDoc + Markdown
+# Documentation patterns
+
+name: documentation-jsdoc-md
+version: 1.0.0
+target_agents: [writer]
+description: Documentation best practices.
+
+rules:
+  - Document all public APIs
+  - Use JSDoc for TypeScript
+  - Write clear README files
+  - Include code examples
+
+patterns:
+  jsdoc: |
+    /**
+     * Creates a new user in the database.
+     * @param data - User creation data
+     * @returns The created user object
+     * @throws {ValidationError} If data is invalid
+     * @example
+     * const user = await createUser({ email: 'test@example.com' })
+     */
+    export async function createUser(data: CreateUserInput): Promise<User> {
+      // implementation
+    }
+  
+  readme_template: |
+    # Project Name
+    
+    Brief description.
+    
+    ## Features
+    - Feature 1
+    - Feature 2
+    
+    ## Installation
+    ```bash
+    npm install
+    ```
+    
+    ## Usage
+    ```typescript
+    import { thing } from 'package'
+    ```

@@ -1,0 +1,40 @@
+# Next.js Architecture
+# Modern Next.js 15 patterns
+
+name: nextjs-architecture
+version: 1.0.0
+target_agents: [prometheus]
+description: Next.js 15 App Router architecture patterns.
+
+rules:
+  - Use App Router, not Pages Router
+  - Implement proper route groups
+  - Use parallel routes for complex layouts
+  - Implement loading and error states
+  - Use server actions for mutations
+  - Enable ISR for static content
+
+patterns:
+  directory_structure: |
+    app/
+    ├── (auth)/
+    │   ├── login/page.tsx
+    │   └── register/page.tsx
+    ├── (dashboard)/
+    │   ├── layout.tsx
+    │   └── [id]/page.tsx
+    ├── api/
+    │   └── [...]/route.ts
+    ├── layout.tsx
+    ├── page.tsx
+    ├── loading.tsx
+    └── error.tsx
+  
+  server_action: |
+    'use server'
+    import { revalidatePath } from 'next/cache'
+    
+    export async function createItem(data: FormData) {
+      await db.item.create({ data: Object.fromEntries(data) })
+      revalidatePath('/items')
+    }

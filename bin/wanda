@@ -1,0 +1,309 @@
+#!/bin/bash
+# ==============================================================================
+# WANDA CLI v1.0.4 - Sovereign AI OS
+# ==============================================================================
+# Usage: wanda [command]
+# Commands: (none)=start, update, status, voice, debug, help
+# ==============================================================================
+
+INSTALL_DIR="${WANDA_INSTALL_DIR:-$HOME/.wanda-system}"
+VERSION="1.0.4"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
+NC='\033[0m'
+BOLD='\033[1m'
+
+# WANDA Banner (Gemini-style)
+print_banner() {
+    echo -e "${MAGENTA}"
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║                                                              ║"
+    echo "║     ██╗    ██╗ █████╗ ███╗   ██╗██████╗  █████╗             ║"
+    echo "║     ██║    ██║██╔══██╗████╗  ██║██╔══██╗██╔══██╗            ║"
+    echo "║     ██║ █╗ ██║███████║██╔██╗ ██║██║  ██║███████║            ║"
+    echo "║     ██║███╗██║██╔══██║██║╚██╗██║██║  ██║██╔══██║            ║"
+    echo "║     ╚███╔███╔╝██║  ██║██║ ╚████║██████╔╝██║  ██║            ║"
+    echo "║      ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝            ║"
+    echo "║                                                              ║"
+    echo "║           ${CYAN}Workspace-Aware Neural Development Assistant${MAGENTA}       ║"
+    echo "║                      ${GREEN}v${VERSION}${MAGENTA} - Sovereign AI OS                   ║"
+    echo "║                                                              ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo -e "${NC}"
+}
+
+print_help() {
+    print_banner
+    echo "Commands:"
+    echo "  wanda              - Start WANDA (wraps OpenCode)"
+    echo "  wanda -d, --debug  - Debug mode (check for errors)"
+    echo "  wanda update       - Check and apply updates"
+    echo "  wanda status       - Show system status"
+    echo "  wanda voice        - Start voice assistant"
+    echo "  wanda help         - Show this help"
+    echo ""
+}
+
+check_install() {
+    if [ ! -d "$INSTALL_DIR" ] && [ ! -f "$HOME/.gemini/GEMINI.md" ]; then
+        echo -e "${YELLOW}WANDA not fully installed.${NC}"
+        echo "Run the installer: curl -fsSL https://raw.githubusercontent.com/jas0nOW/wanda-agentic-system/main/install.sh | bash"
+        return 1
+    fi
+    return 0
+}
+
+# Silent update check
+silent_update_check() {
+    if [ -f "$INSTALL_DIR/scripts/update.sh" ]; then
+        "$INSTALL_DIR/scripts/update.sh" silent 2>/dev/null || true
+    fi
+}
+
+# Debug Mode - Check for errors after 10 and 20 seconds
+cmd_debug() {
+    print_banner
+    echo -e "${YELLOW}🔧 WANDA Debug Mode${NC}"
+    echo ""
+    echo "Starting WANDA with error monitoring..."
+    echo ""
+    
+    # Create temp log file
+    DEBUG_LOG=$(mktemp /tmp/wanda_debug_XXXXXX.log)
+    
+    # Start OpenCode/Gemini in background, capture output
+    if command -v opencode &>/dev/null; then
+        echo -e "${BLUE}Launching OpenCode...${NC}"
+        opencode 2>&1 | tee "$DEBUG_LOG" &
+        PID=$!
+    elif command -v gemini &>/dev/null; then
+        echo -e "${BLUE}Launching Gemini CLI...${NC}"
+        gemini 2>&1 | tee "$DEBUG_LOG" &
+        PID=$!
+    else
+        echo -e "${RED}No AI CLI found (opencode or gemini).${NC}"
+        echo ""
+        echo "Install with:"
+        echo "  npm install -g @anthropic-ai/opencode"
+        echo "  or: npm install -g @anthropic-ai/gemini-cli"
+        rm -f "$DEBUG_LOG"
+        exit 1
+    fi
+    
+    echo ""
+    echo -e "${CYAN}Monitoring for 20 seconds...${NC}"
+    
+    # Check after 10 seconds
+    sleep 10
+    echo ""
+    echo -e "${YELLOW}=== 10 Second Check ===${NC}"
+    
+    if ! ps -p $PID > /dev/null 2>&1; then
+        echo -e "${RED}⚠ Process crashed!${NC}"
+        echo "Last output:"
+        tail -20 "$DEBUG_LOG"
+        rm -f "$DEBUG_LOG"
+        exit 1
+    fi
+    
+    ERROR_COUNT=$(grep -ciE "error|exception|failed|crash" "$DEBUG_LOG" 2>/dev/null || echo 0)
+    if [ "$ERROR_COUNT" -gt 0 ]; then
+        echo -e "${YELLOW}Found $ERROR_COUNT potential error(s):${NC}"
+        grep -iE "error|exception|failed|crash" "$DEBUG_LOG" | head -5
+    else
+        echo -e "${GREEN}✓ No errors detected${NC}"
+    fi
+    
+    # Check after 20 seconds
+    sleep 10
+    echo ""
+    echo -e "${YELLOW}=== 20 Second Check ===${NC}"
+    
+    if ! ps -p $PID > /dev/null 2>&1; then
+        echo -e "${RED}⚠ Process crashed between 10-20 seconds!${NC}"
+        echo "Last output:"
+        tail -20 "$DEBUG_LOG"
+        rm -f "$DEBUG_LOG"
+        exit 1
+    fi
+    
+    ERROR_COUNT=$(grep -ciE "error|exception|failed|crash" "$DEBUG_LOG" 2>/dev/null || echo 0)
+    if [ "$ERROR_COUNT" -gt 0 ]; then
+        echo -e "${YELLOW}Found $ERROR_COUNT potential error(s):${NC}"
+        grep -iE "error|exception|failed|crash" "$DEBUG_LOG" | head -5
+    else
+        echo -e "${GREEN}✓ No errors detected${NC}"
+    fi
+    
+    echo ""
+    echo -e "${CYAN}Did WANDA start successfully?${NC}"
+    echo "  1) Ja - Läuft perfekt"
+    echo "  2) Freezed beim Starten"
+    echo "  3) Eigene Antwort eingeben"
+    echo ""
+    read -p "Choice [1]: " debug_choice
+    
+    case "${debug_choice:-1}" in
+        1)
+            echo -e "${GREEN}✓ WANDA läuft! Debug-Modus beendet.${NC}"
+            echo "Log gespeichert: $DEBUG_LOG"
+            ;;
+        2)
+            echo ""
+            echo -e "${YELLOW}Freeze-Diagnose:${NC}"
+            echo "In 90% der Fälle sind fehlende Pakete die Ursache."
+            echo ""
+            echo "Probiere:"
+            echo "  1. npm cache clean --force"
+            echo "  2. npm install -g @anthropic-ai/opencode"
+            echo "  3. pip install --upgrade faster-whisper silero-vad"
+            echo ""
+            echo "Falls Voice-Assistent freezed:"
+            echo "  pip uninstall torch && pip install torch --index-url https://download.pytorch.org/whl/cpu"
+            echo ""
+            echo "Log für KI-Analyse: $DEBUG_LOG"
+            kill $PID 2>/dev/null
+            ;;
+        3)
+            echo ""
+            read -p "Beschreibe das Problem: " user_problem
+            echo ""
+            echo -e "${CYAN}Problemanalyse:${NC}"
+            echo "Dein Problem: $user_problem"
+            echo ""
+            echo "Mögliche Lösungen:"
+            if echo "$user_problem" | grep -qi "modul\|import\|package"; then
+                echo "  → Fehlende Pakete: pip install -r requirements.txt"
+            elif echo "$user_problem" | grep -qi "permission\|zugriff\|denied"; then
+                echo "  → Berechtigungen: sudo chown -R \$USER:$USER $INSTALL_DIR"
+            elif echo "$user_problem" | grep -qi "connection\|network\|api"; then
+                echo "  → Netzwerk: Prüfe API-Keys in ~/.gemini/settings.json"
+            else
+                echo "  → Log für KI-Analyse: $DEBUG_LOG"
+                echo "  → Öffne Issue: https://github.com/jas0nOW/wanda-agentic-system/issues"
+            fi
+            kill $PID 2>/dev/null
+            ;;
+    esac
+}
+
+# Start WANDA (wraps OpenCode with WANDA branding)
+cmd_start() {
+    check_install || return 1
+    
+    print_banner
+    
+    # Silent update check
+    silent_update_check
+    
+    echo -e "${CYAN}Starting WANDA...${NC}"
+    echo ""
+    
+    # Launch OpenCode or Gemini with WANDA environment
+    export WANDA_ACTIVE=1
+    export WANDA_VERSION="$VERSION"
+    
+    if command -v opencode &>/dev/null; then
+        exec opencode
+    elif command -v gemini &>/dev/null; then
+        exec gemini
+    else
+        echo -e "${YELLOW}No AI CLI found.${NC}"
+        echo ""
+        echo "Install one of:"
+        echo "  npm install -g @anthropic-ai/opencode"
+        echo "  npm install -g @anthropic-ai/gemini-cli"
+        echo ""
+        exit 1
+    fi
+}
+
+cmd_update() {
+    check_install || return 1
+    if [ -f "$INSTALL_DIR/scripts/update.sh" ]; then
+        "$INSTALL_DIR/scripts/update.sh" prompt
+    else
+        echo "Update script not found."
+    fi
+}
+
+cmd_status() {
+    print_banner
+    
+    echo -e "${CYAN}System Status${NC}"
+    echo "────────────────────────────────────────"
+    
+    # Version
+    echo -e "Version:      ${GREEN}v$VERSION${NC}"
+    echo -e "Install Dir:  ${INSTALL_DIR:-Not set}"
+    
+    # Check components
+    echo ""
+    echo "Components:"
+    [ -d "$INSTALL_DIR" ] && echo -e "  ${GREEN}✓${NC} WANDA Core" || echo -e "  ${RED}✗${NC} WANDA Core"
+    command -v opencode &>/dev/null && echo -e "  ${GREEN}✓${NC} OpenCode" || echo -e "  ${RED}✗${NC} OpenCode"
+    command -v gemini &>/dev/null && echo -e "  ${GREEN}✓${NC} Gemini CLI" || echo -e "  ${RED}✗${NC} Gemini CLI"
+    [ -f "$HOME/.gemini/GEMINI.md" ] && echo -e "  ${GREEN}✓${NC} Gemini Config" || echo -e "  ${RED}✗${NC} Gemini Config"
+    [ -f "$HOME/.config/opencode/opencode.jsonc" ] && echo -e "  ${GREEN}✓${NC} OpenCode Profile" || echo -e "  ${RED}✗${NC} OpenCode Profile"
+    command -v docker &>/dev/null && echo -e "  ${GREEN}✓${NC} Docker" || echo -e "  ${YELLOW}○${NC} Docker (optional)"
+    command -v ollama &>/dev/null && echo -e "  ${GREEN}✓${NC} Ollama" || echo -e "  ${YELLOW}○${NC} Ollama (optional)"
+    
+    echo ""
+}
+
+cmd_voice() {
+    check_install || return 1
+    
+    print_banner
+    echo -e "${CYAN}Starting Voice Assistant...${NC}"
+    
+    if [ -d "$INSTALL_DIR/wanda-voice" ]; then
+        cd "$INSTALL_DIR/wanda-voice"
+        if [ -d "venv" ]; then
+            source venv/bin/activate
+        fi
+        python voice_to_text.py
+    elif [ -d "$INSTALL_DIR/wanda_local" ]; then
+        cd "$INSTALL_DIR/wanda_local"
+        if [ -d "venv" ]; then
+            source venv/bin/activate
+        fi
+        python main.py
+    else
+        echo -e "${RED}Voice assistant not found.${NC}"
+        echo "Install with: cd $INSTALL_DIR && ./install.sh"
+    fi
+}
+
+# Main
+case "${1:-}" in
+    ""|start)
+        cmd_start
+        ;;
+    -d|--debug|debug)
+        cmd_debug
+        ;;
+    update)
+        cmd_update
+        ;;
+    status)
+        cmd_status
+        ;;
+    voice)
+        cmd_voice
+        ;;
+    help|--help|-h)
+        print_help
+        ;;
+    *)
+        echo -e "${RED}Unknown command: $1${NC}"
+        print_help
+        exit 1
+        ;;
+esac

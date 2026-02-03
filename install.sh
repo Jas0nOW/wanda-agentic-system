@@ -64,29 +64,89 @@ print_banner() {
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
+# LANGUAGE SELECTION (First thing after banner)
+# ══════════════════════════════════════════════════════════════════════════════
+
+select_language() {
+    echo ""
+    echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║     🌍 Select Language / Sprache wählen                       ║${NC}"
+    echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    echo "   1) 🇩🇪 Deutsch (German)"
+    echo "   2) 🇬🇧 English"
+    echo ""
+    read -p "   Choice / Auswahl [1]: " lang_init
+    
+    case "${lang_init:-1}" in
+        2)
+            INSTALLER_LANG="en"
+            USER_LANGUAGE="en"
+            echo ""
+            echo -e "   ${GREEN}✓ Language set to English${NC}"
+            ;;
+        *)
+            INSTALLER_LANG="de"
+            USER_LANGUAGE="de"
+            echo ""
+            echo -e "   ${GREEN}✓ Sprache auf Deutsch gesetzt${NC}"
+            ;;
+    esac
+}
+
+# Localized text helper
+msg() {
+    local key=$1
+    case "$INSTALLER_LANG" in
+        en)
+            case "$key" in
+                "title_personalization") echo "PERSONALIZATION SETUP";;
+                "q_name") echo "What's your name?";;
+                "q_name_hint") echo "(This will be used in AI prompts and TTS greetings)";;
+                "q_workspace") echo "Where is your main workspace/projects folder?";;
+                "q_workspace_hint") echo "(WANDA will primarily work within this directory)";;
+                "creating_workspace") echo "Creating workspace directory...";;
+                *) echo "$key";;
+            esac
+            ;;
+        *)
+            case "$key" in
+                "title_personalization") echo "PERSONALISIERUNG";;
+                "q_name") echo "Wie heißt du?";;
+                "q_name_hint") echo "(Wird in AI-Prompts und TTS-Begrüßungen verwendet)";;
+                "q_workspace") echo "Wo ist dein Haupt-Workspace/Projekte-Ordner?";;
+                "q_workspace_hint") echo "(WANDA arbeitet hauptsächlich in diesem Verzeichnis)";;
+                "creating_workspace") echo "Erstelle Workspace-Verzeichnis...";;
+                *) echo "$key";;
+            esac
+            ;;
+    esac
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
 # PERSONALIZATION - Ask for user-specific configuration
 # ══════════════════════════════════════════════════════════════════════════════
 
 collect_user_info() {
     echo ""
     echo -e "${YELLOW}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${YELLOW}                  PERSONALIZATION SETUP${NC}"
+    echo -e "${YELLOW}                  $(msg title_personalization)${NC}"
     echo -e "${YELLOW}═══════════════════════════════════════════════════════════════${NC}"
     echo ""
     
     # Username
-    echo -e "${BLUE}1. What's your name?${NC}"
-    echo "   (This will be used in AI prompts and TTS greetings)"
-    read -p "   Your name: " USER_NAME
+    echo -e "${BLUE}1. $(msg q_name)${NC}"
+    echo "   $(msg q_name_hint)"
+    read -p "   Name: " USER_NAME
     USER_NAME=${USER_NAME:-User}
     
     echo ""
     
     # Workspace
-    echo -e "${BLUE}2. Where is your main workspace/projects folder?${NC}"
-    echo "   (WANDA will primarily work within this directory)"
+    echo -e "${BLUE}2. $(msg q_workspace)${NC}"
+    echo "   $(msg q_workspace_hint)"
     echo "   Default: $HOME/Projects"
-    read -p "   Workspace path: " USER_WORKSPACE
+    read -p "   Workspace: " USER_WORKSPACE
     USER_WORKSPACE=${USER_WORKSPACE:-$HOME/Projects}
     
     # Expand ~ if used
@@ -94,55 +154,83 @@ collect_user_info() {
     
     # Create workspace if it doesn't exist
     if [ ! -d "$USER_WORKSPACE" ]; then
-        echo -e "   ${YELLOW}Creating workspace directory...${NC}"
+        echo -e "   ${YELLOW}$(msg creating_workspace)${NC}"
         mkdir -p "$USER_WORKSPACE"
     fi
     
+    # Language already selected at start - skip this step
+    # USER_LANGUAGE is already set from select_language()
+    
     echo ""
     
-    # Language
-    echo -e "${BLUE}3. Preferred language?${NC}"
-    echo "   1) German (de)"
-    echo "   2) English (en)"
-    echo "   3) Spanish (es)"
-    echo "   4) French (fr)"
-    read -p "   Choice [1]: " lang_choice
-    case ${lang_choice:-1} in
-        1) USER_LANGUAGE="de";;
-        2) USER_LANGUAGE="en";;
-        3) USER_LANGUAGE="es";;
-        4) USER_LANGUAGE="fr";;
-        *) USER_LANGUAGE="de";;
+    # ══════════════════════════════════════════════════════════════════════════
+    # STEP 4: Ollama Configuration (ENHANCER + DIRECT ANSWERER)
+    # ══════════════════════════════════════════════════════════════════════════
+    echo -e "${BLUE}4. Ollama Configuration${NC}"
+    echo "   Ollama makes WANDA smarter (prompt optimization, direct answers, TTS preprocessing)."
+    echo "   WANDA works 100% without Ollama - it's an optional enhancer."
+    echo ""
+    echo "   a) Skip Ollama (Cloud-only mode)"
+    echo "   b) Use RECOMMENDED models (based on your hardware: $HARDWARE_PROFILE)"
+    echo "   c) Use DEFAULTS (brainstorm-36b, heretic-12b, qwen3:8b)"
+    echo "   d) CUSTOM - I have my own models"
+    echo ""
+    read -p "   Choice [b]: " ollama_choice
+    
+    case "${ollama_choice:-b}" in
+        [Aa])
+            USE_OLLAMA=0
+            OLLAMA_PRIMARY=""
+            OLLAMA_FALLBACK=""
+            OLLAMA_LIGHT=""
+            OLLAMA_DIRECT_ANSWER=0
+            echo "   ✓ Ollama skipped (Cloud-only mode)"
+            ;;
+        [Bb])
+            USE_OLLAMA=1
+            OLLAMA_DIRECT_ANSWER=1
+            # Use hardware-based recommendation
+            OLLAMA_PRIMARY="${RECOMMENDED_OLLAMA%% /*}"  # First model
+            OLLAMA_FALLBACK="qwen3:8b"
+            OLLAMA_LIGHT="llama-3.2:3b"
+            echo "   ✓ Using recommended: $OLLAMA_PRIMARY"
+            ;;
+        [Cc])
+            USE_OLLAMA=1
+            OLLAMA_DIRECT_ANSWER=1
+            OLLAMA_PRIMARY="brainstorm-36b"
+            OLLAMA_FALLBACK="heretic-12b"
+            OLLAMA_LIGHT="qwen3:8b"
+            echo "   ✓ Using defaults"
+            ;;
+        [Dd])
+            USE_OLLAMA=1
+            OLLAMA_DIRECT_ANSWER=1
+            echo ""
+            echo -e "   ${YELLOW}Enter your Ollama model names:${NC}"
+            read -p "   Primary Model: " OLLAMA_PRIMARY
+            OLLAMA_PRIMARY=${OLLAMA_PRIMARY:-brainstorm-36b}
+            read -p "   Fallback Model: " OLLAMA_FALLBACK
+            OLLAMA_FALLBACK=${OLLAMA_FALLBACK:-heretic-12b}
+            read -p "   Lightweight Model: " OLLAMA_LIGHT
+            OLLAMA_LIGHT=${OLLAMA_LIGHT:-qwen3:8b}
+            ;;
+        *)
+            USE_OLLAMA=1
+            OLLAMA_DIRECT_ANSWER=1
+            OLLAMA_PRIMARY="${RECOMMENDED_OLLAMA%% /*}"
+            OLLAMA_FALLBACK="qwen3:8b"
+            OLLAMA_LIGHT="llama-3.2:3b"
+            ;;
     esac
     
-    echo ""
-    
-    # Ollama Models (Custom)
-    echo -e "${BLUE}4. Ollama Model Configuration${NC}"
-    echo "   Which local models do you want to use?"
-    echo ""
-    echo "   a) Use DEFAULTS (brainstorm-36b, heretic-12b, qwen3:8b)"
-    echo "   b) CUSTOM - I have my own models"
-    echo ""
-    read -p "   Choice [a]: " model_choice
-    
-    if [[ "${model_choice:-a}" =~ ^[Bb] ]]; then
+    # Direct Answerer Toggle (if Ollama enabled)
+    if [ "$USE_OLLAMA" = "1" ]; then
         echo ""
-        echo -e "${YELLOW}   Enter your Ollama model names:${NC}"
-        echo "   (Leave blank to skip)"
-        
-        read -p "   Primary Voice Model [brainstorm-36b]: " OLLAMA_PRIMARY
-        OLLAMA_PRIMARY=${OLLAMA_PRIMARY:-brainstorm-36b}
-        
-        read -p "   Fallback Model [heretic-12b]: " OLLAMA_FALLBACK
-        OLLAMA_FALLBACK=${OLLAMA_FALLBACK:-heretic-12b}
-        
-        read -p "   Lightweight Model [qwen3:8b]: " OLLAMA_LIGHT
-        OLLAMA_LIGHT=${OLLAMA_LIGHT:-qwen3:8b}
-    else
-        OLLAMA_PRIMARY="brainstorm-36b"
-        OLLAMA_FALLBACK="heretic-12b"
-        OLLAMA_LIGHT="qwen3:8b"
+        echo -e "   ${YELLOW}Enable Direct Answering?${NC}"
+        echo "   (Simple questions like 'What's the weather?' answered by Ollama without agents)"
+        read -p "   Enable Direct Answers? [Y/n]: " direct_ans
+        [[ "${direct_ans:-y}" =~ ^[Nn] ]] && OLLAMA_DIRECT_ANSWER=0
     fi
     
     echo ""
@@ -151,106 +239,239 @@ collect_user_info() {
     # STEP 5: Cloud Provider Subscriptions (Smart Model Assignment)
     # ══════════════════════════════════════════════════════════════════════════
     echo -e "${BLUE}5. Cloud Provider Subscriptions${NC}"
-    echo "   Let's configure your AI provider access for optimal model assignment."
+    echo "   Configure your AI provider access for optimal model assignment."
     echo ""
     
     # Claude
     echo -e "   ${YELLOW}Claude (Anthropic):${NC}"
-    echo "   1) No Claude subscription"
-    echo "   2) Claude Pro ($20/mo)"
-    echo "   3) Claude Max ($100/mo - includes Opus)"
+    echo "   1) None"
+    echo "   2) Normal (Sonnet access)"
+    echo "   3) Max (Sonnet + Opus access)"
     read -p "   Your Claude tier [1]: " CLAUDE_TIER
     CLAUDE_TIER=${CLAUDE_TIER:-1}
     
     # Gemini
     echo ""
     echo -e "   ${YELLOW}Google Gemini:${NC}"
-    echo "   1) No Gemini subscription (using Antigravity)"
-    echo "   2) Gemini (free tier)"
-    echo "   3) Gemini Advanced ($20/mo)"
-    read -p "   Your Gemini tier [2]: " GEMINI_TIER
-    GEMINI_TIER=${GEMINI_TIER:-2}
+    echo "   1) Antigravity (OAuth - Flash+Pro auf CLI+Antigravity Limits)"
+    echo "   2) Free tier (nur Flash)"
+    echo "   3) Advanced API KEY (Flash + Pro mit extra Quota - API Key nötig!)"
+    read -p "   Your Gemini tier [1]: " GEMINI_TIER
+    GEMINI_TIER=${GEMINI_TIER:-1}
     
     # OpenAI
     echo ""
     echo -e "   ${YELLOW}OpenAI:${NC}"
-    echo "   1) No OpenAI subscription"
-    echo "   2) ChatGPT Plus ($20/mo)"
-    echo "   3) ChatGPT Pro ($200/mo - includes Codex 5.2)"
+    echo "   1) None"
+    echo "   2) Normal (Codex + GPT-5.2 - günstiger für Code)"
+    echo "   3) Max (GPT-5.2 only - teurer, aber stärker)"
     read -p "   Your OpenAI tier [1]: " OPENAI_TIER
     OPENAI_TIER=${OPENAI_TIER:-1}
     
     # Kimi
     echo ""
     echo -e "   ${YELLOW}Kimi (Moonshot):${NC}"
-    echo "   1) Kimi K2.5 Free (always available via OpenCode)"
-    echo "   2) Kimi K2P5 Paid (premium orchestration)"
+    echo "   1) Free (K2.5 via OpenCode)"
+    echo "   2) Paid (K2P5 Coding - premium)"
     read -p "   Your Kimi tier [1]: " KIMI_TIER
     KIMI_TIER=${KIMI_TIER:-1}
     
+    # GitHub Copilot
+    echo ""
+    echo -e "   ${YELLOW}GitHub Copilot:${NC}"
+    echo "   1) None"
+    echo "   2) Active (OAuth)"
+    read -p "   Your Copilot tier [1]: " COPILOT_TIER
+    COPILOT_TIER=${COPILOT_TIER:-1}
+    
     echo ""
     
     # ══════════════════════════════════════════════════════════════════════════
-    # SMART MODEL ASSIGNMENT
+    # STEP 6: Agent Model Configuration (17 Agents)
     # ══════════════════════════════════════════════════════════════════════════
-    assign_smart_models() {
-        echo -e "${BLUE}   Configuring optimal model assignment...${NC}"
-        
-        # Defaults (free tier / no subs)
-        ORCHESTRATOR_MODEL="kimi-k2.5-free"
-        ORCHESTRATOR_FALLBACK="gemini-3-flash"
-        ARCHITECT_MODEL="kimi-k2.5-free"
-        LIBRARIAN_MODEL="gemini-3-flash"
-        DEVELOPER_MODEL="gemini-3-flash"
-        AUDIT_MODEL="gemini-3-flash"
-        WRITER_MODEL="gemini-3-flash"
-        
-        # Kimi K2P5 for Orchestrator (premium)
-        if [ "$KIMI_TIER" == "2" ]; then
+    echo -e "${BLUE}6. Agent Model Configuration${NC}"
+    echo "   Configure models for all 17 agents."
+    echo ""
+    echo "   1) WANDA DEFAULTS (Jas0n's optimized setup)"
+    echo "   2) SUBSCRIPTION-BASED (auto-assign from your tiers)"
+    echo "   3) CUSTOM (configure each agent manually)"
+    echo ""
+    read -p "   Choice [1]: " agent_menu_choice
+    
+    case "${agent_menu_choice:-1}" in
+        1)
+            # WANDA DEFAULTS - Jas0n's optimized 17-agent configuration
+            echo -e "   ${GREEN}✓ Using WANDA DEFAULTS${NC}"
+            
+            # Primary Agents
             ORCHESTRATOR_MODEL="kimi-code-k2p5"
             ORCHESTRATOR_FALLBACK="kimi-k2.5-free"
-        fi
-        
-        # Claude Max → Use Opus for Architect (big brain decisions)
-        if [ "$CLAUDE_TIER" == "3" ]; then
-            ARCHITECT_MODEL="claude-4.5-opus"
-            AUDIT_MODEL="claude-4.5-sonnet"
-        elif [ "$CLAUDE_TIER" == "2" ]; then
+            BRAINSTORMER_MODEL="kimi-k2.5-free"
+            BRAINSTORMER_FALLBACK="gemini-3-flash"
             ARCHITECT_MODEL="claude-4.5-sonnet"
-        fi
-        
-        # OpenAI Pro → Use Codex for Developer
-        if [ "$OPENAI_TIER" == "3" ]; then
-            DEVELOPER_MODEL="openai/codex-5.2"
-        elif [ "$OPENAI_TIER" == "2" ]; then
-            DEVELOPER_MODEL="openai/gpt-5.1"
-        fi
-        
-        # Gemini Advanced → Use Pro for research
-        if [ "$GEMINI_TIER" == "3" ]; then
-            LIBRARIAN_MODEL="gemini-3-pro"
-        fi
-        
-        echo "   ✓ Models assigned based on your subscriptions"
-    }
+            ARCHITECT_FALLBACK="kimi-k2.5-free"
+            DEVELOPER_MODEL="claude-4.5-sonnet"
+            DEVELOPER_FALLBACK="kimi-code-k2p5"
+            AUDIT_MODEL="codex-5.2"
+            AUDIT_FALLBACK="kimi-k2.5-free"
+            LIBRARIAN_MODEL="gemini-3-flash-preview"
+            LIBRARIAN_FALLBACK="kimi-k2.5-free"
+            WRITER_MODEL="gemini-3-flash-preview"
+            WRITER_FALLBACK="kimi-k2.5-free"
+            
+            # Sub Agents
+            FRONTEND_MODEL="gemini-3-pro-preview"
+            FRONTEND_FALLBACK="kimi-k2.5-free"
+            ORACLE_MODEL="claude-4.5-opus"
+            ORACLE_FALLBACK="gemini-3-pro-preview"
+            EXPLORE_MODEL="gemini-3-flash-preview"
+            EXPLORE_FALLBACK="kimi-k2.5-free"
+            LOOKER_MODEL="kimi-k2.5-free"
+            LOOKER_FALLBACK="gemini-3-flash-preview"
+            LOCATOR_MODEL="gemini-3-flash-preview"
+            LOCATOR_FALLBACK="kimi-k2.5-free"
+            ANALYZER_MODEL="codex-5.2"
+            ANALYZER_FALLBACK="kimi-k2.5-free"
+            PATTERN_MODEL="codex-5.2"
+            PATTERN_FALLBACK="kimi-k2.5-free"
+            LEDGER_MODEL="gemini-3-flash-preview"
+            LEDGER_FALLBACK="kimi-k2.5-free"
+            ARTIFACT_MODEL="gemini-3-flash-preview"
+            ARTIFACT_FALLBACK="kimi-k2.5-free"
+            META_MODEL="gemini-3-flash-preview"
+            META_FALLBACK="kimi-k2.5-free"
+            ;;
+        2)
+            # SUBSCRIPTION-BASED - auto-assign from tiers
+            echo -e "   ${GREEN}✓ Assigning based on subscriptions${NC}"
+            
+            # Defaults
+            ORCHESTRATOR_MODEL="kimi-k2.5-free"
+            ORCHESTRATOR_FALLBACK="gemini-3-flash"
+            BRAINSTORMER_MODEL="kimi-k2.5-free"
+            BRAINSTORMER_FALLBACK="gemini-3-flash"
+            ARCHITECT_MODEL="kimi-k2.5-free"
+            ARCHITECT_FALLBACK="gemini-3-flash"
+            DEVELOPER_MODEL="gemini-3-flash"
+            DEVELOPER_FALLBACK="kimi-k2.5-free"
+            AUDIT_MODEL="gemini-3-flash"
+            AUDIT_FALLBACK="kimi-k2.5-free"
+            LIBRARIAN_MODEL="gemini-3-flash"
+            LIBRARIAN_FALLBACK="kimi-k2.5-free"
+            WRITER_MODEL="gemini-3-flash"
+            WRITER_FALLBACK="kimi-k2.5-free"
+            
+            # Apply subscription upgrades
+            [ "$KIMI_TIER" == "2" ] && ORCHESTRATOR_MODEL="kimi-code-k2p5"
+            [ "$CLAUDE_TIER" == "3" ] && ARCHITECT_MODEL="claude-4.5-opus" && AUDIT_MODEL="claude-4.5-sonnet"
+            [ "$CLAUDE_TIER" == "2" ] && ARCHITECT_MODEL="claude-4.5-sonnet"
+            [ "$OPENAI_TIER" == "3" ] && DEVELOPER_MODEL="codex-5.2" && AUDIT_MODEL="codex-5.2"
+            [ "$OPENAI_TIER" == "2" ] && DEVELOPER_MODEL="gpt-5.2"
+            [ "$GEMINI_TIER" == "3" ] && LIBRARIAN_MODEL="gemini-3-pro"
+            
+            # Sub-agents use same as primaries
+            FRONTEND_MODEL="$DEVELOPER_MODEL"; FRONTEND_FALLBACK="kimi-k2.5-free"
+            ORACLE_MODEL="$ARCHITECT_MODEL"; ORACLE_FALLBACK="gemini-3-flash"
+            EXPLORE_MODEL="$LIBRARIAN_MODEL"; EXPLORE_FALLBACK="kimi-k2.5-free"
+            LOOKER_MODEL="kimi-k2.5-free"; LOOKER_FALLBACK="gemini-3-flash"
+            LOCATOR_MODEL="$LIBRARIAN_MODEL"; LOCATOR_FALLBACK="kimi-k2.5-free"
+            ANALYZER_MODEL="$AUDIT_MODEL"; ANALYZER_FALLBACK="kimi-k2.5-free"
+            PATTERN_MODEL="$AUDIT_MODEL"; PATTERN_FALLBACK="kimi-k2.5-free"
+            LEDGER_MODEL="gemini-3-flash"; LEDGER_FALLBACK="kimi-k2.5-free"
+            ARTIFACT_MODEL="gemini-3-flash"; ARTIFACT_FALLBACK="kimi-k2.5-free"
+            META_MODEL="gemini-3-flash"; META_FALLBACK="kimi-k2.5-free"
+            ;;
+        3)
+            # CUSTOM - manual configuration
+            echo ""
+            echo -e "   ${YELLOW}Configure each agent manually:${NC}"
+            echo ""
+            read -p "   Sisyphus (Orchestrator) model: " ORCHESTRATOR_MODEL
+            ORCHESTRATOR_MODEL=${ORCHESTRATOR_MODEL:-kimi-k2.5-free}
+            read -p "   Prometheus (Architect) model: " ARCHITECT_MODEL
+            ARCHITECT_MODEL=${ARCHITECT_MODEL:-kimi-k2.5-free}
+            read -p "   Atlas (Developer) model: " DEVELOPER_MODEL
+            DEVELOPER_MODEL=${DEVELOPER_MODEL:-gemini-3-flash}
+            read -p "   Audit model: " AUDIT_MODEL
+            AUDIT_MODEL=${AUDIT_MODEL:-gemini-3-flash}
+            read -p "   Librarian model: " LIBRARIAN_MODEL
+            LIBRARIAN_MODEL=${LIBRARIAN_MODEL:-gemini-3-flash}
+            read -p "   Writer model: " WRITER_MODEL
+            WRITER_MODEL=${WRITER_MODEL:-gemini-3-flash}
+            echo "   (Sub-agents will use same as their parent)"
+            
+            ORCHESTRATOR_FALLBACK="kimi-k2.5-free"
+            BRAINSTORMER_MODEL="kimi-k2.5-free"; BRAINSTORMER_FALLBACK="gemini-3-flash"
+            ARCHITECT_FALLBACK="kimi-k2.5-free"
+            DEVELOPER_FALLBACK="kimi-k2.5-free"
+            AUDIT_FALLBACK="kimi-k2.5-free"
+            LIBRARIAN_FALLBACK="kimi-k2.5-free"
+            WRITER_FALLBACK="kimi-k2.5-free"
+            FRONTEND_MODEL="$DEVELOPER_MODEL"; FRONTEND_FALLBACK="kimi-k2.5-free"
+            ORACLE_MODEL="$ARCHITECT_MODEL"; ORACLE_FALLBACK="gemini-3-flash"
+            EXPLORE_MODEL="$LIBRARIAN_MODEL"; EXPLORE_FALLBACK="kimi-k2.5-free"
+            LOOKER_MODEL="kimi-k2.5-free"; LOOKER_FALLBACK="gemini-3-flash"
+            LOCATOR_MODEL="$LIBRARIAN_MODEL"; LOCATOR_FALLBACK="kimi-k2.5-free"
+            ANALYZER_MODEL="$AUDIT_MODEL"; ANALYZER_FALLBACK="kimi-k2.5-free"
+            PATTERN_MODEL="$AUDIT_MODEL"; PATTERN_FALLBACK="kimi-k2.5-free"
+            LEDGER_MODEL="gemini-3-flash"; LEDGER_FALLBACK="kimi-k2.5-free"
+            ARTIFACT_MODEL="gemini-3-flash"; ARTIFACT_FALLBACK="kimi-k2.5-free"
+            META_MODEL="gemini-3-flash"; META_FALLBACK="kimi-k2.5-free"
+            ;;
+        *)
+            # Default to WANDA DEFAULTS
+            ORCHESTRATOR_MODEL="kimi-code-k2p5"
+            ORCHESTRATOR_FALLBACK="kimi-k2.5-free"
+            BRAINSTORMER_MODEL="kimi-k2.5-free"
+            BRAINSTORMER_FALLBACK="gemini-3-flash"
+            ARCHITECT_MODEL="claude-4.5-sonnet"
+            ARCHITECT_FALLBACK="kimi-k2.5-free"
+            DEVELOPER_MODEL="claude-4.5-sonnet"
+            DEVELOPER_FALLBACK="kimi-code-k2p5"
+            AUDIT_MODEL="codex-5.2"
+            AUDIT_FALLBACK="kimi-k2.5-free"
+            LIBRARIAN_MODEL="gemini-3-flash-preview"
+            LIBRARIAN_FALLBACK="kimi-k2.5-free"
+            WRITER_MODEL="gemini-3-flash-preview"
+            WRITER_FALLBACK="kimi-k2.5-free"
+            FRONTEND_MODEL="gemini-3-pro-preview"; FRONTEND_FALLBACK="kimi-k2.5-free"
+            ORACLE_MODEL="claude-4.5-opus"; ORACLE_FALLBACK="gemini-3-pro-preview"
+            EXPLORE_MODEL="gemini-3-flash-preview"; EXPLORE_FALLBACK="kimi-k2.5-free"
+            LOOKER_MODEL="kimi-k2.5-free"; LOOKER_FALLBACK="gemini-3-flash-preview"
+            LOCATOR_MODEL="gemini-3-flash-preview"; LOCATOR_FALLBACK="kimi-k2.5-free"
+            ANALYZER_MODEL="codex-5.2"; ANALYZER_FALLBACK="kimi-k2.5-free"
+            PATTERN_MODEL="codex-5.2"; PATTERN_FALLBACK="kimi-k2.5-free"
+            LEDGER_MODEL="gemini-3-flash-preview"; LEDGER_FALLBACK="kimi-k2.5-free"
+            ARTIFACT_MODEL="gemini-3-flash-preview"; ARTIFACT_FALLBACK="kimi-k2.5-free"
+            META_MODEL="gemini-3-flash-preview"; META_FALLBACK="kimi-k2.5-free"
+            ;;
+    esac
     
-    assign_smart_models
-    
+    echo "   ✓ Agent models configured"
     echo ""
     echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${GREEN}  Configuration:${NC}"
+    echo -e "${GREEN}  WANDA Configuration Summary:${NC}"
+    echo -e "${GREEN}  ────────────────────────────────────────────────────${NC}"
     echo -e "${GREEN}  • Name: $USER_NAME${NC}"
     echo -e "${GREEN}  • Workspace: $USER_WORKSPACE${NC}"
     echo -e "${GREEN}  • Language: $USER_LANGUAGE${NC}"
-    echo -e "${GREEN}  • Ollama Primary: $OLLAMA_PRIMARY${NC}"
-    echo -e "${GREEN}  • Ollama Fallback: $OLLAMA_FALLBACK${NC}"
+    echo -e "${GREEN}  • Hardware Profile: ${HARDWARE_PROFILE:-Unknown}${NC}"
     echo -e "${GREEN}  ────────────────────────────────────────────────────${NC}"
-    echo -e "${GREEN}  • Sisyphus (Orch): $ORCHESTRATOR_MODEL${NC}"
+    if [ "$USE_OLLAMA" = "1" ]; then
+        echo -e "${GREEN}  • Ollama: ENABLED (Direct Answer: ${OLLAMA_DIRECT_ANSWER:-1})${NC}"
+        echo -e "${GREEN}    Primary: $OLLAMA_PRIMARY${NC}"
+    else
+        echo -e "${GREEN}  • Ollama: DISABLED (Cloud-only mode)${NC}"
+    fi
+    echo -e "${GREEN}  ────────────────────────────────────────────────────${NC}"
+    echo -e "${GREEN}  7 PRIMARY AGENTS:${NC}"
+    echo -e "${GREEN}  • Sisyphus (Orch):   $ORCHESTRATOR_MODEL${NC}"
+    echo -e "${GREEN}  • Brainstormer:      $BRAINSTORMER_MODEL${NC}"
     echo -e "${GREEN}  • Prometheus (Arch): $ARCHITECT_MODEL${NC}"
-    echo -e "${GREEN}  • Atlas (Dev):     $DEVELOPER_MODEL${NC}"
-    echo -e "${GREEN}  • Librarian:       $LIBRARIAN_MODEL${NC}"
-    echo -e "${GREEN}  • Audit:           $AUDIT_MODEL${NC}"
-    echo -e "${GREEN}  • Writer:          $WRITER_MODEL${NC}"
+    echo -e "${GREEN}  • Atlas (Dev):       $DEVELOPER_MODEL${NC}"
+    echo -e "${GREEN}  • Audit:             $AUDIT_MODEL${NC}"
+    echo -e "${GREEN}  • Librarian:         $LIBRARIAN_MODEL${NC}"
+    echo -e "${GREEN}  • Writer:            $WRITER_MODEL${NC}"
     echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
     echo ""
     
@@ -260,7 +481,7 @@ collect_user_info() {
     fi
 }
 
-# Hardware Detection
+# Hardware Detection & Profile Assignment
 check_hardware() {
     echo -e "${BLUE}Auditing System Hardware...${NC}"
     
@@ -288,18 +509,32 @@ check_hardware() {
     echo "   - RAM: ${RAM_GB}GB"
     echo "   - GPU: ${GPU_TYPE} (${VRAM_GB}GB VRAM)"
     
-    # Recommend Brain
-    echo -e "${YELLOW}Recommended Local Brain (SOTA 2026):${NC}"
-    if [ "$VRAM_GB" -ge 16 ] || [ "$RAM_GB" -ge 64 ]; then
-        RECOMMENDED_MODEL="DeepSeek V4 / Qwen 3 (235B)"
-    elif [ "$RAM_GB" -ge 48 ]; then
-        RECOMMENDED_MODEL="Qwen 2.5 Coder (32B) / Llama 4 Maverick"
-    elif [ "$VRAM_GB" -ge 8 ] || [ "$RAM_GB" -ge 16 ]; then
-        RECOMMENDED_MODEL="Gemma 3 (27B) / Llama 4 Scout"
+    # Assign Hardware Profile (S/M/M-High/High)
+    if [ "$VRAM_GB" -ge 16 ] || [ "$RAM_GB" -ge 48 ]; then
+        HARDWARE_PROFILE="High"
+        RECOMMENDED_OLLAMA="deepseek-r1:32b / qwen-2.5-coder:32b"
+        TTS_MODEL="xtts-v2"
+    elif [ "$VRAM_GB" -ge 10 ] || [ "$RAM_GB" -ge 32 ]; then
+        HARDWARE_PROFILE="M-High"
+        RECOMMENDED_OLLAMA="qwen-2.5-coder:14b"
+        TTS_MODEL="xtts-v2"
+    elif [ "$VRAM_GB" -ge 6 ] || [ "$RAM_GB" -ge 16 ]; then
+        HARDWARE_PROFILE="M"
+        RECOMMENDED_OLLAMA="gemma-3:9b / mistral:7b"
+        TTS_MODEL="piper-fast"
     else
-        RECOMMENDED_MODEL="Llama 4 Scout (17B MoE - Lightweight)"
+        HARDWARE_PROFILE="S"
+        RECOMMENDED_OLLAMA="llama-3.2:3b (Lightweight)"
+        TTS_MODEL="piper-fast"
     fi
-    echo -e "   → ${GREEN}$RECOMMENDED_MODEL${NC}"
+    
+    echo ""
+    echo -e "${CYAN}╔═══════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║  Hardware Profile: ${GREEN}${HARDWARE_PROFILE}${CYAN}                                        ║${NC}"
+    echo -e "${CYAN}╠═══════════════════════════════════════════════════════════════╣${NC}"
+    echo -e "${CYAN}║  Recommended Ollama: ${GREEN}${RECOMMENDED_OLLAMA}${NC}"
+    echo -e "${CYAN}║  TTS Engine: ${GREEN}${TTS_MODEL}${NC}"
+    echo -e "${CYAN}╚═══════════════════════════════════════════════════════════════╝${NC}"
 }
 
 # Prerequisites check
@@ -617,23 +852,125 @@ EOF
 # MCP setup
 setup_mcp() {
     echo ""
-    read -p "Setup MCP Docker servers? [y/N]: " ans
-    if [[ "$ans" =~ ^[Yy] ]]; then
-        MCP_INSTALLED=1
-        if command -v docker >/dev/null 2>&1; then
-            if [ -f "$INSTALL_DIR/mcp-servers/settings.json.template" ]; then
-                sed -e "s|{{HOME}}|$HOME|g" \
-                    "$INSTALL_DIR/mcp-servers/settings.json.template" \
-                    > "$GEMINI_CONFIG/settings.json"
-            fi
-            echo -e "${GREEN}✓ MCP config created${NC}"
-            echo "Edit $GEMINI_CONFIG/settings.json to add API keys"
+    echo -e "${BLUE}MCP Server Configuration${NC}"
+    echo "   MCP servers provide WANDA with additional capabilities."
+    echo ""
+    
+    if command -v docker >/dev/null 2>&1; then
+        echo -e "   ${GREEN}✓ Docker detected${NC}"
+        echo ""
+        echo "   1) Install Docker MCP Gateway (recommended)"
+        echo "   2) Use npx fallback (no Docker containers)"
+        echo "   3) Skip MCP setup"
+        read -p "   Choice [1]: " mcp_choice
+        
+        case "${mcp_choice:-1}" in
+            1)
+                USE_DOCKER_MCP=1
+                echo ""
+                echo -e "${YELLOW}Starting Docker MCP Gateway...${NC}"
+                
+                # Pull and run MCP gateway
+                docker pull mcp/gateway:latest 2>/dev/null || true
+                docker rm -f mcp-gateway 2>/dev/null || true
+                docker run -d --name mcp-gateway \
+                    -p 3100:3100 \
+                    -v "$HOME/.mcp:/root/.mcp" \
+                    mcp/gateway:latest 2>/dev/null && \
+                    echo -e "${GREEN}✓ MCP Gateway running on port 3100${NC}" || \
+                    echo -e "${YELLOW}⚠ MCP Gateway container not available, using config only${NC}"
+                
+                # API Key collection
+                echo ""
+                echo -e "${BLUE}API Keys (optional, press Enter to skip):${NC}"
+                echo "   Du kannst diese später in $GEMINI_CONFIG/settings.json ändern"
+                echo ""
+                
+                echo -e "   ${CYAN}GitHub PAT:${NC} https://github.com/settings/tokens"
+                read -p "   GitHub Token: " GITHUB_TOKEN_INPUT
+                
+                echo -e "   ${CYAN}Brave Search:${NC} https://api-dashboard.search.brave.com/app/keys"
+                read -p "   Brave API Key: " BRAVE_API_KEY_INPUT
+                
+                echo -e "   ${CYAN}Vercel:${NC} https://vercel.com/account/settings/tokens"
+                read -p "   Vercel Token: " VERCEL_TOKEN_INPUT
+                
+                echo -e "   ${CYAN}Supabase:${NC} https://supabase.com/dashboard/account/tokens"
+                read -p "   Supabase Token: " SUPABASE_TOKEN_INPUT
+                
+                echo -e "   ${CYAN}Stripe:${NC} https://dashboard.stripe.com/apikeys"
+                read -p "   Stripe Secret Key: " STRIPE_KEY_INPUT
+                
+                echo -e "   ${CYAN}n8n (optional):${NC} Deine Instanz /settings/api"
+                read -p "   n8n API Key: " N8N_KEY_INPUT
+                
+                # Process settings.json with API keys
+                if [ -f "$INSTALL_DIR/mcp-servers/settings.json.template" ]; then
+                    sed -e "s|{{HOME}}|$HOME|g" \
+                        -e "s|{{GITHUB_TOKEN}}|${GITHUB_TOKEN_INPUT:-YOUR_GITHUB_TOKEN}|g" \
+                        -e "s|{{BRAVE_API_KEY}}|${BRAVE_API_KEY_INPUT:-YOUR_BRAVE_KEY}|g" \
+                        -e "s|{{VERCEL_TOKEN}}|${VERCEL_TOKEN_INPUT:-YOUR_VERCEL_TOKEN}|g" \
+                        -e "s|{{SUPABASE_TOKEN}}|${SUPABASE_TOKEN_INPUT:-YOUR_SUPABASE_TOKEN}|g" \
+                        -e "s|{{STRIPE_SECRET_KEY}}|${STRIPE_KEY_INPUT:-YOUR_STRIPE_KEY}|g" \
+                        -e "s|{{N8N_API_KEY}}|${N8N_KEY_INPUT:-YOUR_N8N_KEY}|g" \
+                        "$INSTALL_DIR/mcp-servers/settings.json.template" \
+                        > "$GEMINI_CONFIG/settings.json"
+                fi
+                
+                MCP_INSTALLED=1
+                echo -e "${GREEN}✓ MCP Docker config complete${NC}"
+                ;;
+            2)
+                USE_DOCKER_MCP=0
+                echo ""
+                echo -e "${YELLOW}Setting up npx-based MCP servers...${NC}"
+                
+                # Minimal npx config
+                cat > "$GEMINI_CONFIG/settings.json" << 'EOF'
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-server-filesystem", "$HOME"]
+    }
+  }
+}
+EOF
+                sed -i "s|\$HOME|$HOME|g" "$GEMINI_CONFIG/settings.json"
+                
+                MCP_INSTALLED=1
+                echo -e "${GREEN}✓ npx MCP fallback configured${NC}"
+                ;;
+            *)
+                MCP_INSTALLED=0
+                echo "   Skipped MCP setup"
+                ;;
+        esac
+    else
+        echo -e "   ${YELLOW}Docker not found - using npx fallback${NC}"
+        USE_DOCKER_MCP=0
+        
+        read -p "   Setup npx-based MCP servers? [Y/n]: " ans
+        if [[ "${ans:-y}" =~ ^[Yy] ]]; then
+            cat > "$GEMINI_CONFIG/settings.json" << 'EOF'
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    }
+  }
+}
+EOF
+            MCP_INSTALLED=1
+            echo -e "${GREEN}✓ npx MCP configured${NC}"
         else
-            echo -e "${RED}Docker not found. Install Docker first.${NC}"
             MCP_INSTALLED=0
         fi
-    else
-        MCP_INSTALLED=0
     fi
 }
 
@@ -662,6 +999,41 @@ print_summary() {
     echo -e "${BLUE}Documentation:${NC}"
     echo "  $INSTALL_DIR/docs/"
     echo ""
+    
+    # Setup wanda CLI in PATH
+    if [ -f "$INSTALL_DIR/bin/wanda" ]; then
+        chmod +x "$INSTALL_DIR/bin/wanda"
+        
+        # Add to PATH via shell profile
+        SHELL_PROFILE=""
+        if [ -f "$HOME/.zshrc" ]; then
+            SHELL_PROFILE="$HOME/.zshrc"
+        elif [ -f "$HOME/.bashrc" ]; then
+            SHELL_PROFILE="$HOME/.bashrc"
+        fi
+        
+        if [ -n "$SHELL_PROFILE" ]; then
+            if ! grep -q "WANDA_INSTALL_DIR" "$SHELL_PROFILE"; then
+                echo "" >> "$SHELL_PROFILE"
+                echo "# WANDA System" >> "$SHELL_PROFILE"
+                echo "export WANDA_INSTALL_DIR=\"$INSTALL_DIR\"" >> "$SHELL_PROFILE"
+                echo "export PATH=\"\$WANDA_INSTALL_DIR/bin:\$PATH\"" >> "$SHELL_PROFILE"
+                echo -e "${GREEN}✓ Added 'wanda' command to PATH${NC}"
+            fi
+        fi
+        
+        # Create version file
+        cp "$INSTALL_DIR/VERSION" "$INSTALL_DIR/.wanda-version" 2>/dev/null || echo "1.0.4" > "$INSTALL_DIR/.wanda-version"
+        
+        echo ""
+        echo -e "${CYAN}Commands:${NC}"
+        echo "  wanda          - Start WANDA (checks for updates)"
+        echo "  wanda update   - Check and apply updates"
+        echo "  wanda status   - Show system status"
+        echo "  wanda voice    - Start voice assistant"
+    fi
+    
+    echo ""
     echo "🌟 Enjoy WANDA, $USER_NAME!"
 }
 
@@ -674,6 +1046,9 @@ main() {
     detect_os
     set_paths
     check_prereqs
+    
+    # LANGUAGE SELECTION (First!)
+    select_language
     
     # PERSONALIZATION
     collect_user_info

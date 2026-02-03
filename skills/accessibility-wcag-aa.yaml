@@ -1,0 +1,41 @@
+# Accessibility WCAG AA
+# Web accessibility patterns
+
+name: accessibility-wcag-aa
+version: 1.0.0
+target_agents: [frontend-ui-ux]
+description: WCAG AA accessibility compliance.
+
+rules:
+  - Use semantic HTML elements
+  - Provide alt text for images
+  - Ensure keyboard navigation
+  - Maintain 4.5:1 contrast ratio
+  - Use ARIA only when needed
+  - Test with screen reader
+
+patterns:
+  button: |
+    <button
+      aria-label="Close dialog"
+      onClick={onClose}
+    >
+      <CloseIcon aria-hidden="true" />
+    </button>
+  
+  form: |
+    <label htmlFor="email">Email</label>
+    <input
+      id="email"
+      type="email"
+      aria-describedby="email-error"
+      aria-invalid={!!error}
+    />
+    {error && <span id="email-error" role="alert">{error}</span>}
+
+checklist:
+  - "All images have alt text"
+  - "Forms have labels"
+  - "Focus visible on all interactive elements"
+  - "Color is not only indicator"
+  - "Text resizable to 200%"

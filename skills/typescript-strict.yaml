@@ -1,0 +1,67 @@
+# TypeScript Strict Mode
+# Type-safe coding patterns
+
+name: typescript-strict
+version: 1.0.0
+target_agents: [atlas, audit]
+description: |
+  TypeScript strict mode patterns.
+  Focus on type safety, inference, and Zod validation.
+
+rules:
+  - ENABLE strict mode in tsconfig
+  - Use Zod for runtime validation
+  - Prefer interface over type for objects
+  - Use discriminated unions for state
+  - Avoid 'any' - use 'unknown' if needed
+  - Use const assertions for literals
+  - Implement proper generics
+  - Use satisfies operator for type checking
+
+patterns:
+  zod_schema: |
+    import { z } from 'zod';
+    
+    const userSchema = z.object({
+      id: z.string().uuid(),
+      email: z.string().email(),
+      name: z.string().min(2).max(100),
+      role: z.enum(['admin', 'user', 'guest']),
+    });
+    
+    type User = z.infer<typeof userSchema>;
+  
+  discriminated_union: |
+    type Result<T> =
+      | { success: true; data: T }
+      | { success: false; error: string };
+    
+    function handle<T>(result: Result<T>) {
+      if (result.success) {
+        console.log(result.data); // T
+      } else {
+        console.error(result.error); // string
+      }
+    }
+  
+  type_guard: |
+    function isUser(obj: unknown): obj is User {
+      return userSchema.safeParse(obj).success;
+    }
+  
+  const_assertion: |
+    const ROLES = ['admin', 'user', 'guest'] as const;
+    type Role = typeof ROLES[number]; // 'admin' | 'user' | 'guest'
+
+tsconfig:
+  strict: true
+  noUncheckedIndexedAccess: true
+  noImplicitReturns: true
+  noFallthroughCasesInSwitch: true
+  exactOptionalPropertyTypes: true
+
+anti_patterns:
+  - "Using 'any' type"
+  - "Type assertions without validation"
+  - "Ignoring null/undefined checks"
+  - "Non-exhaustive switch statements"

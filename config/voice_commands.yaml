@@ -1,0 +1,151 @@
+# WANDA Voice Commands Configuration
+# v1.0.4 - Expanded with Wanda-Mode and Vorlesen
+
+version: "1.0.4"
+
+# ==============================================================================
+# WAKE WORDS
+# ==============================================================================
+wake_words:
+  - "hey wanda"
+  - "hallo wanda"
+  - "ok wanda"
+  - "wanda"
+
+# ==============================================================================
+# VOICE COMMANDS (German + English)
+# ==============================================================================
+commands:
+  # Control Commands
+  pause:
+    triggers:
+      - "pausieren"
+      - "wanda pause"
+      - "pause"
+    action: "pause_listening"
+    description: "Mic schließt, Hotkey deaktiviert"
+  
+  resume:
+    triggers:
+      - "fortsetzen"
+      - "weiter"
+      - "hallo wanda"
+      - "continue"
+    action: "resume_listening"
+    description: "Resume listening"
+  
+  retry:
+    triggers:
+      - "nochmal"
+      - "neu aufnehmen"
+      - "retry"
+    action: "retry_last_turn"
+    description: "Letzten Turn wiederholen"
+  
+  edit:
+    triggers:
+      - "ändere"
+      - "edit"
+      - "korrigiere"
+    action: "edit_last_prompt"
+    description: "Modifiziere letzten Prompt"
+  
+  send:
+    triggers:
+      - "abschicken"
+      - "senden"
+      - "bestätige"
+      - "send"
+      - "confirm"
+    action: "send_to_agent"
+    description: "Prompt an Agent senden"
+  
+  cancel:
+    triggers:
+      - "abbrechen"
+      - "stop"
+      - "cancel"
+    action: "cancel_task"
+    description: "Aktuellen Task abbrechen"
+  
+  exit:
+    triggers:
+      - "schließen"
+      - "exit"
+      - "beenden"
+      - "quit"
+    action: "exit_wanda"
+    description: "WANDA beenden"
+  
+  read_back:
+    triggers:
+      - "vorlesen"
+      - "was hast du verstanden"
+      - "read back"
+      - "what did you hear"
+    action: "read_back_prompt"
+    description: "Prompt/Output vorlesen"
+
+# ==============================================================================
+# WANDA-MODE (Full Autonomy)
+# ==============================================================================
+wanda_mode:
+  triggers:
+    - "wanda modus"
+    - "wanda mode"
+    - "voll auto"
+    - "full auto"
+    - "autonomer modus"
+  description: |
+    Aktiviert voll-autonomen Betrieb:
+    - Ollama prüft Agent-Output als zweiter Experte
+    - Automatische Weiterleitung zwischen Agenten
+    - TTS liest Zusammenfassungen vor
+    - User-Approval nur bei kritischen Aktionen
+  settings:
+    auto_continue: true
+    ollama_validation: true
+    tts_summaries: true
+    require_approval_for:
+      - file_deletion
+      - git_push
+      - npm_publish
+      - docker_rm
+
+# ==============================================================================
+# TTS CONFIGURATION (Cross-Platform)
+# ==============================================================================
+tts:
+  linux:
+    primary: "xtts-v2"
+    fallback: "piper"
+    voice_primary: "de_DE-thorsten-high"
+    voice_fallback: "de_DE-eva_k"
+    hardware_tier:
+      high: "xtts-v2"
+      m_high: "xtts-v2"
+      m: "piper"
+      s: "piper"
+  
+  macos:
+    engine: "siri"
+    voice: "Anna"
+    language: "de-DE"
+  
+  windows:
+    primary: "edge-tts"
+    fallback: "sapi5"
+    voice: "de-DE-ConradNeural"
+    # Only use if quality matches Siri
+    quality_threshold: "premium"
+
+# ==============================================================================
+# STT CONFIGURATION
+# ==============================================================================
+stt:
+  engine: "faster-whisper"
+  model: "large-v3"
+  language: "de"
+  vad: "silero"
+  push_to_talk_key: "F12"
+  continuous_listening: true

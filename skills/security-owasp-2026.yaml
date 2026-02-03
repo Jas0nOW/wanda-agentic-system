@@ -1,0 +1,67 @@
+# Security OWASP 2026
+# Web application security best practices
+
+name: security-owasp-2026
+version: 1.0.0
+target_agents: [audit]
+description: |
+  OWASP Top 10 2026 security patterns.
+  Focus on modern web vulnerabilities and mitigations.
+
+rules:
+  - ALWAYS validate input on server side (never trust client)
+  - Use parameterized queries / ORM for database access
+  - Implement CSRF protection with tokens
+  - Use Content-Security-Policy headers
+  - Sanitize all user-generated content for XSS
+  - Implement rate limiting on all endpoints
+  - Use secure session management
+  - Enable HTTPS everywhere
+
+vulnerabilities:
+  injection:
+    description: "SQL, NoSQL, OS, LDAP injection"
+    mitigation: |
+      // ✅ Safe - Parameterized
+      await db.user.findFirst({ where: { id: userId } })
+      
+      // ❌ Unsafe - String concatenation
+      // `SELECT * FROM users WHERE id = ${userId}`
+  
+  xss:
+    description: "Cross-Site Scripting"
+    mitigation: |
+      // ✅ React escapes by default
+      <div>{userContent}</div>
+      
+      // ❌ Never use dangerouslySetInnerHTML with user input
+  
+  csrf:
+    description: "Cross-Site Request Forgery"
+    mitigation: |
+      // Use Next.js server actions (built-in CSRF protection)
+      // Or add CSRF token to forms
+  
+  auth:
+    description: "Broken Authentication"
+    mitigation: |
+      // Use established auth libraries (next-auth, clerk)
+      // Implement MFA
+      // Use secure password hashing (bcrypt, argon2)
+
+headers:
+  - "Content-Security-Policy: default-src 'self'"
+  - "X-Frame-Options: DENY"
+  - "X-Content-Type-Options: nosniff"
+  - "Referrer-Policy: strict-origin-when-cross-origin"
+  - "Permissions-Policy: camera=(), microphone=()"
+
+checklist:
+  - "Input validation on all endpoints"
+  - "Output encoding for XSS prevention"
+  - "Authentication and session management"
+  - "Access control enforcement"
+  - "Security headers configured"
+  - "Sensitive data encrypted"
+  - "Dependencies up to date"
+  - "Error handling without info leakage"

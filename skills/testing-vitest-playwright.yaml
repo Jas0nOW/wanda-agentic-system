@@ -1,0 +1,35 @@
+# Testing with Vitest + Playwright
+# Modern testing patterns
+
+name: testing-vitest-playwright
+version: 1.0.0
+target_agents: [audit]
+description: Testing best practices with Vitest and Playwright.
+
+rules:
+  - Write tests before fixing bugs
+  - Use describe/it structure
+  - Mock external dependencies
+  - Test edge cases
+  - Use Playwright for E2E
+
+patterns:
+  unit_test: |
+    import { describe, it, expect, vi } from 'vitest'
+    
+    describe('formatDate', () => {
+      it('formats date correctly', () => {
+        expect(formatDate(new Date('2026-01-01'))).toBe('Jan 1, 2026')
+      })
+    })
+  
+  e2e_test: |
+    import { test, expect } from '@playwright/test'
+    
+    test('user can login', async ({ page }) => {
+      await page.goto('/login')
+      await page.fill('[name="email"]', 'test@example.com')
+      await page.fill('[name="password"]', 'password')
+      await page.click('button[type="submit"]')
+      await expect(page).toHaveURL('/dashboard')
+    })

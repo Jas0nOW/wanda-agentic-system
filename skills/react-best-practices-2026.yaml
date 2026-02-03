@@ -1,0 +1,47 @@
+# React Best Practices 2026
+# SOTA patterns for production-grade UIs
+
+name: react-best-practices-2026
+version: 1.0.0
+target_agents: [frontend-ui-ux, atlas]
+description: |
+  SOTA React 19 patterns for production-grade UIs.
+  Focuses on Server Components, Suspense, and modern data fetching.
+
+rules:
+  - ALWAYS use Server Components by default (no 'use client' unless needed)
+  - NEVER use useEffect for data fetching (use server actions or use())
+  - Use Suspense boundaries for ALL async operations
+  - Use Zod for form validation
+  - Prefer shadcn/ui components over custom implementations
+  - Use React.memo only with profiler evidence
+  - Implement proper error boundaries
+  - Use the use() hook for promises in client components
+
+patterns:
+  data_fetching: |
+    // Server Component (default)
+    async function UserList() {
+      const users = await db.user.findMany();
+      return <ul>{users.map(u => <UserCard key={u.id} user={u} />)}</ul>;
+    }
+  
+  form_handling: |
+    // Server Action
+    async function createUser(formData: FormData) {
+      'use server';
+      const data = userSchema.parse(Object.fromEntries(formData));
+      await db.user.create({ data });
+      revalidatePath('/users');
+    }
+  
+  suspense_pattern: |
+    <Suspense fallback={<Skeleton />}>
+      <UserList />
+    </Suspense>
+
+anti_patterns:
+  - "useEffect for data fetching"
+  - "prop drilling beyond 2 levels"
+  - "inline styles in production"
+  - "anonymous functions in JSX without useCallback"

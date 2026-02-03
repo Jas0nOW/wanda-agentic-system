@@ -2,48 +2,93 @@
 
 > **A Hybrid AI Operating System combining Local Voice Intelligence with Cloud Agentic Power.**
 
-[![Version](https://img.shields.io/badge/version-1.0.3-blue)](https://github.com/jas0nOW/wanda-agentic-system)
+[![Version](https://img.shields.io/badge/version-1.0.4-blue)](https://github.com/jas0nOW/wanda-agentic-system)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ## Overview
 
-WANDA (Workspace-Aware Neural Development Assistant) is a **Doppel-Wanda System**:
+WANDA (Workspace-Aware Neural Development Assistant) is a **Sovereign AI OS**:
 
-1. **🟢 Local Gateway**: Voice Activity Detection, Speech-to-Text, Prompt Refinement (Ollama), Safety Checks, TTS.
-2. **🔵 Cloud Core**: 17 Specialized Agents powered by Claude 4.5 & Gemini 3 via OpenCode.
+- **17 Specialized Agents** powered by Claude 4.5, Gemini 3, Codex 5.2
+- **9 Layer Architecture** (Brainstorming → Deploy)
+- **Voice-First Interface** with Wanda-Mode (full autonomy)
+- **Docker MCP Gateway** with 18 servers
 
 ---
 
-## 🌟 Quick Start (AI Installer - EMPFOHLEN)
-
-Der **personalisierte Installer** fragt nach deinem Namen, Arbeitsordner und Sprache - so funktioniert WANDA sofort für dich!
+## 🌟 Quick Start
 
 ```bash
 # One-line install (RECOMMENDED)
 curl -fsSL https://raw.githubusercontent.com/jas0nOW/wanda-agentic-system/main/install.sh | bash
 ```
 
-Oder manuell:
+After installation:
 
+```bash
+wanda              # Start WANDA (shows banner, opens AI CLI)
+wanda -d           # Debug mode (check for errors)
+wanda update       # Check and apply updates
+wanda status       # Show system status
+wanda voice        # Start voice assistant
+```
+
+---
+
+## 🤖 AI Installation (Für KI-Assistenten)
+
+Die KI kann WANDA mit folgendem Workflow installieren:
+
+### Step 1: Repo klonen
 ```bash
 git clone https://github.com/jas0nOW/wanda-agentic-system.git ~/.wanda-system
 cd ~/.wanda-system
+```
+
+### Step 2: Installer ausführen
+```bash
 chmod +x install.sh
 ./install.sh
 ```
 
-> **📖 Vollständige Anleitung**: [docs/INSTALLATION.md](docs/INSTALLATION.md)
+### Step 3: Bei Problemen
+```bash
+wanda -d   # Debug mode - zeigt Fehler nach 10/20 Sek
+```
+
+### Edge Cases & Fixes
+
+| Problem | Lösung |
+|---------|--------|
+| **Freeze beim Start** | `npm cache clean --force && npm install -g @anthropic-ai/opencode` |
+| **Voice Assistant freeze** | `pip uninstall torch && pip install torch --index-url https://download.pytorch.org/whl/cpu` |
+| **Permission denied** | `sudo chown -R $USER:$USER ~/.wanda-system` |
+| **API errors** | API-Keys in `~/.gemini/settings.json` prüfen |
+| **Missing packages** | `pip install -r requirements.txt` |
+| **MCP not connecting** | Docker starten: `systemctl start docker` |
+
+### Dateien die die KI kennen sollte
+
+| Datei | Zweck |
+|-------|-------|
+| `install.sh` | Hauptinstaller (interaktiv) |
+| `bin/wanda` | CLI wrapper |
+| `scripts/update.sh` | Update system |
+| `config/agents.yaml` | Agent-Konfiguration |
+| `config/voice_commands.yaml` | Voice-Kommandos |
+| `~/.gemini/GEMINI.md` | System prompt |
+| `~/.gemini/settings.json` | MCP & API keys |
 
 ---
 
 ## System Requirements
 
-| Tier | RAM | Recommended Model | Capability |
-|---|---|---|---|
-| **S** | < 8GB | `qwen3:8b` | Basic routing |
-| **M** | 16GB | `heretic-12b` | Voice interaction |
-| **MH** | 50GB+ | `brainstorm-36b` | Full Gateway (Your Setup) |
-| **G** | 64GB+ | `deepseek-v4` | Local autonomy |
+| Profile | VRAM | RAM | Recommended Model |
+|---------|------|-----|-------------------|
+| **S** | 0-4GB | 8-16GB | `llama-3.2:3b` |
+| **M** | 6-8GB | 16-32GB | `gemma-3:9b` |
+| **M-High** | 10-12GB | 32-48GB | `qwen-2.5-coder:14b` |
+| **High** | 16+GB | 48+GB | `deepseek-r1:32b` |
 
 ---
 
@@ -61,104 +106,59 @@ chmod +x install.sh
 └─────────────────────┬───────────────────────────────────┘
                       ▼
 ┌─────────────────────────────────────────────────────────┐
-│               WANDA CLOUD CORE                          │
-│  OpenCode + oh-my-opencode (Leader)                     │
-│  17 Agents: Architect, Developer, Oracle, ...           │
-│  Claude 4.5 / Gemini 3                                  │
+│               WANDA CLOUD CORE (17 Agents)              │
+│  Sisyphus (Orchestrator) → Prometheus → Atlas → Audit  │
+│  Claude 4.5 / Gemini 3 / Codex 5.2                     │
 └─────────────────────────────────────────────────────────┘
 ```
 
+### 9 Layers
+1. Brainstorming → 2. Planning → 3. Architecture → 4. Development
+5. Audit → 6. Refactor → 7. Testing → 8. User-Approval → 9. Deploy
+
 ---
 
-## MCP Server (Docker Hub)
-
-WANDA nutzt Docker als zentralen MCP Hub mit 8+ Servern:
+## MCP Servers (Docker Hub)
 
 | Server | Zweck |
 |--------|-------|
-| `MCP_DOCKER` | Gateway Hub |
-| `filesystem` | Datei-Operationen |
-| `memory` | Wissens-Speicher |
 | `github` | Repository-Ops |
 | `brave` | Web-Suche |
 | `playwright` | Browser-Automation |
-| `sequential-thinking` | Step-by-Step Reasoning |
-| `context7` | Library Documentation |
-
-> Der Installer konfiguriert alle MCP Server automatisch!
-
----
-
-## Directory Structure
-
-```
-wanda-agentic-system/
-├── install.sh              # 🌟 Personalized Installer
-├── docs/
-│   ├── INSTALLATION.md     # Full setup guide
-│   └── WANDA_MASTER_BLUEPRINT_DE.md
-├── prompts/
-│   ├── system/             # OLLAMA_SYSTEM.md, TERMINAL_POLICY.md
-│   └── context/            # MCP_TOOL_MAPPING.md, AGENT_REGISTRY.md
-├── templates/
-│   └── GEMINI.md.template  # Personalized system prompt
-├── mcp-servers/
-│   └── settings.json.template
-├── wanda_local/            # Voice Gateway (Python)
-├── wanda_cloud/            # OpenCode profiles
-├── scripts/                # diagnostics.sh, deploy-hook.sh
-└── tests/                  # Smoke tests
-```
-
----
-
-## Profiles
-
-- **Stable** (Daily Driver): `oh-my-opencode` only. Minimal conflicts.
-- **Experimental** (Lab): Multi-agent swarm with orchestrator.
-
-Switch profiles:
-```bash
-# Use stable
-ln -sf ~/.wanda-system/wanda_cloud/profiles/stable/opencode.jsonc ~/.config/opencode/opencode.jsonc
-
-# Use experimental
-ln -sf ~/.wanda-system/wanda_cloud/profiles/experimental/opencode.jsonc ~/.config/opencode/opencode.jsonc
-```
+| `context7` | Library Docs |
+| `supermemory` | Persistent Context |
+| `filesystem` | Datei-Operationen |
 
 ---
 
 ## Voice Commands
 
-Start the Voice Gateway:
 ```bash
-cd ~/.wanda-system/wanda_local && source venv/bin/activate && python main.py
+wanda voice   # Start Voice Assistant
 ```
 
-Commands:
-- **"Hey Wanda"**: Wake word
-- **"Guten Morgen"**: Get status briefing
-- **Any voice input**: Transcribed → Refined → Routed to agent
+| Command | Action |
+|---------|--------|
+| "Hallo Wanda" | Wake/Resume |
+| "Bestätige" | Send prompt |
+| "Stop" | Cancel task |
+| "Vorlesen" | Read back |
+| "Wanda Modus" | Full autonomy |
 
 ---
 
-## Telegram Bot
+## Debug Mode
 
 ```bash
-# Token in .env
-echo 'WANDA_TELEGRAM_BOT_TOKEN="your_token"' > ~/.wanda-system/wanda_local/.env
-
-# Start
-python ~/.wanda-system/wanda_local/telegram_bot.py
+wanda -d
 ```
 
----
-
-## Safety
-
-- **Denylist**: `rm -rf /`, `cat /etc/shadow` → BLOCKED
-- **Confirmlist**: `git push --force`, `sudo` → Requires confirmation
-- **Secrets**: `.env` files are never committed
+- Startet WANDA mit Error-Monitoring
+- Prüft nach 10 und 20 Sekunden
+- Bei Problemen: Diagnose-Optionen
+  - "Ja" - Läuft
+  - "Freezed" - Package-Fix Anleitung
+  - "Eigene Antwort" - Problem-Analyse
 
 ---
 
@@ -168,4 +168,4 @@ MIT © 2026
 
 ---
 
-*WANDA - Sovereign AI Operating System v1.0.1*
+*WANDA v1.0.4 - Sovereign AI Operating System*

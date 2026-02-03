@@ -16,7 +16,7 @@ leader:
 agents:
 
   orchestrator:
-    name: "Orchestrator"
+    name: "Orchestrator1"
     symbol: "🎯"
     layer: 2
     model: "kimi-code-k2p5"
@@ -24,7 +24,7 @@ agents:
     triggers: ["always_active", "/plan", "/ralph-loop"]
     
   brainstormer:
-    name: "Brainstormer"
+    name: "Brainstormer1"
     symbol: "💡"
     layer: 1
     model: "kimi-k2.5-free"
@@ -32,7 +32,7 @@ agents:
     triggers: ["@brainstormer", "brainstorm", "ideas"]
     
   librarian:
-    name: "Librarian"
+    name: "Librarian1"
     symbol: "📚"
     layer: 4
     model: "gemini-3-flash"
@@ -40,7 +40,7 @@ agents:
     triggers: ["@librarian", "remember", "research"]
     
   architect:
-    name: "Architect"
+    name: "Architect1"
     symbol: "🏗️"
     layer: 3
     model: "kimi-k2.5-free"
@@ -48,7 +48,7 @@ agents:
     triggers: ["@architect", "design", "plan"]
     
   developer:
-    name: "Developer"
+    name: "Developer1"
     symbol: "👨‍💻"
     layer: 3
     model: "gemini-3-flash"
@@ -56,7 +56,7 @@ agents:
     triggers: ["@dev", "code", "implement"]
     
   audit:
-    name: "Audit"
+    name: "Audit1"
     symbol: "🔍"
     layer: 3
     model: "gemini-3-flash"
@@ -64,7 +64,7 @@ agents:
     triggers: ["@audit", "@fix", "review", "debug"]
     
   writer:
-    name: "Writer"
+    name: "Writer1"
     symbol: "✍️"
     layer: 4
     model: "gemini-3-flash"
