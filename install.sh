@@ -479,6 +479,12 @@ install_agents() {
     if [ -f "$INSTALL_DIR/wanda_cloud/profiles/stable/opencode.jsonc" ]; then
         ln -sf "$INSTALL_DIR/wanda_cloud/profiles/stable/opencode.jsonc" "$OPENCODE_CONFIG/opencode.jsonc"
         echo "  ✓ OpenCode profile symlinked"
+        
+        # Enforce Single Profile Policy
+        if [ -f "$OPENCODE_CONFIG/opencode.json" ]; then
+            rm "$OPENCODE_CONFIG/opencode.json"
+            echo "  ✓ Verified Single Profile (removed legacy opencode.json)"
+        fi
     fi
     
     # Copy/process GEMINI.md

@@ -11,21 +11,21 @@ leader:
 agents:
 
   sisyphus:
-    name: "Sisyphus"
+    name: "Sisyphus1"
     symbol: "🎯"
     layer: 2
     model: "{{ORCHESTRATOR_MODEL}}"
     triggers: ["always_active", "/plan"]
     
   prometheus:
-    name: "Prometheus"
+    name: "Prometheus1"
     symbol: "🏗️"
     layer: 3
     model: "{{ARCHITECT_MODEL}}"
     triggers: ["design", "architecture"]
     
   atlas:
-    name: "Atlas"
+    name: "Atlas1"
     symbol: "👨‍💻"
     layer: 3
     model: "{{DEVELOPER_MODEL}}"
