@@ -18,7 +18,7 @@
 *   `micode@latest`
 *   `opencode-agent-skills@latest`
 *   `opencode-orchestrator@latest`
- *   `opencode-handoff@latest`
+*   `opencode-handoff@latest`
 
 ---
 
