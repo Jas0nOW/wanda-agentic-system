@@ -24,6 +24,12 @@ python3 setup.py
 ./wanda
 ```
 
+Wayland safe startup:
+
+```bash
+wanda voice --simple
+```
+
 ## 📋 Voice Commands
 
 | Command | Action |
@@ -48,6 +54,11 @@ python3 setup.py
 
 ### Optional
 - [Ollama](https://ollama.com/) for local LLM
+
+### Wayland Notes
+
+- `wanda voice` uses a Wayland-aware launcher.
+- If GTK or evdev is missing, it falls back to a terminal-based toggle mode.
 
 ## 📦 Installation
 

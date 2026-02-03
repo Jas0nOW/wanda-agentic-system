@@ -29,8 +29,10 @@ After installation:
 wanda              # Start WANDA (shows banner, opens AI CLI)
 wanda -d           # Debug mode (check for errors)
 wanda update       # Check and apply updates
+wanda update-auto  # Auto-update without prompts
 wanda status       # Show system status
 wanda voice        # Start voice assistant
+wanda voice --simple  # Voice without GUI (Wayland safe)
 ```
 
 ---
@@ -169,3 +171,17 @@ MIT © 2026
 ---
 
 *WANDA v1.0.5 - Sovereign AI Operating System*
+
+---
+
+## Desktop App & Compatibility
+
+- Linux (X11/Wayland): use `wanda voice` or the generated `Wanda.desktop` launcher in `wanda-voice/`.
+- Windows: use `wanda_voice.bat` (runs via WSL).
+- macOS: run `wanda voice --simple` from Terminal for the most reliable startup.
+
+## Auto-Update & Banner Style
+
+- Auto-update on launch: `WANDA_AUTO_UPDATE=1 wanda`
+- Banner style: `WANDA_BANNER_STYLE=animated|minimal wanda`
+- One-off animated banner: `WANDA_BANNER_ANIMATED=1 wanda`
