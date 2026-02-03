@@ -48,7 +48,7 @@ switch_stable() {
     ln -sf "$PROFILES_DIR/stable/opencode.jsonc" "$OPENCODE_CONFIG"
     echo -e "${GREEN}✓ Switched to STABLE profile${NC}"
     echo ""
-    echo "  Plugins: oh-my-opencode, micode, envsitter-guard, ..."
+    echo "  Plugins: oh-my-opencode, micode, ..."
     echo "  Permissions: bash=ask, edit=allow, read=allow"
     echo ""
     echo "  Restart opencode to apply changes."
