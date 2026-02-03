@@ -19,34 +19,52 @@ MAGENTA='\033[0;35m'
 NC='\033[0m'
 BOLD='\033[1m'
 
-# WANDA Banner (Gemini-style)
+# WANDA Banner - Enhanced with colors and animations
 print_banner() {
-    echo -e "${MAGENTA}"
-    echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║                                                              ║"
-    echo "║     ██╗    ██╗ █████╗ ███╗   ██╗██████╗  █████╗             ║"
-    echo "║     ██║    ██║██╔══██╗████╗  ██║██╔══██╗██╔══██╗            ║"
-    echo "║     ██║ █╗ ██║███████║██╔██╗ ██║██║  ██║███████║            ║"
-    echo "║     ██║███╗██║██╔══██║██║╚██╗██║██║  ██║██╔══██║            ║"
-    echo "║     ╚███╔███╔╝██║  ██║██║ ╚████║██████╔╝██║  ██║            ║"
-    echo "║      ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝            ║"
-    echo "║                                                              ║"
-    echo "║           ${CYAN}Workspace-Aware Neural Development Assistant${MAGENTA}       ║"
-    echo "║                      ${GREEN}v${VERSION}${MAGENTA} - Sovereign AI OS                   ║"
-    echo "║                                                              ║"
-    echo "╚══════════════════════════════════════════════════════════════╝"
-    echo -e "${NC}"
+    # Use Python banner generator if available
+    if [ -f "$INSTALL_DIR/scripts/banner.py" ] && command -v python3 &>/dev/null; then
+        python3 "$INSTALL_DIR/scripts/banner.py" --scheme cyberpunk 2>/dev/null
+    else
+        # Fallback to static banner
+        echo -e "${MAGENTA}"
+        echo "╔══════════════════════════════════════════════════════════════╗"
+        echo "║                                                              ║"
+        echo "║     ██╗    ██╗ █████╗ ███╗   ██╗██████╗  █████╗             ║"
+        echo "║     ██║    ██║██╔══██╗████╗  ██║██╔══██╗██╔══██╗            ║"
+        echo "║     ██║ █╗ ██║███████║██╔██╗ ██║██║  ██║███████║            ║"
+        echo "║     ██║███╗██║██╔══██║██║╚██╗██║██║  ██║██╔══██║            ║"
+        echo "║     ╚███╔███╔╝██║  ██║██║ ╚████║██████╔╝██║  ██║            ║"
+        echo "║      ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝            ║"
+        echo "║                                                              ║"
+        echo "║           ${CYAN}Workspace-Aware Neural Development Assistant${MAGENTA}       ║"
+        echo "║                      ${GREEN}v${VERSION}${MAGENTA} - Sovereign AI OS                   ║"
+        echo "║                                                              ║"
+        echo "╚══════════════════════════════════════════════════════════════╝"
+        echo -e "${NC}"
+    fi
+}
+
+# Animated banner for special occasions
+print_banner_animated() {
+    if [ -f "$INSTALL_DIR/scripts/banner.py" ] && command -v python3 &>/dev/null; then
+        python3 "$INSTALL_DIR/scripts/banner.py" --scheme cyberpunk --animated 2>/dev/null
+    else
+        print_banner
+    fi
 }
 
 print_help() {
     print_banner
     echo "Commands:"
-    echo "  wanda              - Start WANDA (wraps OpenCode)"
-    echo "  wanda -d, --debug  - Debug mode (check for errors)"
-    echo "  wanda update       - Check and apply updates"
-    echo "  wanda status       - Show system status"
-    echo "  wanda voice        - Start voice assistant"
-    echo "  wanda help         - Show this help"
+    echo "  wanda                 - Start WANDA (wraps OpenCode)"
+    echo "  wanda -d, --debug     - Debug mode (check for errors)"
+    echo "  wanda update          - Check and apply updates"
+    echo "  wanda update-auto     - Auto-update without prompts"
+    echo "  wanda status          - Show system status"
+    echo "  wanda voice           - Start voice assistant"
+    echo "  wanda voice --simple  - Voice without GUI (Wayland safe)"
+    echo "  wanda voice --status  - Check voice environment"
+    echo "  wanda help            - Show this help"
     echo ""
 }
 
@@ -193,27 +211,37 @@ cmd_debug() {
     esac
 }
 
-# Start WANDA (wraps OpenCode with WANDA branding)
+# Start WANDA Agent System + Voice Assistant
 cmd_start() {
     check_install || return 1
-    
+
     print_banner
-    
+
     # Silent update check
     silent_update_check
-    
-    echo -e "${CYAN}Starting WANDA...${NC}"
+
+    echo -e "${CYAN}Starting WANDA Agent System + Voice Assistant...${NC}"
     echo ""
-    
+
+    # Start Voice Assistant in background if available
+    if [ -d "$INSTALL_DIR/wanda-voice" ] && [ -f "$INSTALL_DIR/wanda-voice/venv/bin/activate" ]; then
+        echo -e "${CYAN}Starting Voice Assistant in background...${NC}"
+        (
+            cd "$INSTALL_DIR/wanda-voice"
+            source venv/bin/activate
+            nohup python voice_to_text.py > /tmp/wanda-voice.log 2>&1 &
+            echo $! > /tmp/wanda-voice.pid
+        )
+        echo -e "${GREEN}✓ Voice Assistant started${NC}"
+        echo ""
+    fi
+
     # Launch OpenCode or Gemini with WANDA environment
     export WANDA_ACTIVE=1
     export WANDA_VERSION="$VERSION"
-    
-    # Fix for MiCode auth error (restricted key)
-    unset ANTHROPIC_API_KEY
-    
+
     if command -v opencode &>/dev/null; then
-        exec opencode --model google/antigravity-gemini-3-flash "$@"
+        exec opencode
     elif command -v gemini &>/dev/null; then
         exec gemini
     else
@@ -231,6 +259,18 @@ cmd_update() {
     check_install || return 1
     if [ -f "$INSTALL_DIR/scripts/update.sh" ]; then
         "$INSTALL_DIR/scripts/update.sh" prompt
+    else
+        echo "Update script not found."
+    fi
+}
+
+cmd_update_auto() {
+    check_install || return 1
+    print_banner
+    echo -e "${CYAN}WANDA Auto-Update Mode${NC}"
+    echo ""
+    if [ -f "$INSTALL_DIR/scripts/update.sh" ]; then
+        "$INSTALL_DIR/scripts/update.sh" auto
     else
         echo "Update script not found."
     fi
@@ -266,12 +306,23 @@ cmd_voice() {
     print_banner
     echo -e "${CYAN}Starting Voice Assistant...${NC}"
     
+    # Detect session type
+    SESSION_TYPE=${XDG_SESSION_TYPE:-unknown}
+    echo -e "${CYAN}Session Type: $SESSION_TYPE${NC}"
+    
     if [ -d "$INSTALL_DIR/wanda-voice" ]; then
         cd "$INSTALL_DIR/wanda-voice"
         if [ -d "venv" ]; then
             source venv/bin/activate
         fi
-        python voice_to_text.py
+        
+        # Use new launcher with Wayland support
+        if [ -f "launcher.py" ]; then
+            python3 launcher.py "$@"
+        else
+            # Fallback to legacy mode
+            python3 voice_to_text.py
+        fi
     elif [ -d "$INSTALL_DIR/wanda_local" ]; then
         cd "$INSTALL_DIR/wanda_local"
         if [ -d "venv" ]; then
@@ -294,6 +345,9 @@ case "${1:-}" in
         ;;
     update)
         cmd_update
+        ;;
+    update-auto)
+        cmd_update_auto
         ;;
     status)
         cmd_status

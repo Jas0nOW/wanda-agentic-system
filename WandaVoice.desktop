@@ -1,0 +1,28 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=WANDA Voice
+Comment=Sovereign AI Voice Assistant - Wayland Compatible
+Exec=/home/jannis/.wanda-system/wanda-voice/desktop_launcher.sh
+Icon=/home/jannis/.wanda-system/wanda-icon.png
+Terminal=false
+Categories=Utility;AI;
+Keywords=AI;Voice;Assistant;Wanda;
+StartupNotify=true
+StartupWMClass=wanda-voice
+Actions=Status;Debug;Update;
+
+[Desktop Action Status]
+Name=Check Status
+Exec=/home/jannis/.local/bin/wanda voice --status
+Terminal=true
+
+[Desktop Action Debug]
+Name=Debug Mode
+Exec=/home/jannis/.local/bin/wanda -d
+Terminal=true
+
+[Desktop Action Update]
+Name=Check for Updates
+Exec=/home/jannis/.local/bin/wanda update
+Terminal=true

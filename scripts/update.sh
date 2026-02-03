@@ -110,7 +110,41 @@ silent_check() {
     fi
 }
 
-# Main
+auto_update() {
+    echo -e "${BLUE}WANDA Auto-Update Mode${NC}"
+    echo ""
+    
+    LOCAL_VERSION=$(get_local_version)
+    REMOTE_VERSION=$(get_remote_version)
+    
+    echo "  Local:  v$LOCAL_VERSION"
+    echo "  Remote: v$REMOTE_VERSION"
+    
+    if version_gt "$REMOTE_VERSION" "$LOCAL_VERSION"; then
+        echo -e "${YELLOW}🔄 Auto-updating WANDA...${NC}"
+        apply_update
+        echo ""
+        echo -e "${GREEN}✅ WANDA has been automatically updated!${NC}"
+        echo -e "${CYAN}Please restart WANDA to use the new version.${NC}"
+        return 0
+    else
+        echo -e "${GREEN}✓ WANDA is already up to date${NC}"
+        return 1
+    fi
+}
+
+check_and_auto_update() {
+    LOCAL_VERSION=$(get_local_version)
+    REMOTE_VERSION=$(get_remote_version)
+    
+    if version_gt "$REMOTE_VERSION" "$LOCAL_VERSION"; then
+        echo -e "${CYAN}🔄 Auto-updating WANDA v$LOCAL_VERSION → v$REMOTE_VERSION...${NC}"
+        apply_update > /dev/null 2>&1
+        return 0
+    fi
+    return 1
+}
+
 case "${1:-check}" in
     check)
         check_update
@@ -126,8 +160,14 @@ case "${1:-check}" in
     silent)
         silent_check
         ;;
+    auto)
+        auto_update
+        ;;
+    auto-silent)
+        check_and_auto_update
+        ;;
     *)
-        echo "Usage: $0 {check|update|prompt|silent}"
+        echo "Usage: $0 {check|update|prompt|silent|auto|auto-silent}"
         exit 1
         ;;
 esac
