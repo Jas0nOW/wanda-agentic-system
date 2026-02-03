@@ -1,10 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 # ==============================================================================
 # WANDA Agentic System - One-Command Installer
 # https://github.com/jas0nOW/wanda-agentic-system
 # ==============================================================================
 # PERSONALIZED INSTALLATION - Asks for user name and workspace folder
 # ==============================================================================
+# POSIX-compliant version - works with bash, zsh, dash, and other POSIX shells
 
 set -e
 
@@ -230,7 +231,9 @@ collect_user_info() {
         echo -e "   ${YELLOW}Enable Direct Answering?${NC}"
         echo "   (Simple questions like 'What's the weather?' answered by Ollama without agents)"
         read -p "   Enable Direct Answers? [Y/n]: " direct_ans
-        [[ "${direct_ans:-y}" =~ ^[Nn] ]] && OLLAMA_DIRECT_ANSWER=0
+        case "${direct_ans:-y}" in
+            [Nn]*) OLLAMA_DIRECT_ANSWER=0 ;;
+        esac
     fi
     
     echo ""
@@ -476,9 +479,9 @@ collect_user_info() {
     echo ""
     
     read -p "Is this correct? [Y/n]: " confirm
-    if [[ "${confirm:-y}" =~ ^[Nn] ]]; then
-        collect_user_info
-    fi
+    case "${confirm:-y}" in
+        [Nn]*) collect_user_info ;;
+    esac
 }
 
 # Hardware Detection & Profile Assignment
@@ -551,12 +554,26 @@ check_prereqs() {
     if [ -n "$missing" ]; then
         echo -e "${RED}Missing required tools:${missing}${NC}"
         echo "Please install them first:"
-        if [ "$OS" = "linux" ]; then
-            echo "  sudo apt install python3 python3-pip git gh"
-            echo "  (For gh: see https://github.com/cli/cli/blob/trunk/docs/install_linux.md)"
-        elif [ "$OS" = "macos" ]; then
-            echo "  brew install python3 git gh"
-        fi
+        case "$OS" in
+            linux)
+                if command -v apt-get >/dev/null 2>&1; then
+                    echo "  sudo apt install python3 python3-pip git gh"
+                elif command -v dnf >/dev/null 2>&1; then
+                    echo "  sudo dnf install python3 python3-pip git gh"
+                elif command -v pacman >/dev/null 2>&1; then
+                    echo "  sudo pacman -S python python-pip git github-cli"
+                else
+                    echo "  Install python3, pip, git, and GitHub CLI using your package manager"
+                fi
+                echo "  (For gh: see https://github.com/cli/cli/blob/trunk/docs/install_linux.md)"
+                ;;
+            macos)
+                echo "  brew install python3 git gh"
+                ;;
+            *)
+                echo "  Install python3, pip, git, and GitHub CLI"
+                ;;
+        esac
         exit 1
     fi
     
@@ -620,13 +637,19 @@ custom_selection() {
     INSTALL_TELEGRAM=0
     
     read -p "Install Agent System? [Y/n]: " ans
-    [[ "${ans:-y}" =~ ^[Yy] ]] && INSTALL_AGENTS=1
+    case "${ans:-y}" in
+        [Yy]*) INSTALL_AGENTS=1 ;;
+    esac
     
     read -p "Install Voice Assistant? [Y/n]: " ans
-    [[ "${ans:-y}" =~ ^[Yy] ]] && INSTALL_VOICE=1
+    case "${ans:-y}" in
+        [Yy]*) INSTALL_VOICE=1 ;;
+    esac
     
     read -p "Install Telegram Bot? [y/N]: " ans
-    [[ "$ans" =~ ^[Yy] ]] && INSTALL_TELEGRAM=1
+    case "$ans" in
+        [Yy]*) INSTALL_TELEGRAM=1 ;;
+    esac
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -790,20 +813,43 @@ install_voice() {
     
     cd "$VOICE_DIR"
     
-    # Install system dependencies
+    # Install system dependencies (OS-specific)
     echo -e "${CYAN}Installing system dependencies...${NC}"
-    sudo apt-get update
-    sudo apt-get install -y \
-        libgirepository1.0-dev \
-        libgirepository-2.0-dev \
-        gcc \
-        libcairo2-dev \
-        pkg-config \
-        python3-dev \
-        gir1.2-gtk-3.0 \
-        portaudio19-dev \
-        libportaudio2 \
-        2>/dev/null || echo -e "${YELLOW}Some system packages may already be installed${NC}"
+    case "$OS" in
+        linux)
+            if command -v apt-get >/dev/null 2>&1; then
+                sudo apt-get update
+                sudo apt-get install -y \
+                    libgirepository1.0-dev \
+                    libgirepository-2.0-dev \
+                    gcc \
+                    libcairo2-dev \
+                    pkg-config \
+                    python3-dev \
+                    gir1.2-gtk-3.0 \
+                    portaudio19-dev \
+                    libportaudio2 \
+                    2>/dev/null || echo -e "${YELLOW}Some system packages may already be installed${NC}"
+            elif command -v dnf >/dev/null 2>&1; then
+                sudo dnf install -y gcc cairo-devel pkgconfig python3-devel portaudio-devel || echo -e "${YELLOW}Some packages may already be installed${NC}"
+            elif command -v pacman >/dev/null 2>&1; then
+                sudo pacman -S --noconfirm gcc cairo pkgconf python portaudio || echo -e "${YELLOW}Some packages may already be installed${NC}"
+            else
+                echo -e "${YELLOW}Could not detect package manager. Please install dependencies manually.${NC}"
+            fi
+            ;;
+        macos)
+            if command -v brew >/dev/null 2>&1; then
+                brew install pkg-config portaudio || echo -e "${YELLOW}Some packages may already be installed${NC}"
+            else
+                echo -e "${YELLOW}Homebrew not found. Install from https://brew.sh${NC}"
+                echo -e "${YELLOW}Voice Assistant may not work without portaudio${NC}"
+            fi
+            ;;
+        *)
+            echo -e "${YELLOW}Unknown OS. Please install dependencies manually.${NC}"
+            ;;
+    esac
     
     # Create venv if not exists
     if [ ! -d "venv" ]; then
@@ -847,10 +893,13 @@ install_telegram() {
     echo -e "${YELLOW}Setting up Telegram Bot...${NC}"
     
     read -p "Do you have a Telegram Bot token? [y/N]: " has_token
-    if [[ ! "$has_token" =~ ^[Yy] ]]; then
-        echo "  Skipping Telegram setup. Get a token from @BotFather later."
-        return
-    fi
+    case "$has_token" in
+        [Yy]*) ;;
+        *)
+            echo "  Skipping Telegram setup. Get a token from @BotFather later."
+            return
+            ;;
+    esac
     
     read -p "Enter your Telegram Bot Token: " TELEGRAM_TOKEN
     
@@ -955,7 +1004,12 @@ setup_mcp() {
   }
 }
 EOF
-                sed -i "s|\$HOME|$HOME|g" "$GEMINI_CONFIG/settings.json"
+                # Cross-platform sed (macOS needs -i '', Linux needs just -i)
+                if [ "$OS" = "macos" ]; then
+                    sed -i '' "s|\$HOME|$HOME|g" "$GEMINI_CONFIG/settings.json"
+                else
+                    sed -i "s|\$HOME|$HOME|g" "$GEMINI_CONFIG/settings.json"
+                fi
                 
                 MCP_INSTALLED=1
                 echo -e "${GREEN}✓ npx MCP fallback configured${NC}"
@@ -970,8 +1024,9 @@ EOF
         USE_DOCKER_MCP=0
         
         read -p "   Setup npx-based MCP servers? [Y/n]: " ans
-        if [[ "${ans:-y}" =~ ^[Yy] ]]; then
-            cat > "$GEMINI_CONFIG/settings.json" << 'EOF'
+        case "${ans:-y}" in
+            [Yy]*)
+                cat > "$GEMINI_CONFIG/settings.json" << 'EOF'
 {
   "mcpServers": {
     "context7": {
@@ -981,11 +1036,13 @@ EOF
   }
 }
 EOF
-            MCP_INSTALLED=1
-            echo -e "${GREEN}✓ npx MCP configured${NC}"
-        else
-            MCP_INSTALLED=0
-        fi
+                MCP_INSTALLED=1
+                echo -e "${GREEN}✓ npx MCP configured${NC}"
+                ;;
+            *)
+                MCP_INSTALLED=0
+                ;;
+        esac
     fi
 }
 
