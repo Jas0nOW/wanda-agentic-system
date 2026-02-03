@@ -21,27 +21,40 @@ BOLD='\033[1m'
 
 # WANDA Banner - Enhanced with colors and animations
 print_banner() {
+    local style="${WANDA_BANNER_STYLE:-static}"
+    if [ "${WANDA_BANNER_ANIMATED:-0}" = "1" ]; then
+        style="animated"
+    fi
+
     # Use Python banner generator if available
     if [ -f "$INSTALL_DIR/scripts/banner.py" ] && command -v python3 &>/dev/null; then
-        python3 "$INSTALL_DIR/scripts/banner.py" --scheme cyberpunk 2>/dev/null
-    else
-        # Fallback to static banner
-        echo -e "${MAGENTA}"
-        echo "╔══════════════════════════════════════════════════════════════╗"
-        echo "║                                                              ║"
-        echo "║     ██╗    ██╗ █████╗ ███╗   ██╗██████╗  █████╗             ║"
-        echo "║     ██║    ██║██╔══██╗████╗  ██║██╔══██╗██╔══██╗            ║"
-        echo "║     ██║ █╗ ██║███████║██╔██╗ ██║██║  ██║███████║            ║"
-        echo "║     ██║███╗██║██╔══██║██║╚██╗██║██║  ██║██╔══██║            ║"
-        echo "║     ╚███╔███╔╝██║  ██║██║ ╚████║██████╔╝██║  ██║            ║"
-        echo "║      ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝            ║"
-        echo "║                                                              ║"
-        echo "║           ${CYAN}Workspace-Aware Neural Development Assistant${MAGENTA}       ║"
-        echo "║                      ${GREEN}v${VERSION}${MAGENTA} - Sovereign AI OS                   ║"
-        echo "║                                                              ║"
-        echo "╚══════════════════════════════════════════════════════════════╝"
-        echo -e "${NC}"
+        if [ "$style" = "animated" ]; then
+            python3 "$INSTALL_DIR/scripts/banner.py" --scheme cyberpunk --animated 2>/dev/null
+        elif [ "$style" = "minimal" ]; then
+            python3 "$INSTALL_DIR/scripts/banner.py" --scheme cyberpunk --minimal 2>/dev/null
+        else
+            python3 "$INSTALL_DIR/scripts/banner.py" --scheme cyberpunk 2>/dev/null
+        fi
+        return
     fi
+
+    # Fallback to static banner
+    echo -e "${MAGENTA}"
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║                                                              ║"
+    echo "║     ██╗    ██╗ █████╗ ███╗   ██╗██████╗  █████╗             ║"
+    echo "║     ██║    ██║██╔══██╗████╗  ██║██╔══██╗██╔══██╗            ║"
+    echo "║     ██║ █╗ ██║███████║██╔██╗ ██║██║  ██║███████║            ║"
+    echo "║     ██║███╗██║██╔══██║██║╚██╗██║██║  ██║██╔══██║            ║"
+    echo "║     ╚███╔███╔╝██║  ██║██║ ╚████║██████╔╝██║  ██║            ║"
+    echo "║      ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝            ║"
+    echo "║                                                              ║"
+    echo "║           ${CYAN}Workspace-Aware Neural Development Assistant${MAGENTA}       ║"
+    echo "║                      ${GREEN}v${VERSION}${MAGENTA} - Sovereign AI OS                   ║"
+    echo "║                                                              ║"
+    echo "║                                                              ║"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo -e "${NC}"
 }
 
 # Animated banner for special occasions
@@ -217,8 +230,14 @@ cmd_start() {
 
     print_banner
 
-    # Silent update check
-    silent_update_check
+    # Silent update check (or auto-update if enabled)
+    if [ "${WANDA_AUTO_UPDATE:-0}" = "1" ]; then
+        if [ -f "$INSTALL_DIR/scripts/update.sh" ]; then
+            "$INSTALL_DIR/scripts/update.sh" auto-silent || true
+        fi
+    else
+        silent_update_check
+    fi
 
     echo -e "${CYAN}Starting WANDA Agent System + Voice Assistant...${NC}"
     echo ""
