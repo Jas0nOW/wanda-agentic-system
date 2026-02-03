@@ -15,6 +15,13 @@ leader:
 # ══════════════════════════════════════════════════════════════════════════════
 agents:
 
+  sisyphus:
+    name: "Sisyphus (DEACTIVATED)"
+    enabled: false
+    layer: 0
+    triggers: []
+    model: "void"
+
   orchestrator:
     name: "Orchestrator"
     symbol: "🎯"
