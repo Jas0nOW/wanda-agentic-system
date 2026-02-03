@@ -1,0 +1,133 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# OH-MY-OPENCODE Configuration
+# ══════════════════════════════════════════════════════════════════════════════
+# This is the primary orchestrator plugin that coordinates the WANDA agent swarm
+# ══════════════════════════════════════════════════════════════════════════════
+
+leader:
+  name: "WANDA Leader"
+  model: "claude-sonnet-4.5"
+  prompt_file: "prompts/agents/02_sisyphus.md"  # Use Sisyphus as leader
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Agent Roster - All available agents
+# ══════════════════════════════════════════════════════════════════════════════
+agents:
+  # Layer 1: Ideation
+  brainstormer:
+    name: "Brainstormer"
+    layer: 1
+    model: "gemini-3-pro"
+    prompt_file: "prompts/agents/01_brainstormer.md"
+    triggers: ["brainstorm", "explore", "ideas", "what if"]
+    
+  # Layer 2: Orchestration (Sisyphus IS the leader)
+  
+  # Layer 3: Core
+  architect:
+    name: "Architect"
+    layer: 3
+    model: "claude-opus-4.5-thinking"
+    prompt_file: "prompts/agents/03_architect.md"
+    triggers: ["design", "architecture", "plan", "structure", "/ralph-loop phase 1"]
+    
+  software_engineer:
+    name: "Software-Engineer"
+    layer: 3
+    model: "claude-sonnet-4.5"
+    prompt_file: "prompts/agents/03_software_engineer.md"
+    triggers: ["code", "implement", "fix", "debug", "build", "/ralph-loop phase 2"]
+    
+  frontend:
+    name: "Frontend-UI-UX"
+    layer: 3
+    model: "gemini-3-pro"
+    prompt_file: "prompts/agents/03_frontend_ui_ux.md"
+    triggers: ["ui", "ux", "frontend", "design", "css", "component"]
+    
+  audit:
+    name: "Audit"
+    layer: 3
+    model: "claude-opus-4.5-thinking"
+    prompt_file: "prompts/agents/03_audit.md"
+    triggers: ["review", "audit", "security", "verify", "/ralph-loop phase 3"]
+    
+  # Layer 4: Specialist
+  oracle:
+    name: "Oracle"
+    layer: 4
+    model: "gemini-3-pro"
+    prompt_file: "prompts/agents/04_oracle.md"
+    triggers: ["research", "search", "find", "lookup"]
+    
+  writer:
+    name: "Writer"
+    layer: 4
+    model: "gemini-3-pro"
+    prompt_file: "prompts/agents/04_writer.md"
+    triggers: ["document", "readme", "docs", "explain"]
+    
+  librarian:
+    name: "Librarian"
+    layer: 4
+    model: "gemini-3-flash"
+    prompt_file: "prompts/agents/04_librarian.md"
+    triggers: ["remember", "recall", "context", "history"]
+    
+  explore:
+    name: "Explore"
+    layer: 4
+    model: "gemini-3-flash"
+    prompt_file: "prompts/agents/04_explore.md"
+    triggers: ["explore", "find files", "where is", "structure"]
+    
+  multimodal:
+    name: "Multimodal-Looker"
+    layer: 4
+    model: "gemini-3-pro"
+    prompt_file: "prompts/agents/04_multimodal_looker.md"
+    triggers: ["look at", "image", "screenshot", "visual"]
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Layer 5-7 agents (background/meta - not directly triggered)
+# ══════════════════════════════════════════════════════════════════════════════
+background_agents:
+  research:
+    prompt_file: "prompts/agents/05_research_agents.md"
+    mode: "read-only"
+    
+  continuity:
+    prompt_file: "prompts/agents/06_continuity_agents.md"
+    mode: "always-active"
+    
+  meta:
+    prompt_file: "prompts/agents/07_meta_agents.md"
+    triggers: ["/plan", "complex task"]
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Routing Rules
+# ══════════════════════════════════════════════════════════════════════════════
+routing:
+  default_agent: software_engineer
+  fallback_agent: architect
+  
+  priority:
+    # Higher number = higher priority
+    security: 10
+    architecture: 8
+    implementation: 5
+    research: 3
+    
+# ══════════════════════════════════════════════════════════════════════════════
+# Workflows
+# ══════════════════════════════════════════════════════════════════════════════
+workflows:
+  ralph_loop:
+    description: "3-Phase Autopilot: Design → Implement → Verify"
+    phases:
+      - agent: architect
+        name: "Design"
+      - agent: software_engineer
+        name: "Implement"
+      - agent: audit
+        name: "Verify"

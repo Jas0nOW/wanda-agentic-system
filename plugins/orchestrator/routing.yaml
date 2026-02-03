@@ -1,0 +1,149 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# OPENCODE-ORCHESTRATOR Configuration
+# ══════════════════════════════════════════════════════════════════════════════
+# Request classification and multi-agent routing
+# ══════════════════════════════════════════════════════════════════════════════
+
+version: "1.0"
+name: "wanda-orchestrator"
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Request Classification
+# ══════════════════════════════════════════════════════════════════════════════
+classification:
+  intents:
+    creative:
+      keywords: ["brainstorm", "explore", "idea", "what if", "creative", "design thinking"]
+      agent: brainstormer
+      priority: medium
+      
+    architecture:
+      keywords: ["design", "architecture", "plan", "structure", "system", "ADR"]
+      agent: architect
+      priority: high
+      
+    implementation:
+      keywords: ["code", "implement", "fix", "debug", "build", "write", "create"]
+      agent: software_engineer
+      priority: high
+      
+    frontend:
+      keywords: ["ui", "ux", "frontend", "css", "component", "layout", "style"]
+      agent: frontend
+      priority: medium
+      
+    security:
+      keywords: ["review", "audit", "security", "vulnerability", "check"]
+      agent: audit
+      priority: critical
+      
+    research:
+      keywords: ["research", "search", "find", "lookup", "what is", "how does"]
+      agent: oracle
+      priority: low
+      
+    documentation:
+      keywords: ["document", "readme", "docs", "explain", "describe"]
+      agent: writer
+      priority: low
+      
+    navigation:
+      keywords: ["explore", "find file", "where is", "show me", "structure"]
+      agent: explore
+      priority: low
+      
+    memory:
+      keywords: ["remember", "recall", "context", "history", "last time"]
+      agent: librarian
+      priority: medium
+      
+    visual:
+      keywords: ["image", "screenshot", "look at", "visual", "picture"]
+      agent: multimodal
+      priority: medium
+      
+    planning:
+      keywords: ["plan", "complex", "multi-step", "project", "roadmap"]
+      agent: metis
+      priority: high
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Agent Capabilities Map
+# ══════════════════════════════════════════════════════════════════════════════
+capabilities:
+  brainstormer:
+    can: [ideate, explore, compare]
+    cannot: [code, execute, modify]
+    
+  architect:
+    can: [design, plan, evaluate]
+    cannot: [implement]
+    hands_off_to: [software_engineer, audit]
+    
+  software_engineer:
+    can: [code, debug, refactor, test]
+    cannot: [deploy_production]
+    hands_off_to: [audit, writer]
+    
+  frontend:
+    can: [ui, css, components, deploy_staging]
+    hands_off_to: [audit]
+    
+  audit:
+    can: [review, analyze, report]
+    cannot: [fix_directly]
+    hands_off_to: [software_engineer]
+    
+  oracle:
+    can: [search, research, summarize]
+    cannot: [modify, execute]
+    
+  writer:
+    can: [document, explain, readme]
+    cannot: [code]
+    
+  explore:
+    can: [navigate, find, map]
+    cannot: [modify]
+    
+  librarian:
+    can: [store, retrieve, connect]
+    cannot: [modify_code]
+    
+  multimodal:
+    can: [analyze_visual, compare_screenshots, ocr]
+    cannot: [modify]
+    
+  metis:
+    can: [plan, decompose, estimate]
+    cannot: [execute]
+    hands_off_to: [architecture, software_engineer]
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Conflict Resolution
+# ══════════════════════════════════════════════════════════════════════════════
+conflict_resolution:
+  # When multiple agents could handle a request
+  rules:
+    - "Prefer specialized over generalist"
+    - "Security/audit takes priority"
+    - "Architecture before implementation"
+    - "When equal, use user history preference"
+    
+  tie_breakers:
+    - agent: architect    # For design/code ambiguity
+    - agent: software_engineer  # For general tasks
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Handoff Protocol
+# ══════════════════════════════════════════════════════════════════════════════
+handoff:
+  format: |
+    🔄 Handoff: {{from_agent}} → {{to_agent}}
+    📋 Task: {{task_summary}}
+    📎 Context: {{relevant_context}}
+    
+  required_context:
+    - files_modified
+    - decisions_made
+    - pending_questions

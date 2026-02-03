@@ -1,0 +1,75 @@
+{
+    "name": "wanda-micode",
+    "version": "1.0.0",
+    "description": "MiCode Visual GUI Configuration for WANDA",
+    "ui": {
+        "theme": "dark",
+        "primaryColor": "#7c3aed",
+        "accentColor": "#10b981",
+        "showAgentStatus": true,
+        "showTokenCount": true,
+        "showMcpStatus": true
+    },
+    "personas": {
+        "default": {
+            "name": "WANDA",
+            "avatar": "🤖",
+            "greeting": "Hallo {{USER_NAME}}! Wie kann ich dir heute helfen?"
+        },
+        "brainstormer": {
+            "name": "Brainstormer",
+            "avatar": "💡",
+            "accent": "#fbbf24"
+        },
+        "architect": {
+            "name": "Architect",
+            "avatar": "🏗️",
+            "accent": "#3b82f6"
+        },
+        "developer": {
+            "name": "Software-Engineer",
+            "avatar": "👨‍💻",
+            "accent": "#10b981"
+        },
+        "frontend": {
+            "name": "Frontend-UI-UX",
+            "avatar": "🎨",
+            "accent": "#ec4899"
+        },
+        "audit": {
+            "name": "Audit",
+            "avatar": "🔍",
+            "accent": "#ef4444"
+        },
+        "oracle": {
+            "name": "Oracle",
+            "avatar": "🔎",
+            "accent": "#8b5cf6"
+        }
+    },
+    "statusIndicators": {
+        "thinking": "⏳ Denke...",
+        "searching": "🔎 Suche...",
+        "coding": "💻 Code...",
+        "reviewing": "🔍 Review...",
+        "complete": "✅ Fertig"
+    },
+    "shortcuts": {
+        "ctrl+shift+b": "brainstorm",
+        "ctrl+shift+a": "architect",
+        "ctrl+shift+d": "developer",
+        "ctrl+shift+r": "review"
+    },
+    "agentPanel": {
+        "enabled": true,
+        "position": "right",
+        "showActiveAgents": true,
+        "showQueuedTasks": true
+    },
+    "contextPanel": {
+        "enabled": true,
+        "showFiles": true,
+        "showGitStatus": true,
+        "showMcpServers": true
+    }
+}

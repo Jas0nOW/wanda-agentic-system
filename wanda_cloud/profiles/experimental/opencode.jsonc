@@ -33,10 +33,20 @@
     // INSTRUCTIONS (All context files)
     // ──────────────────────────────────────────────────────────────────
     "instructions": [
+        "prompts/AGENT_ROSTER.md",
         "prompts/system/OPENCODE_SYSTEM.md",
         "prompts/system/TERMINAL_POLICY.md",
         "prompts/context/MCP_TOOL_MAPPING.md",
         "prompts/context/AGENT_REGISTRY.md",
+        "prompts/agents/01_brainstormer.md",
+        "prompts/agents/02_sisyphus.md",
+        "prompts/agents/03_architect.md",
+        "prompts/agents/03_software_engineer.md",
+        "prompts/agents/03_frontend_ui_ux.md",
+        "prompts/agents/03_audit.md",
+        "prompts/agents/04_oracle.md",
+        "prompts/agents/04_writer.md",
+        "prompts/agents/07_meta_agents.md",
         "docs/02_architecture/ROUTING_MAP.md",
         ".gemini/GEMINI.md"
     ],
@@ -133,13 +143,6 @@
     "compaction": {
         "auto": true,
         "prune": true
-    },
-    // ──────────────────────────────────────────────────────────────────
-    // EXPERIMENTAL FEATURES
-    // ──────────────────────────────────────────────────────────────────
-    "experimental": {
-        "planning": true,
-        "auto_context": true
     },
     "autoupdate": "notify"
 }

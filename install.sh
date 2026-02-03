@@ -325,6 +325,7 @@ install_agents() {
     # Create directories
     mkdir -p "$OPENCODE_CONFIG"
     mkdir -p "$GEMINI_CONFIG"
+    mkdir -p "$OPENCODE_CONFIG/plugins"
     
     # Copy OpenCode profiles (symlink for live updates)
     if [ -f "$INSTALL_DIR/wanda_cloud/profiles/stable/opencode.jsonc" ]; then
@@ -345,7 +346,45 @@ install_agents() {
         cp "$INSTALL_DIR/mcp-servers/settings.json.template" "$GEMINI_CONFIG/settings.json"
     fi
     
-    echo -e "${GREEN}✓ Agent System installed${NC}"
+    # ══════════════════════════════════════════════════════════════════════════
+    # PLUGIN DEPLOYMENT - Copy plugin configs to correct locations
+    # ══════════════════════════════════════════════════════════════════════════
+    echo -e "${BLUE}  Deploying plugin configurations...${NC}"
+    
+    # oh-my-opencode plugin
+    if [ -d "$INSTALL_DIR/plugins/oh-my-opencode" ]; then
+        mkdir -p "$OPENCODE_CONFIG/plugins/oh-my-opencode"
+        cp "$INSTALL_DIR/plugins/oh-my-opencode/"*.yaml "$OPENCODE_CONFIG/plugins/oh-my-opencode/" 2>/dev/null || true
+        echo "    ✓ oh-my-opencode config deployed"
+    fi
+    
+    # MiCode plugin
+    if [ -d "$INSTALL_DIR/plugins/micode" ]; then
+        mkdir -p "$OPENCODE_CONFIG/plugins/micode"
+        cp "$INSTALL_DIR/plugins/micode/"*.json "$OPENCODE_CONFIG/plugins/micode/" 2>/dev/null || true
+        echo "    ✓ MiCode config deployed"
+    fi
+    
+    # Orchestrator plugin
+    if [ -d "$INSTALL_DIR/plugins/orchestrator" ]; then
+        mkdir -p "$OPENCODE_CONFIG/plugins/orchestrator"
+        cp "$INSTALL_DIR/plugins/orchestrator/"*.yaml "$OPENCODE_CONFIG/plugins/orchestrator/" 2>/dev/null || true
+        echo "    ✓ Orchestrator routing deployed"
+    fi
+    
+    # Symlink agent prompts for reference
+    if [ -d "$INSTALL_DIR/prompts/agents" ]; then
+        ln -sf "$INSTALL_DIR/prompts/agents" "$OPENCODE_CONFIG/agents"
+        echo "    ✓ Agent prompts linked"
+    fi
+    
+    # Copy AGENT_ROSTER for quick reference
+    if [ -f "$INSTALL_DIR/prompts/AGENT_ROSTER.md" ]; then
+        cp "$INSTALL_DIR/prompts/AGENT_ROSTER.md" "$OPENCODE_CONFIG/"
+        echo "    ✓ Agent roster copied"
+    fi
+    
+    echo -e "${GREEN}✓ Agent System installed (with all plugins)${NC}"
 }
 
 # Install Voice Assistant
