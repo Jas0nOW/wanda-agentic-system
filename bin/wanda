@@ -213,7 +213,7 @@ cmd_start() {
     unset ANTHROPIC_API_KEY
     
     if command -v opencode &>/dev/null; then
-        exec opencode
+        exec opencode --model google/antigravity-gemini-3-flash "$@"
     elif command -v gemini &>/dev/null; then
         exec gemini
     else

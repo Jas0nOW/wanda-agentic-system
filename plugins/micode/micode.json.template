@@ -1,5 +1,4 @@
 {
-    "$schema": "https://micode.dev/schema.json",
     "version": "1.0.4",
     "_comment": "WANDA MiCode Config - Fix Auth Error",
     "agents": {
