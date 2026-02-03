@@ -16,8 +16,7 @@
         // Authentication & Quota
         "opencode-antigravity-auth@1.4.3",
         "opencode-antigravity-quota",
-        // Safety & Handoff
-        "envsitter-guard",
+        // Handoff
         "opencode-handoff",
         // Scheduling & Tasks
         "opencode-scheduler",

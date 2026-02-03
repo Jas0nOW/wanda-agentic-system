@@ -12,7 +12,6 @@
         "micode",
         "opencode-antigravity-auth@1.4.3",
         "opencode-antigravity-quota",
-        "envsitter-guard",
         "opencode-handoff@latest",
         "opencode-scheduler@latest",
         "opencode-knowledge@latest",
@@ -62,6 +61,24 @@
                 "run"
             ],
             "enabled": true
+        },
+        "hostinger-web": {
+            "type": "local",
+            "command": [
+                "bash",
+                "-c",
+                "API_TOKEN={{HOSTINGER_WEB_API_TOKEN}} npx -y hostinger-api-mcp"
+            ],
+            "enabled": false
+        },
+        "hostinger-vps": {
+            "type": "local",
+            "command": [
+                "bash",
+                "-c",
+                "API_TOKEN={{HOSTINGER_VPS_API_TOKEN}} npx -y hostinger-api-mcp"
+            ],
+            "enabled": false
         }
     },
     // ──────────────────────────────────────────────────────────────────
