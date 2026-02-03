@@ -2,7 +2,7 @@
 
 > **Dokumentenstatus:** Absoluter Single Source of Truth (SSOT)  
 > **Version:** 1.0.0 (Visions-Release)  
-> **Autor:** Antigravity (Assistent) für Jannis (Souverän)  
+> **Autor:** Jas0n 
 > **Vision:** Ein dezentrales, autonomes und persönliches KI-Betriebssystem, das die Lücke zwischen biologischem Denken und digitaler Ausführung durch eine mehrschichtige agentische Architektur schließt.
 
 ---
@@ -18,13 +18,13 @@ WANDA operiert über eine spezialisierte Hierarchie von **17 Agenten** in 7 funk
 
 | Schicht | Ziel | Agenten | Schlüsseltechnologie |
 |:---:|---|---|---|
-| **Ideation** | Konzeptualisierung | Brainstormer | Gemini 3 Pro |
+| **Ideation** | Konzeptualisierung | Brainstormer | Gemini 3 Flash |
 | **Orchestration** | Aufgaben-Routing | Sisyphus | Gemini 3 Flash / Ollama |
 | **Core** | Technische Ausführung | Architect, Developer, Audit, UI-UX | Claude 4.5 / Sonnet |
 | **Specialist** | Tiefenwissen | Oracle, Writer, Librarian | Gemini Pro / RAG |
-| **Research** | Datensammlung | Locator, Analyzer, Pattern-Finder | Gemini Flash |
+| **Research** | Datensammlung | Locator, Analyzer, Pattern-Finder | Gemini 3 Flash |
 | **Continuity** | Kontexterhalt | Ledger, Artifact-Searcher | Lokale Vektor-DB |
-| **Meta** | Plan-Optimierung | Metis, Momus | Claude Opus Thinking |
+| **Meta** | Plan-Optimierung | Metis, Momus | Claude Sonnet Thinking |
 
 ---
 

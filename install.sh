@@ -55,6 +55,41 @@ set_paths
 REPO_URL="https://github.com/jas0nOW/wanda-agentic-system"
 INSTALL_DIR="${WANDA_INSTALL_DIR:-$HOME/.wanda-system}"
 
+# Hardware Detection for Brain Recommendations
+check_hardware() {
+    echo -e "${BLUE}Auditing System Hardware...${NC}"
+    
+    # RAM
+    TOTAL_RAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+    RAM_GB=$((TOTAL_RAM / 1024 / 1024))
+    
+    # VRAM (NVIDIA)
+    if command -v nvidia-smi &> /dev/null; then
+        VRAM_MB=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -n 1)
+        VRAM_GB=$((VRAM_MB / 1024))
+        GPU_TYPE="NVIDIA"
+    else
+        VRAM_GB=0
+        GPU_TYPE="None/iGPU"
+    fi
+    
+    echo "   - RAM: ${RAM_GB}GB"
+    echo "   - GPU: ${GPU_TYPE} (${VRAM_GB}GB VRAM)"
+    
+    # Recommend Brain
+    echo -e "${YELLOW}Recommended Local Brain:${NC}"
+    if [ "$VRAM_GB" -ge 16 ]; then
+        RECOMMENDED_MODEL="deepseek-r1:8b (High-End Reasoning)"
+    elif [ "$VRAM_GB" -ge 6 ]; then
+        RECOMMENDED_MODEL="gemma2:9b (SOTA Balance)"
+    elif [ "$RAM_GB" -ge 8 ]; then
+        RECOMMENDED_MODEL="llama3.2:3b (Fast CPU-Hybrid)"
+    else
+        RECOMMENDED_MODEL="llama3.2:1b (Minimal)"
+    fi
+    echo -e "   → ${GREEN}$RECOMMENDED_MODEL${NC}"
+}
+
 # Check prerequisites
 check_prereqs() {
     echo -e "${YELLOW}Checking prerequisites...${NC}"
@@ -149,7 +184,26 @@ install_agents() {
         npm install -g oh-my-opencode@3.2.1 2>/dev/null || true
     fi
     
-    echo -e "${GREEN}✓ Agent System installed${NC}"
+ # Setup Symlinks for Live Tracking
+setup_symlinks() {
+    echo -e "${BLUE}Setting up Symlinks for Live Config Tracking...${NC}"
+    
+    # Opencode Profiles
+    mkdir -p "$OPENCODE_CONFIG/profiles/experimental"
+    ln -sf "$INSTALL_DIR/wanda-agents/profiles/experimental/opencode.json" "$OPENCODE_CONFIG/profiles/experimental/opencode.json"
+    
+    # GEMINI.md
+    mkdir -p "$GEMINI_CONFIG"
+    ln -sf "$INSTALL_DIR/wanda-agents/GEMINI.md" "$GEMINI_CONFIG/GEMINI.md"
+    
+    # Plugins (if folders exist)
+    if [ -d "$INSTALL_DIR/plugins/oh-my-opencode" ]; then
+        mkdir -p "$HOME/.config/oh-my-opencode"
+        # ln -sf ...
+    fi
+    
+    echo -e "${GREEN}[OK] Symlinks established. Your changes in the repo are now live!${NC}"
+}
     echo ""
     echo -e "${YELLOW}📌 Next steps:${NC}"
     echo "   1. Add your Antigravity account to:"

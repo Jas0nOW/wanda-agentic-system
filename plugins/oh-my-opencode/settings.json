@@ -1,0 +1,14 @@
+{
+    "name": "oh-my-opencode-config",
+    "version": "1.0.0",
+    "description": "WANDA OhMyOpencode Pillar - Orchestration Layer Settings",
+    "layers": {
+        "ideation": "enabled",
+        "orchestration": "enabled",
+        "core": "enabled",
+        "specialist": "enabled",
+        "research": "enabled",
+        "continuity": "enabled",
+        "meta": "enabled"
+    }
+}

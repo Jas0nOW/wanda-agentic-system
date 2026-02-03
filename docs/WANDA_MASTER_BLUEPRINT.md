@@ -2,7 +2,7 @@
 
 > **Document Status:** Absolute Single Source of Truth (SSOT)  
 > **Version:** 1.0.0 (Full Vision Release)  
-> **Author:** Antigravity (Assistant) for Jannis (Sovereign)  
+> **Author:** Jas0n 
 > **Vision:** A decentralized, autonomous, and personal AI Operating System that bridges the gap between biological thought and digital execution.
 
 ---
@@ -18,11 +18,11 @@ WANDA operates through a specialized hierarchy of **17 agents** across 7 functio
 
 | Layer | Goal | Agents | Key Technology |
 |:---:|---|---|---|
-| **Ideation** | Conceptualization | Brainstormer | Gemini 3 Pro |
+| **Ideation** | Conceptualization | Brainstormer | Gemini 3 Flash |
 | **Orchestration** | Task Routing | Sisyphus | Gemini 3 Flash / Ollama |
 | **Core** | Technical Execution | Architect, Developer, Audit, UI-UX | Claude 4.5 / Sonnet |
 | **Specialist** | Deep Knowledge | Oracle, Writer, Librarian | Gemini Pro / RAG |
-| **Research** | Data Gathering | Locator, Analyzer, Pattern-Finder | Gemini Flash |
+| **Research** | Data Gathering | Locator, Analyzer, Pattern-Finder | Gemini 3 Flash |
 | **Continuity** | Context Preservation | Ledger, Artifact-Searcher | Local Vector DB |
 | **Meta** | Plan Optimization | Metis, Momus | Claude Opus Thinking |
 

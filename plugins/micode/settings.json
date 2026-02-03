@@ -1,0 +1,14 @@
+{
+    "name": "micode-config",
+    "version": "1.0.0",
+    "description": "WANDA MiCode Pillar - Deep Intelligence Settings",
+    "settings": {
+        "ast_parsing": true,
+        "context_depth": "high",
+        "patterns": [
+            "research",
+            "audit",
+            "architect"
+        ]
+    }
+}
