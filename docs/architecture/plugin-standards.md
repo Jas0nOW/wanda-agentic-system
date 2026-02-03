@@ -18,8 +18,7 @@
 *   `micode@latest`
 *   `opencode-agent-skills@latest`
 *   `opencode-orchestrator@latest`
-*   `opencode-handoff@latest`
-*   `@gitlab/opencode-gitlab-auth@latest`
+ *   `opencode-handoff@latest`
 
 ---
 

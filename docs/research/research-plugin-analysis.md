@@ -26,8 +26,6 @@ Wir müssen die Quelle und Funktion folgender Pakete verifizieren:
 | `opencode-orchestrator@latest` | Task Routing / Autopilot | Zu prüfen |
 | `opencode-handoff@latest` | Session Continuity | Zu prüfen |
 | `opencode-gemini-auth@latest` | Gemini CLI OAuth | Zu prüfen |
-| `@gitlab/opencode-gitlab-auth@latest` | GitLab Auth | Zu prüfen |
-| `opencode-anthropic-auth@latest` | Anthropic Auth | Zu prüfen |
 
 ## 3. Strategie
 1.  **Online-Check:** Existieren diese Pakete auf NPM/GitHub?
