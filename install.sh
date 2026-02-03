@@ -116,11 +116,43 @@ collect_user_info() {
     esac
     
     echo ""
+    
+    # Ollama Models (Custom)
+    echo -e "${BLUE}4. Ollama Model Configuration${NC}"
+    echo "   Which local models do you want to use?"
+    echo ""
+    echo "   a) Use DEFAULTS (brainstorm-36b, heretic-12b, qwen3:8b)"
+    echo "   b) CUSTOM - I have my own models"
+    echo ""
+    read -p "   Choice [a]: " model_choice
+    
+    if [[ "${model_choice:-a}" =~ ^[Bb] ]]; then
+        echo ""
+        echo -e "${YELLOW}   Enter your Ollama model names:${NC}"
+        echo "   (Leave blank to skip)"
+        
+        read -p "   Primary Voice Model [brainstorm-36b]: " OLLAMA_PRIMARY
+        OLLAMA_PRIMARY=${OLLAMA_PRIMARY:-brainstorm-36b}
+        
+        read -p "   Fallback Model [heretic-12b]: " OLLAMA_FALLBACK
+        OLLAMA_FALLBACK=${OLLAMA_FALLBACK:-heretic-12b}
+        
+        read -p "   Lightweight Model [qwen3:8b]: " OLLAMA_LIGHT
+        OLLAMA_LIGHT=${OLLAMA_LIGHT:-qwen3:8b}
+    else
+        OLLAMA_PRIMARY="brainstorm-36b"
+        OLLAMA_FALLBACK="heretic-12b"
+        OLLAMA_LIGHT="qwen3:8b"
+    fi
+    
+    echo ""
     echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
     echo -e "${GREEN}  Configuration:${NC}"
     echo -e "${GREEN}  • Name: $USER_NAME${NC}"
     echo -e "${GREEN}  • Workspace: $USER_WORKSPACE${NC}"
     echo -e "${GREEN}  • Language: $USER_LANGUAGE${NC}"
+    echo -e "${GREEN}  • Ollama Primary: $OLLAMA_PRIMARY${NC}"
+    echo -e "${GREEN}  • Ollama Fallback: $OLLAMA_FALLBACK${NC}"
     echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
     echo ""
     
@@ -358,8 +390,9 @@ tts:
   voice: ${USER_LANGUAGE}-1
 
 ollama:
-  model: brainstorm-36b
-  fallback: heretic-12b
+  model: $OLLAMA_PRIMARY
+  fallback: $OLLAMA_FALLBACK
+  lightweight: $OLLAMA_LIGHT
 EOF
     
     echo -e "${GREEN}✓ Voice Assistant installed${NC}"
