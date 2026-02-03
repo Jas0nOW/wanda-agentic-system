@@ -1,37 +1,47 @@
 {
     "$schema": "https://opencode.ai/config.json",
     // ╔════════════════════════════════════════════════════════════════╗
-    // ║  WANDA EXPERIMENTAL PROFILE - Multi-Agent Lab                  ║
-    // ║  WARNING: Multiple orchestration layers active                 ║
+    // ║  WANDA EXPERIMENTAL PROFILE - EVERYTHING ENABLED               ║
+    // ║  All plugins, all MCP servers, all features                    ║
+    // ║  WARNING: May have conflicts - use for testing only            ║
     // ╚════════════════════════════════════════════════════════════════╝
     // ──────────────────────────────────────────────────────────────────
-    // PLUGINS (npm packages) - MULTI-AGENT STACK
+    // PLUGINS - MAXIMUM STACK (all available)
     // ──────────────────────────────────────────────────────────────────
     "plugin": [
+        // Core Orchestration
         "oh-my-opencode@3.2.1",
         "micode",
         "opencode-orchestrator",
+        // Authentication & Quota
         "opencode-antigravity-auth@1.4.3",
         "opencode-antigravity-quota",
+        // Safety & Handoff
         "envsitter-guard",
         "opencode-handoff",
+        // Scheduling & Tasks
         "opencode-scheduler",
+        // Research & Search
         "opencode-websearch-cited",
-        "opencode-shell-strategy",
-        "opencode-context-analysis",
+        // Context Management
         "opencode-dynamic-context-pruning"
+        // DISABLED (cause freezing):
+        // "opencode-shell-strategy",
+        // "opencode-context-analysis"
     ],
     // ──────────────────────────────────────────────────────────────────
-    // INSTRUCTIONS (System prompts / context files)
+    // INSTRUCTIONS (All context files)
     // ──────────────────────────────────────────────────────────────────
     "instructions": [
         "prompts/system/OPENCODE_SYSTEM.md",
         "prompts/system/TERMINAL_POLICY.md",
+        "prompts/context/MCP_TOOL_MAPPING.md",
+        "prompts/context/AGENT_REGISTRY.md",
         "docs/02_architecture/ROUTING_MAP.md",
         ".gemini/GEMINI.md"
     ],
     // ──────────────────────────────────────────────────────────────────
-    // MCP SERVERS
+    // MCP SERVERS - ALL ENABLED
     // ──────────────────────────────────────────────────────────────────
     "mcp": {
         "filesystem": {
@@ -89,10 +99,28 @@
                 "@anthropic/mcp-playwright"
             ],
             "enabled": true
+        },
+        "sequential-thinking": {
+            "type": "local",
+            "command": [
+                "npx",
+                "-y",
+                "@anthropic/mcp-sequential-thinking"
+            ],
+            "enabled": true
+        },
+        "context7": {
+            "type": "local",
+            "command": [
+                "npx",
+                "-y",
+                "@upstash/context7-mcp"
+            ],
+            "enabled": true
         }
     },
     // ──────────────────────────────────────────────────────────────────
-    // PERMISSIONS (More permissive for experimentation)
+    // PERMISSIONS (Fully permissive for experimentation)
     // ──────────────────────────────────────────────────────────────────
     "permission": {
         "bash": "allow",
@@ -109,6 +137,9 @@
     // ──────────────────────────────────────────────────────────────────
     // EXPERIMENTAL FEATURES
     // ──────────────────────────────────────────────────────────────────
-    "experimental": {},
+    "experimental": {
+        "planning": true,
+        "auto_context": true
+    },
     "autoupdate": "notify"
 }

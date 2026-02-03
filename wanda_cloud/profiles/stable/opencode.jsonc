@@ -2,20 +2,19 @@
     "$schema": "https://opencode.ai/config.json",
     // ╔════════════════════════════════════════════════════════════════╗
     // ║  WANDA STABLE PROFILE - Daily Driver Configuration             ║
-    // ║  oh-my-opencode is the SOLE orchestrator                       ║
+    // ║  oh-my-opencode + MiCode (Visual GUI)                          ║
     // ╚════════════════════════════════════════════════════════════════╝
     // ──────────────────────────────────────────────────────────────────
-    // PLUGINS (npm packages)
+    // PLUGINS (npm packages) - Tested & Stable
     // ──────────────────────────────────────────────────────────────────
     "plugin": [
         "oh-my-opencode@3.2.1",
+        "micode",
         "opencode-antigravity-auth@1.4.3",
         "opencode-antigravity-quota",
         "envsitter-guard",
         "opencode-handoff",
-        "opencode-websearch-cited",
-        "opencode-shell-strategy",
-        "opencode-context-analysis"
+        "opencode-websearch-cited"
     ],
     // ──────────────────────────────────────────────────────────────────
     // INSTRUCTIONS (System prompts / context files)
@@ -23,10 +22,11 @@
     "instructions": [
         "prompts/system/OPENCODE_SYSTEM.md",
         "prompts/system/TERMINAL_POLICY.md",
+        "prompts/context/MCP_TOOL_MAPPING.md",
         ".gemini/GEMINI.md"
     ],
     // ──────────────────────────────────────────────────────────────────
-    // MCP SERVERS
+    // MCP SERVERS (Core set)
     // ──────────────────────────────────────────────────────────────────
     "mcp": {
         "filesystem": {
@@ -75,10 +75,19 @@
                 "@anthropic/mcp-brave-search"
             ],
             "enabled": true
+        },
+        "context7": {
+            "type": "local",
+            "command": [
+                "npx",
+                "-y",
+                "@upstash/context7-mcp"
+            ],
+            "enabled": true
         }
     },
     // ──────────────────────────────────────────────────────────────────
-    // PERMISSIONS
+    // PERMISSIONS (Conservative - ask before shell)
     // ──────────────────────────────────────────────────────────────────
     "permission": {
         "bash": "ask",
@@ -92,8 +101,5 @@
         "auto": true,
         "prune": false
     },
-    // ──────────────────────────────────────────────────────────────────
-    // AUTO UPDATE
-    // ──────────────────────────────────────────────────────────────────
     "autoupdate": "notify"
 }
