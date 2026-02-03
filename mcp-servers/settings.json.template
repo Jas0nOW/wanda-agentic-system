@@ -1,17 +1,22 @@
 {
+  "$schema": "https://geminicli.com/settings.schema.json",
+  
   "model": {
     "name": "auto-gemini-3"
   },
+  
   "security": {
     "auth": {
       "selectedType": "oauth-personal"
     },
     "enablePermanentToolApproval": true
   },
+  
   "general": {
     "previewFeatures": true,
     "enablePromptCompletion": false
   },
+  
   "ui": {
     "footer": {
       "hideContextPercentage": false
@@ -20,26 +25,85 @@
     "showModelInfoInChat": true,
     "showHomeDirectoryWarning": false
   },
+  
   "context": {
-    "loadMemoryFromIncludeDirectories": true
+    "loadMemoryFromIncludeDirectories": true,
+    "fileName": "GEMINI.md"
   },
+  
   "tools": {
     "shell": {
       "showColor": true
     },
     "autoAccept": true
   },
+  
   "experimental": {
     "plan": true
   },
+  
+  "advanced": {
+    "autoConfigureMemory": true,
+    "dnsResolutionOrder": "ipv4first"
+  },
+  
+  "sandbox": false,
+  "vimMode": false,
+  "checkpointing": true,
+  
   "mcpServers": {
     "MCP_DOCKER": {
       "command": "docker",
-      "args": [
-        "mcp",
-        "gateway",
-        "run"
-      ]
+      "args": ["mcp", "gateway", "run"],
+      "comment": "Central hub for all Docker-based MCP servers"
+    },
+    
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-filesystem", "{{HOME}}"],
+      "comment": "File operations within home directory"
+    },
+    
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-memory"],
+      "comment": "Persistent knowledge graph for context"
+    },
+    
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-github"],
+      "env": {
+        "GITHUB_TOKEN": "$GITHUB_TOKEN"
+      },
+      "comment": "Repository operations - requires GITHUB_TOKEN"
+    },
+    
+    "brave": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-brave-search"],
+      "env": {
+        "BRAVE_API_KEY": "$BRAVE_API_KEY"
+      },
+      "comment": "Web search - requires BRAVE_API_KEY"
+    },
+    
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-playwright"],
+      "comment": "Browser automation for UI testing"
+    },
+    
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-sequential-thinking"],
+      "comment": "Step-by-step reasoning for complex problems"
+    },
+    
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"],
+      "comment": "Library documentation lookup"
     }
   }
 }

@@ -1,380 +1,171 @@
-<div align="center">
+# WANDA Sovereign AI OS 🚀🤖🛡️
 
-# 🌟 WANDA Agentic System
+> **A Hybrid AI Operating System combining Local Voice Intelligence with Cloud Agentic Power.**
 
-**Sovereign AI OS with 17 Agents + Voice Assistant**
+[![Version](https://img.shields.io/badge/version-1.0.1-blue)](https://github.com/jas0nOW/wanda-agentic-system)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-green.svg)](https://python.org)
-[![OpenCode](https://img.shields.io/badge/OpenCode-Compatible-purple.svg)](https://opencode.ai)
+## Overview
 
-*A complete AI development environment with multi-agent orchestration, voice control, and seamless tool integration.*
+WANDA (Workspace-Aware Neural Development Assistant) is a **Doppel-Wanda System**:
 
-[Installation](#-installation) • [Features](#-features) • [Configuration](#-configuration) • [Usage](#-usage) • [Documentation](#-documentation)
-
----
-
-</div>
-
-## 🎯 Overview
-
-WANDA is a comprehensive AI system consisting of two main components:
-
-| Component | Description |
-|-----------|-------------|
-| **🤖 Agent System** | 17 specialized AI agents with orchestration, from architecture to code review |
-| **🎤 Voice Assistant** | Local-first voice interface with STT, TTS, multiple modes, and mobile access |
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      WANDA AGENTIC SYSTEM                       │
-├────────────────────────────┬────────────────────────────────────┤
-│     🤖 Agent System        │        🎤 Voice Assistant          │
-│  ┌──────────────────────┐  │  ┌────────────────────────────┐   │
-│  │ Orchestration Layer  │  │  │ Premium Siri-Style Orb     │   │
-│  │ • Sisyphus (Flash)   │  │  │ • Click = Daily Start      │   │
-│  ├──────────────────────┤  │  │ • Drag = Move              │   │
-│  │ Core Layer           │  │  ├────────────────────────────┤   │
-│  │ • Architect (Opus)   │  │  │ Multi-Mode                 │   │
-│  │ • Software-Engineer  │  │  │ • Aktiv, Paused            │   │
-│  │ • Audit (Opus)       │  │  │ • Autonomous, CLI-Proxy    │   │
-│  ├──────────────────────┤  │  ├────────────────────────────┤   │
-│  │ Specialist Layer     │  │  │ Mobile Access              │   │
-│  │ • Oracle, Writer...  │  │  │ • Telegram Bot             │   │
-│  └──────────────────────┘  │  │ • Push Notifications       │   │
-│                            │  └────────────────────────────┘   │
-└────────────────────────────┴────────────────────────────────────┘
-```
+1. **🟢 Local Gateway**: Voice Activity Detection, Speech-to-Text, Prompt Refinement (Ollama), Safety Checks, TTS.
+2. **🔵 Cloud Core**: 17 Specialized Agents powered by Claude 4.5 & Gemini 3 via OpenCode.
 
 ---
 
-## 🚀 Installation
+## 🌟 Quick Start (AI Installer - EMPFOHLEN)
 
-### Linux / macOS (One-Command)
+Der **personalisierte Installer** fragt nach deinem Namen, Arbeitsordner und Sprache - so funktioniert WANDA sofort für dich!
 
 ```bash
+# One-line install (RECOMMENDED)
 curl -fsSL https://raw.githubusercontent.com/jas0nOW/wanda-agentic-system/main/install.sh | bash
 ```
 
-### Windows
-
-```powershell
-# Option 1: WSL (recommended)
-wsl curl -fsSL https://raw.githubusercontent.com/jas0nOW/wanda-agentic-system/main/install.sh | bash
-
-# Option 2: Native (download and run)
-git clone https://github.com/jas0nOW/wanda-agentic-system
-cd wanda-agentic-system
-.\install.bat
-```
-
-### Manual Installation
+Oder manuell:
 
 ```bash
-git clone https://github.com/jas0nOW/wanda-agentic-system
-cd wanda-agentic-system
+git clone https://github.com/jas0nOW/wanda-agentic-system.git ~/.wanda-system
+cd ~/.wanda-system
 chmod +x install.sh
 ./install.sh
 ```
 
-### 🤖 AI-Assisted Install
-
-**Copy this to your AI:**
-> "Install WANDA from https://github.com/jas0nOW/wanda-agentic-system - follow docs/AI_INSTALL_PROMPT.md"
-
-### System Requirements
-
-| Requirement | Linux | macOS | Windows |
-|-------------|-------|-------|---------|
-| Python | 3.10+ | 3.10+ | 3.10+ |
-| RAM | 4GB+ | 4GB+ | 4GB+ |
-| GPU | Optional (CUDA) | Optional (MPS) | Optional |
-| Shell | bash | zsh/bash | WSL / PowerShell |
-
-<details>
-<summary><strong>📦 Dependencies</strong></summary>
-
-**System packages:**
-```bash
-sudo apt install python3 python3-pip python3-venv git ffmpeg
-sudo apt install portaudio19-dev libasound2-dev  # For audio
-sudo apt install libgirepository1.0-dev gir1.2-gtk-3.0  # For orb UI
-```
-
-**Python packages:** (installed automatically)
-- `faster-whisper` - Local STT
-- `piper-tts` - Local TTS
-- `sounddevice`, `scipy`, `numpy` - Audio
-- `evdev` - Hotkey handling
-- `PyGObject` - GTK orb
-- `python-telegram-bot` - Mobile access
-
-</details>
+> **📖 Vollständige Anleitung**: [docs/INSTALLATION.md](docs/INSTALLATION.md)
 
 ---
 
-## ✨ Features
+## System Requirements
 
-### 🤖 Agent System (17 Agents)
-
-<table>
-<tr>
-<th>Layer</th>
-<th>Agents</th>
-<th>Model</th>
-</tr>
-<tr>
-<td><strong>Orchestration</strong></td>
-<td>Sisyphus</td>
-<td>Gemini 3 Flash</td>
-</tr>
-<tr>
-<td><strong>Ideation</strong></td>
-<td>Brainstormer</td>
-<td>Gemini 3 Pro</td>
-</tr>
-<tr>
-<td><strong>Core</strong></td>
-<td>Architect, Software-Engineer, Frontend-UI-UX, Audit</td>
-<td>Claude Opus / Sonnet</td>
-</tr>
-<tr>
-<td><strong>Specialist</strong></td>
-<td>Oracle, Writer, Librarian, Explore, Multimodal-Looker</td>
-<td>Mixed</td>
-</tr>
-<tr>
-<td><strong>Research</strong></td>
-<td>Codebase-Locator, Codebase-Analyzer, Pattern-Finder</td>
-<td>Gemini Flash</td>
-</tr>
-<tr>
-<td><strong>Continuity</strong></td>
-<td>Ledger-Creator, Artifact-Searcher</td>
-<td>Gemini Flash</td>
-</tr>
-<tr>
-<td><strong>Meta</strong></td>
-<td>Metis, Momus</td>
-<td>Claude Opus Thinking</td>
-</tr>
-</table>
-
-### 🎤 Voice Assistant
-
-| Feature | Description |
-|---------|-------------|
-| **Local STT** | Whisper (tiny → large) with CUDA acceleration |
-| **Local TTS** | Piper with German voice, <200ms interrupt |
-| **Premium Orb** | Siri-style animations, particle effects |
-| **Multi-Mode** | Aktiv, Paused, Autonomous, CLI-Proxy |
-| **Wake Word** | "Hey Wanda", "Hey Jarvis" (optional) |
-| **Mobile** | Telegram bot + push notifications |
-| **Wayland** | Full support for COSMIC, GNOME, KDE |
-
-### 🔌 MCP Integration
-
-Preconfigured for 14+ MCP servers:
-- `brave`, `filesystem`, `memory`, `github`
-- `supabase`, `vercel`, `docker`, `playwright`
-- And more...
+| Tier | RAM | Recommended Model | Capability |
+|---|---|---|---|
+| **S** | < 8GB | `qwen3:8b` | Basic routing |
+| **M** | 16GB | `heretic-12b` | Voice interaction |
+| **MH** | 50GB+ | `brainstorm-36b` | Full Gateway (Your Setup) |
+| **G** | 64GB+ | `deepseek-v4` | Local autonomy |
 
 ---
 
-## ⚙️ Configuration
+## Architecture
 
-### Agent System
-
-```bash
-# Location
-~/.config/opencode/profiles/
-
-# Profiles available
-├── opencode.jsonc          # Main config
-├── stable/opencode.json    # Minimal (1 agent)
-└── experimental/opencode.json  # Full (17 agents)
 ```
-
-**Switch profiles:**
-```bash
-opencode --profile experimental
-```
-
-**Add Antigravity account:**
-```json
-// ~/.config/opencode/antigravity-accounts.json
-{
-  "accounts": [
-    { "email": "your@email.com", "token": "YOUR_TOKEN" }
-  ]
-}
-```
-
-### Voice Assistant
-
-```yaml
-# ~/.wanda-system/wanda-voice/wanda.config.yaml
-
-mode: aktiv
-audio:
-  sample_rate: 16000
-  record_seconds: 20
-  silence_threshold: 0.2
-
-stt:
-  engine: faster-whisper
-  model: small
-  device: cuda  # or cpu
-
-tts:
-  engine: piper
-  voice: de_DE-eva_k-x_low
-
-# Optional: Telegram
-telegram:
-  enabled: true
-  token: "YOUR_BOT_TOKEN"
-
-# Optional: Push notifications
-notifications:
-  enabled: true
-  topic: "wanda-private"
-```
-
-### MCP Servers
-
-```json
-// ~/.gemini/settings.json
-{
-  "mcpServers": {
-    "MCP_DOCKER": {
-      "command": "docker",
-      "args": ["mcp", "gateway", "run"]
-    }
-  }
-}
+┌─────────────────────────────────────────────────────────┐
+│                    USER (Voice/Chat)                    │
+└─────────────────────┬───────────────────────────────────┘
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│               WANDA LOCAL GATEWAY                       │
+│  Silero VAD → Whisper STT → Ollama → XTTS-v2 TTS       │
+│  Safety Checker → CLI Injector                          │
+└─────────────────────┬───────────────────────────────────┘
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│               WANDA CLOUD CORE                          │
+│  OpenCode + oh-my-opencode (Leader)                     │
+│  17 Agents: Architect, Developer, Oracle, ...           │
+│  Claude 4.5 / Gemini 3                                  │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📖 Usage
+## MCP Server (Docker Hub)
 
-### Agent System
+WANDA nutzt Docker als zentralen MCP Hub mit 8+ Servern:
 
-```bash
-# Start with orchestrator
-opencode
+| Server | Zweck |
+|--------|-------|
+| `MCP_DOCKER` | Gateway Hub |
+| `filesystem` | Datei-Operationen |
+| `memory` | Wissens-Speicher |
+| `github` | Repository-Ops |
+| `brave` | Web-Suche |
+| `playwright` | Browser-Automation |
+| `sequential-thinking` | Step-by-Step Reasoning |
+| `context7` | Library Documentation |
 
-# Use specific agent
-@brainstormer "Design a REST API"
-
-# Full autopilot workflow
-/ralph-loop "Build authentication system"
-```
-
-### Voice Assistant
-
-```bash
-# Start
-wanda
-
-# Or with options
-wanda --mode autonomous
-wanda --no-orb
-```
-
-**Voice Commands:**
-| Command | Action |
-|---------|--------|
-| *Click orb* | Daily Start (morning) or toggle recording |
-| "Wanda Pause" | Go to sleep |
-| "Hallo Wanda" | Wake up |
-| "Vollautonom" | Enter autonomous mode |
-
-**Telegram Commands:**
-```
-/start     - Welcome message
-/status    - System status
-/projekt   - Create project in Work-OS
-/idee      - Capture idea
-```
+> Der Installer konfiguriert alle MCP Server automatisch!
 
 ---
 
-## 📁 Project Structure
+## Directory Structure
 
 ```
 wanda-agentic-system/
-│
-├── wanda-voice/              # 🎤 Voice Assistant
-│   ├── audio/                # Recording, VAD
-│   ├── stt/                  # Speech-to-text
-│   ├── tts/                  # Text-to-speech
-│   ├── adapters/             # Gemini, Ollama, CLI
-│   ├── conversation/         # State, context, commands
-│   ├── modes/                # Autonomous, Daily Init
-│   ├── mobile/               # Telegram, notifications
-│   ├── ui/                   # GTK Orb
-│   └── wanda                 # Entry point
-│
-├── wanda-agents/             # 🤖 Agent System
-│   ├── profiles/             # OpenCode configurations
-│   │   ├── stable/
-│   │   └── experimental/
-│   └── GEMINI.md             # System kernel
-│
-├── mcp-servers/              # 🔌 MCP Integration
+├── install.sh              # 🌟 Personalized Installer
+├── docs/
+│   ├── INSTALLATION.md     # Full setup guide
+│   └── WANDA_MASTER_BLUEPRINT_DE.md
+├── prompts/
+│   ├── system/             # OLLAMA_SYSTEM.md, TERMINAL_POLICY.md
+│   └── context/            # MCP_TOOL_MAPPING.md, AGENT_REGISTRY.md
+├── templates/
+│   └── GEMINI.md.template  # Personalized system prompt
+├── mcp-servers/
 │   └── settings.json.template
-│
-├── docs/                     # 📚 Documentation
-│   ├── architecture/
-│   ├── guides/
-│   └── workflows/
-│
-├── templates/                # 📝 Templates
-├── install.sh                # Installer
-└── README.md                 # This file
+├── wanda_local/            # Voice Gateway (Python)
+├── wanda_cloud/            # OpenCode profiles
+├── scripts/                # diagnostics.sh, deploy-hook.sh
+└── tests/                  # Smoke tests
 ```
 
 ---
 
-## 🔄 Updates
+## Profiles
+
+- **Stable** (Daily Driver): `oh-my-opencode` only. Minimal conflicts.
+- **Experimental** (Lab): Multi-agent swarm with orchestrator.
+
+Switch profiles:
+```bash
+# Use stable
+ln -sf ~/.wanda-system/wanda_cloud/profiles/stable/opencode.jsonc ~/.config/opencode/opencode.jsonc
+
+# Use experimental
+ln -sf ~/.wanda-system/wanda_cloud/profiles/experimental/opencode.jsonc ~/.config/opencode/opencode.jsonc
+```
+
+---
+
+## Voice Commands
+
+Start the Voice Gateway:
+```bash
+cd ~/.wanda-system/wanda_local && source venv/bin/activate && python main.py
+```
+
+Commands:
+- **"Hey Wanda"**: Wake word
+- **"Guten Morgen"**: Get status briefing
+- **Any voice input**: Transcribed → Refined → Routed to agent
+
+---
+
+## Telegram Bot
 
 ```bash
-cd ~/.wanda-system
-git pull
-./install.sh
+# Token in .env
+echo 'WANDA_TELEGRAM_BOT_TOKEN="your_token"' > ~/.wanda-system/wanda_local/.env
+
+# Start
+python ~/.wanda-system/wanda_local/telegram_bot.py
 ```
 
 ---
 
-## 🤝 Contributing
+## Safety
 
-See [docs/guides/contributing.md](docs/guides/contributing.md)
-
-```bash
-# Fork, clone, create branch
-git checkout -b feature/my-feature
-
-# Make changes, commit
-git commit -m "feat: add amazing feature"
-
-# Push and create PR
-git push origin feature/my-feature
-```
+- **Denylist**: `rm -rf /`, `cat /etc/shadow` → BLOCKED
+- **Confirmlist**: `git push --force`, `sudo` → Requires confirmation
+- **Secrets**: `.env` files are never committed
 
 ---
 
-## 📜 License
+## License
 
-MIT © [jas0nOW](https://github.com/jas0nOW)
+MIT © 2026
 
 ---
 
-<div align="center">
-
-**Made with ❤️ by Jannis**
-
-[⬆ Back to top](#-wanda-agentic-system)
-
-</div>
+*WANDA - Sovereign AI Operating System v1.0.1*

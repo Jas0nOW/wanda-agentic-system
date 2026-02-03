@@ -1,0 +1,57 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "model": "google/antigravity-gemini-3-flash",
+    "plugin": [
+        "oh-my-opencode@3.2.1",
+        "micode@latest",
+        "opencode-antigravity-auth@1.4.3",
+        "opencode-antigravity-quota@latest",
+        "opencode-handoff@latest",
+        "opencode-scheduler@latest",
+        "opencode-context-analysis@latest",
+        "opencode-shell-strategy@latest",
+        "opencode-websearch-cited@latest",
+        "envsitter-guard@latest",
+        "opencode-notifier@latest",
+        "opencode-knowledge@latest"
+    ],
+    "agent": {
+        "orchestrator": {
+            "mode": "primary",
+            "model": "google/antigravity-gemini-3-flash",
+            "temperature": 0.2
+        },
+        "brainstormer": {
+            "mode": "primary",
+            "model": "google/antigravity-gemini-3-pro",
+            "temperature": 0.7
+        },
+        "architect": {
+            "mode": "primary",
+            "model": "google/antigravity-claude-opus-4-5-thinking",
+            "thinking": {
+                "type": "enabled",
+                "budgetTokens": 32000
+            }
+        },
+        "software-engineer": {
+            "mode": "primary",
+            "model": "google/antigravity-claude-sonnet-4-5",
+            "temperature": 0.2
+        },
+        "librarian": {
+            "mode": "primary",
+            "model": "google/antigravity-gemini-3-flash"
+        },
+        "writer": {
+            "mode": "primary",
+            "model": "google/antigravity-gemini-3-flash"
+        }
+    },
+    "permission": {
+        "bash": "ask",
+        "edit": "ask",
+        "write": "ask"
+    },
+    "default_agent": "orchestrator"
+}

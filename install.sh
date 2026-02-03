@@ -1,6 +1,10 @@
 #!/bin/bash
+# ==============================================================================
 # WANDA Agentic System - One-Command Installer
 # https://github.com/jas0nOW/wanda-agentic-system
+# ==============================================================================
+# PERSONALIZED INSTALLATION - Asks for user name and workspace folder
+# ==============================================================================
 
 set -e
 
@@ -9,6 +13,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m'
 
 # Detect OS
@@ -40,32 +45,109 @@ set_paths() {
     esac
 }
 
-echo -e "${BLUE}"
-echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║           🌟 WANDA Agentic System Installer 🌟              ║"
-echo "║     Sovereign AI OS with 17 Agents + Voice Assistant        ║"
-echo "║           Linux • macOS • Windows (WSL)                     ║"
-echo "╚══════════════════════════════════════════════════════════════╝"
-echo -e "${NC}"
+# Banner
+print_banner() {
+    echo -e "${CYAN}"
+    echo "╔══════════════════════════════════════════════════════════════════════════╗"
+    echo "║                                                                          ║"
+    echo "║   ██╗    ██╗ █████╗ ███╗   ██╗██████╗  █████╗                            ║"
+    echo "║   ██║    ██║██╔══██╗████╗  ██║██╔══██╗██╔══██╗                           ║"
+    echo "║   ██║ █╗ ██║███████║██╔██╗ ██║██║  ██║███████║                           ║"
+    echo "║   ██║███╗██║██╔══██║██║╚██╗██║██║  ██║██╔══██║                           ║"
+    echo "║   ╚███╔███╔╝██║  ██║██║ ╚████║██████╔╝██║  ██║                           ║"
+    echo "║    ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝                           ║"
+    echo "║                                                                          ║"
+    echo "║        Sovereign AI OS • 17 Agents • 7 Layers • 15 MCP Servers           ║"
+    echo "║                                                                          ║"
+    echo "╚══════════════════════════════════════════════════════════════════════════╝"
+    echo -e "${NC}"
+}
 
-detect_os
-set_paths
+# ══════════════════════════════════════════════════════════════════════════════
+# PERSONALIZATION - Ask for user-specific configuration
+# ══════════════════════════════════════════════════════════════════════════════
 
-# Configuration
-REPO_URL="https://github.com/jas0nOW/wanda-agentic-system"
-INSTALL_DIR="${WANDA_INSTALL_DIR:-$HOME/.wanda-system}"
+collect_user_info() {
+    echo ""
+    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════${NC}"
+    echo -e "${YELLOW}                  PERSONALIZATION SETUP${NC}"
+    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════${NC}"
+    echo ""
+    
+    # Username
+    echo -e "${BLUE}1. What's your name?${NC}"
+    echo "   (This will be used in AI prompts and TTS greetings)"
+    read -p "   Your name: " USER_NAME
+    USER_NAME=${USER_NAME:-User}
+    
+    echo ""
+    
+    # Workspace
+    echo -e "${BLUE}2. Where is your main workspace/projects folder?${NC}"
+    echo "   (WANDA will primarily work within this directory)"
+    echo "   Default: $HOME/Projects"
+    read -p "   Workspace path: " USER_WORKSPACE
+    USER_WORKSPACE=${USER_WORKSPACE:-$HOME/Projects}
+    
+    # Expand ~ if used
+    USER_WORKSPACE="${USER_WORKSPACE/#\~/$HOME}"
+    
+    # Create workspace if it doesn't exist
+    if [ ! -d "$USER_WORKSPACE" ]; then
+        echo -e "   ${YELLOW}Creating workspace directory...${NC}"
+        mkdir -p "$USER_WORKSPACE"
+    fi
+    
+    echo ""
+    
+    # Language
+    echo -e "${BLUE}3. Preferred language?${NC}"
+    echo "   1) German (de)"
+    echo "   2) English (en)"
+    echo "   3) Spanish (es)"
+    echo "   4) French (fr)"
+    read -p "   Choice [1]: " lang_choice
+    case ${lang_choice:-1} in
+        1) USER_LANGUAGE="de";;
+        2) USER_LANGUAGE="en";;
+        3) USER_LANGUAGE="es";;
+        4) USER_LANGUAGE="fr";;
+        *) USER_LANGUAGE="de";;
+    esac
+    
+    echo ""
+    echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
+    echo -e "${GREEN}  Configuration:${NC}"
+    echo -e "${GREEN}  • Name: $USER_NAME${NC}"
+    echo -e "${GREEN}  • Workspace: $USER_WORKSPACE${NC}"
+    echo -e "${GREEN}  • Language: $USER_LANGUAGE${NC}"
+    echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
+    echo ""
+    
+    read -p "Is this correct? [Y/n]: " confirm
+    if [[ "${confirm:-y}" =~ ^[Nn] ]]; then
+        collect_user_info
+    fi
+}
 
-# Hardware Detection for Brain Recommendations
+# Hardware Detection
 check_hardware() {
     echo -e "${BLUE}Auditing System Hardware...${NC}"
     
     # RAM
-    TOTAL_RAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-    RAM_GB=$((TOTAL_RAM / 1024 / 1024))
+    if [ "$OS" = "linux" ]; then
+        TOTAL_RAM=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+        RAM_GB=$((TOTAL_RAM / 1024 / 1024))
+    elif [ "$OS" = "macos" ]; then
+        TOTAL_RAM=$(sysctl -n hw.memsize)
+        RAM_GB=$((TOTAL_RAM / 1024 / 1024 / 1024))
+    else
+        RAM_GB=16
+    fi
     
     # VRAM (NVIDIA)
     if command -v nvidia-smi &> /dev/null; then
-        VRAM_MB=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -n 1)
+        VRAM_MB=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits 2>/dev/null | head -n 1)
         VRAM_GB=$((VRAM_MB / 1024))
         GPU_TYPE="NVIDIA"
     else
@@ -76,21 +158,21 @@ check_hardware() {
     echo "   - RAM: ${RAM_GB}GB"
     echo "   - GPU: ${GPU_TYPE} (${VRAM_GB}GB VRAM)"
     
-    # Recommend Brain (SOTA 2026 Updates)
+    # Recommend Brain
     echo -e "${YELLOW}Recommended Local Brain (SOTA 2026):${NC}"
     if [ "$VRAM_GB" -ge 16 ] || [ "$RAM_GB" -ge 64 ]; then
-        RECOMMENDED_MODEL="DeepSeek V4 (upcoming) / Qwen 3 (235B)"
+        RECOMMENDED_MODEL="DeepSeek V4 / Qwen 3 (235B)"
     elif [ "$RAM_GB" -ge 48 ]; then
-        RECOMMENDED_MODEL="Qwen 2.5 Coder (32B) / Llama 4 Maverick (17B MoE)"
+        RECOMMENDED_MODEL="Qwen 2.5 Coder (32B) / Llama 4 Maverick"
     elif [ "$VRAM_GB" -ge 8 ] || [ "$RAM_GB" -ge 16 ]; then
         RECOMMENDED_MODEL="Gemma 3 (27B) / Llama 4 Scout"
     else
-        RECOMMENDED_MODEL="Llama 4 Scout (17B MoE - Lightweight Mode)"
+        RECOMMENDED_MODEL="Llama 4 Scout (17B MoE - Lightweight)"
     fi
     echo -e "   → ${GREEN}$RECOMMENDED_MODEL${NC}"
 }
 
-# Check prerequisites
+# Prerequisites check
 check_prereqs() {
     echo -e "${YELLOW}Checking prerequisites...${NC}"
     
@@ -103,7 +185,11 @@ check_prereqs() {
     if [ -n "$missing" ]; then
         echo -e "${RED}Missing required tools:${missing}${NC}"
         echo "Please install them first:"
-        echo "  sudo apt install python3 python3-pip git"
+        if [ "$OS" = "linux" ]; then
+            echo "  sudo apt install python3 python3-pip git"
+        elif [ "$OS" = "macos" ]; then
+            echo "  brew install python3 git"
+        fi
         exit 1
     fi
     
@@ -111,6 +197,9 @@ check_prereqs() {
 }
 
 # Clone or update repo
+REPO_URL="https://github.com/jas0nOW/wanda-agentic-system"
+INSTALL_DIR="${WANDA_INSTALL_DIR:-$HOME/.wanda-system}"
+
 get_repo() {
     echo ""
     echo -e "${YELLOW}Getting WANDA system...${NC}"
@@ -142,22 +231,58 @@ select_components() {
     choice=${choice:-3}
     
     case $choice in
-        1) INSTALL_AGENTS=1; INSTALL_VOICE=0 ;;
-        2) INSTALL_AGENTS=0; INSTALL_VOICE=1 ;;
+        1) INSTALL_AGENTS=1; INSTALL_VOICE=0; INSTALL_TELEGRAM=0 ;;
+        2) INSTALL_AGENTS=0; INSTALL_VOICE=1; INSTALL_TELEGRAM=0 ;;
         4) custom_selection ;;
-        *) INSTALL_AGENTS=1; INSTALL_VOICE=1 ;;
+        *) INSTALL_AGENTS=1; INSTALL_VOICE=1; INSTALL_TELEGRAM=1 ;;
     esac
 }
 
 custom_selection() {
     INSTALL_AGENTS=0
     INSTALL_VOICE=0
+    INSTALL_TELEGRAM=0
     
     read -p "Install Agent System? [Y/n]: " ans
     [[ "${ans:-y}" =~ ^[Yy] ]] && INSTALL_AGENTS=1
     
     read -p "Install Voice Assistant? [Y/n]: " ans
     [[ "${ans:-y}" =~ ^[Yy] ]] && INSTALL_VOICE=1
+    
+    read -p "Install Telegram Bot? [y/N]: " ans
+    [[ "$ans" =~ ^[Yy] ]] && INSTALL_TELEGRAM=1
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TEMPLATE PROCESSING - Replace {{TOKENS}} with user values
+# ══════════════════════════════════════════════════════════════════════════════
+
+process_templates() {
+    echo -e "${BLUE}Processing templates with your configuration...${NC}"
+    
+    # Process PROJECT_CONTEXT.md
+    if [ -f "$INSTALL_DIR/prompts/context/PROJECT_CONTEXT.md.template" ]; then
+        sed -e "s|{{USERNAME}}|$USER_NAME|g" \
+            -e "s|{{WORKSPACE}}|$USER_WORKSPACE|g" \
+            -e "s|{{LANGUAGE}}|$USER_LANGUAGE|g" \
+            -e "s|{{AGENTS_INSTALLED}}|$INSTALL_AGENTS|g" \
+            -e "s|{{VOICE_INSTALLED}}|$INSTALL_VOICE|g" \
+            -e "s|{{TELEGRAM_INSTALLED}}|$INSTALL_TELEGRAM|g" \
+            -e "s|{{MCP_INSTALLED}}|${MCP_INSTALLED:-0}|g" \
+            "$INSTALL_DIR/prompts/context/PROJECT_CONTEXT.md.template" \
+            > "$INSTALL_DIR/prompts/context/PROJECT_CONTEXT.md"
+    fi
+    
+    # Process GEMINI.md (personalized system prompt)
+    if [ -f "$INSTALL_DIR/templates/GEMINI.md.template" ]; then
+        sed -e "s|{{USERNAME}}|$USER_NAME|g" \
+            -e "s|{{WORKSPACE}}|$USER_WORKSPACE|g" \
+            -e "s|{{LANGUAGE}}|$USER_LANGUAGE|g" \
+            "$INSTALL_DIR/templates/GEMINI.md.template" \
+            > "$GEMINI_CONFIG/GEMINI.md"
+    fi
+    
+    echo -e "${GREEN}✓ Templates processed${NC}"
 }
 
 # Install Agent System
@@ -166,49 +291,29 @@ install_agents() {
     echo -e "${YELLOW}Installing Agent System...${NC}"
     
     # Create directories
-    mkdir -p "$OPENCODE_CONFIG/profiles/stable"
-    mkdir -p "$OPENCODE_CONFIG/profiles/experimental"
+    mkdir -p "$OPENCODE_CONFIG"
     mkdir -p "$GEMINI_CONFIG"
     
-    # Copy profiles
-    cp -n "$INSTALL_DIR/wanda-agents/profiles/opencode.jsonc" "$OPENCODE_CONFIG/profiles/" 2>/dev/null || true
-    cp -n "$INSTALL_DIR/wanda-agents/profiles/stable/opencode.json" "$OPENCODE_CONFIG/profiles/stable/" 2>/dev/null || true
-    cp -n "$INSTALL_DIR/wanda-agents/profiles/experimental/opencode.json" "$OPENCODE_CONFIG/profiles/experimental/" 2>/dev/null || true
-    
-    # Copy GEMINI.md
-    cp -n "$INSTALL_DIR/wanda-agents/GEMINI.md" "$GEMINI_CONFIG/" 2>/dev/null || true
-    
-    # Install plugins (if npm available)
-    if command -v npm >/dev/null 2>&1; then
-        echo "Installing OpenCode plugins..."
-        npm install -g oh-my-opencode@3.2.1 2>/dev/null || true
+    # Copy OpenCode profiles (symlink for live updates)
+    if [ -f "$INSTALL_DIR/wanda_cloud/profiles/stable/opencode.jsonc" ]; then
+        ln -sf "$INSTALL_DIR/wanda_cloud/profiles/stable/opencode.jsonc" "$OPENCODE_CONFIG/opencode.jsonc"
+        echo "  ✓ OpenCode profile symlinked"
     fi
     
- # Setup Symlinks for Live Tracking
-setup_symlinks() {
-    echo -e "${BLUE}Setting up Symlinks for Live Config Tracking...${NC}"
-    
-    # Opencode Profiles
-    mkdir -p "$OPENCODE_CONFIG/profiles/experimental"
-    ln -sf "$INSTALL_DIR/wanda-agents/profiles/experimental/opencode.json" "$OPENCODE_CONFIG/profiles/experimental/opencode.json"
-    
-    # GEMINI.md
-    mkdir -p "$GEMINI_CONFIG"
-    ln -sf "$INSTALL_DIR/wanda-agents/GEMINI.md" "$GEMINI_CONFIG/GEMINI.md"
-    
-    # Plugins (if folders exist)
-    if [ -d "$INSTALL_DIR/plugins/oh-my-opencode" ]; then
-        mkdir -p "$HOME/.config/oh-my-opencode"
-        # ln -sf ...
+    # Copy/process GEMINI.md
+    if [ -f "$INSTALL_DIR/templates/GEMINI.md.template" ]; then
+        process_templates
+    else
+        # Fallback: copy default and personalize inline
+        cp "$INSTALL_DIR/prompts/system/OPENCODE_SYSTEM.md" "$GEMINI_CONFIG/GEMINI.md" 2>/dev/null || true
     fi
     
-    echo -e "${GREEN}[OK] Symlinks established. Your changes in the repo are now live!${NC}"
-}
-    echo ""
-    echo -e "${YELLOW}📌 Next steps:${NC}"
-    echo "   1. Add your Antigravity account to:"
-    echo "      $OPENCODE_CONFIG/antigravity-accounts.json"
-    echo "   2. Run: opencode"
+    # Copy settings.json for MCP
+    if [ -f "$INSTALL_DIR/mcp-servers/settings.json.template" ]; then
+        cp "$INSTALL_DIR/mcp-servers/settings.json.template" "$GEMINI_CONFIG/settings.json"
+    fi
+    
+    echo -e "${GREEN}✓ Agent System installed${NC}"
 }
 
 # Install Voice Assistant
@@ -216,49 +321,93 @@ install_voice() {
     echo ""
     echo -e "${YELLOW}Installing Voice Assistant...${NC}"
     
-    cd "$INSTALL_DIR/wanda-voice"
+    VOICE_DIR="$INSTALL_DIR/wanda_local"
     
-    # Create venv
+    if [ ! -d "$VOICE_DIR" ]; then
+        echo -e "${RED}Voice module not found${NC}"
+        return
+    fi
+    
+    cd "$VOICE_DIR"
+    
+    # Create venv if not exists
     if [ ! -d "venv" ]; then
         python3 -m venv venv
     fi
     
     # Install dependencies
     source venv/bin/activate
-    pip install --upgrade pip
-    pip install -r requirements.txt
-    
-    # Run setup
-    if [ -f "setup.py" ]; then
-        python3 setup.py --auto
-    fi
-    
-    # Create global command
-    echo "Creating 'wanda' command..."
-    sudo ln -sf "$INSTALL_DIR/wanda-voice/wanda" /usr/local/bin/wanda 2>/dev/null || {
-        echo "Could not create global command. Run manually:"
-        echo "  $INSTALL_DIR/wanda-voice/wanda"
+    pip install --upgrade pip --quiet
+    pip install -r requirements.txt --quiet 2>/dev/null || {
+        pip install python-telegram-bot python-dotenv httpx --quiet
     }
     
+    # Create personalized config
+    cat > "$VOICE_DIR/config.yaml" <<EOF
+# WANDA Voice Configuration
+# Generated by install.sh
+
+user:
+  name: "$USER_NAME"
+  language: "$USER_LANGUAGE"
+
+workspace: "$USER_WORKSPACE"
+
+tts:
+  engine: auto  # auto, xtts, siri (macOS), piper
+  voice: ${USER_LANGUAGE}-1
+
+ollama:
+  model: brainstorm-36b
+  fallback: heretic-12b
+EOF
+    
     echo -e "${GREEN}✓ Voice Assistant installed${NC}"
-    echo ""
-    echo -e "${YELLOW}📌 Next steps:${NC}"
-    echo "   1. Configure wanda.config.yaml"
-    echo "   2. Run: wanda"
 }
 
-# MCP servers (optional)
+# Install Telegram Bot (optional)
+install_telegram() {
+    echo ""
+    echo -e "${YELLOW}Setting up Telegram Bot...${NC}"
+    
+    read -p "Do you have a Telegram Bot token? [y/N]: " has_token
+    if [[ ! "$has_token" =~ ^[Yy] ]]; then
+        echo "  Skipping Telegram setup. Get a token from @BotFather later."
+        return
+    fi
+    
+    read -p "Enter your Telegram Bot Token: " TELEGRAM_TOKEN
+    
+    cat > "$INSTALL_DIR/wanda_local/.env" <<EOF
+# WANDA Telegram Bot Configuration
+WANDA_TELEGRAM_BOT_TOKEN=$TELEGRAM_TOKEN
+WANDA_TELEGRAM_BOT_NAME=@wandavoice_bot
+WANDA_USER_NAME=$USER_NAME
+EOF
+    
+    echo -e "${GREEN}✓ Telegram Bot configured${NC}"
+}
+
+# MCP setup
 setup_mcp() {
     echo ""
     read -p "Setup MCP Docker servers? [y/N]: " ans
     if [[ "$ans" =~ ^[Yy] ]]; then
+        MCP_INSTALLED=1
         if command -v docker >/dev/null 2>&1; then
-            cp "$INSTALL_DIR/mcp-servers/settings.json.template" "$GEMINI_CONFIG/settings.json"
-            echo -e "${GREEN}✓ MCP config copied${NC}"
-            echo "Edit $GEMINI_CONFIG/settings.json to configure MCP servers"
+            if [ -f "$INSTALL_DIR/mcp-servers/settings.json.template" ]; then
+                sed -e "s|{{HOME}}|$HOME|g" \
+                    "$INSTALL_DIR/mcp-servers/settings.json.template" \
+                    > "$GEMINI_CONFIG/settings.json"
+            fi
+            echo -e "${GREEN}✓ MCP config created${NC}"
+            echo "Edit $GEMINI_CONFIG/settings.json to add API keys"
         else
             echo -e "${RED}Docker not found. Install Docker first.${NC}"
+            MCP_INSTALLED=0
         fi
+    else
+        MCP_INSTALLED=0
     fi
 }
 
@@ -266,16 +415,20 @@ setup_mcp() {
 print_summary() {
     echo ""
     echo -e "${GREEN}"
-    echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║                  ✅ Installation Complete!                   ║"
-    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo "╔══════════════════════════════════════════════════════════════════════════╗"
+    echo "║                      ✅ Installation Complete!                           ║"
+    echo "╚══════════════════════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
     echo ""
-    echo "Installed to: $INSTALL_DIR"
+    echo -e "  ${CYAN}Welcome, $USER_NAME!${NC}"
+    echo ""
+    echo "  Installed to: $INSTALL_DIR"
+    echo "  Workspace: $USER_WORKSPACE"
     echo ""
     echo -e "${BLUE}Quick Start:${NC}"
-    [ "$INSTALL_AGENTS" = "1" ] && echo "  • Agent System: opencode"
-    [ "$INSTALL_VOICE" = "1" ] && echo "  • Voice Assistant: wanda"
+    [ "$INSTALL_AGENTS" = "1" ] && echo "  • Agent System: opencode or gemini"
+    [ "$INSTALL_VOICE" = "1" ] && echo "  • Voice Assistant: cd $INSTALL_DIR/wanda_local && python main.py"
+    [ "$INSTALL_TELEGRAM" = "1" ] && echo "  • Telegram Bot: pm2 start wanda_local/telegram_bot.py"
     echo ""
     echo -e "${BLUE}Update:${NC}"
     echo "  cd $INSTALL_DIR && git pull"
@@ -283,19 +436,32 @@ print_summary() {
     echo -e "${BLUE}Documentation:${NC}"
     echo "  $INSTALL_DIR/docs/"
     echo ""
-    echo "🌟 Enjoy WANDA!"
+    echo "🌟 Enjoy WANDA, $USER_NAME!"
 }
 
-# Main
+# ══════════════════════════════════════════════════════════════════════════════
+# MAIN
+# ══════════════════════════════════════════════════════════════════════════════
+
 main() {
+    print_banner
+    detect_os
+    set_paths
     check_prereqs
+    
+    # PERSONALIZATION
+    collect_user_info
+    
+    check_hardware
     get_repo
     select_components
     
     [ "$INSTALL_AGENTS" = "1" ] && install_agents
     [ "$INSTALL_VOICE" = "1" ] && install_voice
+    [ "$INSTALL_TELEGRAM" = "1" ] && install_telegram
     
     setup_mcp
+    process_templates
     print_summary
 }
 

@@ -30,12 +30,12 @@ WANDA operiert über eine spezialisierte Hierarchie von **17 Agenten** in 7 funk
 
 ## 3. Die vier Säulen (Plugin-Ökosystem)
 
-Das OS basiert auf vier fundamentalen Plugin-Modulen, die live über GitHub synchronisiert werden:
+3.  Das OS basiert auf einer strikten Plugin-Hierarchie (SSOT 2026):
 
-1.  **OhMyOpencode (Orchestrator):** Das zentrale Nervensystem. Veraltet Agenten-Lebenszyklen, Layer-Übergänge und Tool-Berechtigungen.
-2.  **MiCode (Intelligence):** Die "Augen" des Systems. Nutzt AST-Parsing und semantische Analyse, um Codebasen besser zu verstehen als reiner Text.
-3.  **Opencore (Tooling):** Die "Hände". Verwaltet MCP-Server (Docker, Filesystem, GitHub, Browser) für autonome Aktionen.
-4.  **Wanda UI (Feedback):** Das "Gesicht". Ein hochwertiger, animierter Orb im Siri-Stil mit Mikro-Animationen, die den internen Status widerspiegeln (Zuhören, Denken, Sprechen).
+1.  **OhMyOpencode (Chefdirigent):** Das **primäre** Orchestrierungs-Plugin. Verwaltet Session, Auth und Token-Budget. "Der Boss".
+2.  **MiCode (Playbook):** Eine **manuelle** Workflow-Engine für komplexe Tasks (Brainstorm → Plan → Code). Wird bewusst aufgerufen, ist *kein* dauerhafter Hintergrund-Orchestrator.
+3.  **Opencode-Orchestrator (Experimentell):** Nur im `experimental` Profil aktiv. Dient als Testlabor für Multi-Agent-Schwärme.
+4.  **Wanda Voice (Interface):** Das lokale Gateway (Ollama + XTTS). Es injiziert Befehle direkt in die CLI.
 
 ---
 
@@ -60,16 +60,43 @@ WANDA strebt eine Konversationsqualität auf "JARVIS-Niveau" an.
 
 ## 5. Intelligenz: Das Hardware-adaptive Gehirn 🧠
 
-WANDA nutzt kein einzelnes Modell, sondern eine dynamische Auswahl an "Brains" basierend auf deiner Hardware.
+WANDA ist ein hybrider Organismus, der Cloud-Intelligenz für tiefes Denken und lokale Modelle für Echtzeit-Interaktion nutzt.
 
-| System-Klasse | RAM/VRAM | Empfohlenes lokales LLM (SOTA 2026) | Fähigkeiten |
+### 5.1 Der Agenten-Kern (Cloud SOTA) 🧠
+Der Kern besteht aus **17 Agenten**, die deine 5 Cloud-Abonnements nutzen, um maximale Präzision zu erreichen.
+
+| Schicht | Agenten | Primäres Modell (Cloud) | Fokus |
 |---|---|---|---|
-| **S (Niedrig)** | < 8GB RAM / 4GB V | **Llama 4 Scout (17B MoE)** | Schnell, Multimodal, Zusammenfassung |
-| **M (Mittel)** | 16GB RAM / 8GB V | **Gemma 3 (27B)** / Qwen 2.5 (14B) | SOTA Balance, Bildanalyse |
-| **MH (Mittel-Hoch)** | 50GB+ RAM / 8GB V | **Qwen 2.5 Coder (32B)** / **Llama 4 Maverick** | Deep Coding, Autonome Recherche |
-| **G (Hoch)** | 64GB+ RAM / 24GB V | **DeepSeek V4 (erscheint bald)** / **Qwen 3 (235B)** | Absolute Souveräne Intelligenz |
+| **Ideation** | Brainstormer | Gemini 3 Pro | Konzepte, UX Mapping |
+| **Core Coding** | Architect, Developer, Audit | Claude 4.5 Sonnet / Opus | TDD, Refactoring, Struktur |
+| **Specialist** | Oracle, Writer, Librarian | Gemini Pro / Claude 4.5 | Recherche & Dokumentation |
+| **Meta-Review** | Metis, Momus | Claude 4.5 Opus Thinking | Sicherheit & Plan-Prüfung |
 
-**Unified Installer:** Erkennt VRAM/RAM/CPU und installiert das optimale Gehirn automatisch.
+### 5.2 Voice-Gateway & Lokaler Sicherheits-Layer (Ollama) 🛡️
+Wanda ist mehr als nur Sprache. Das lokale Ollama-Modell fungiert als **Middleware** zwischen dir und dem Cloud-System:
+
+1.  **Prompt-Optimierung**: Dein gesprochener Befehl wird von `brainstorm-36b` in einen präzisen technischen Prompt verwandelt.
+2.  **Sicherheits-Check**: Bevor ein Befehl an die Cloud-Agenten geht, prüft Ollama auf destruktive Aktionen (z.B. `rm -rf`).
+3.  **Readback & Briefing**: Wanda fasst komplexe Pläne mündlich zusammen ("Soll ich das so ausführen?") und gibt morgens ein Briefing.
+
+**Hardware-Specs für den Installer (Lokale Modelle):**
+
+| System-Klasse | RAM/VRAM | Empfohlenes lokales LLM (Gehirn) | Fähigkeiten |
+|---|---|---|---|
+| **S (Niedrig)** | < 8GB RAM / 4GB | **Llama 4 Scout (17B MoE)** | Schnelles Routing, Tags |
+| **M (Mittel)** | 16GB RAM / 8GB | **Gemma 3 (27B)** | Voice-Interaktion & VAD |
+| **MH (Mittel-Hoch)** | 50GB+ RAM / 8GB | **Qwen 2.5 Coder (32B)** / **Llama 4 Maverick** | **Dein Setup:** Deep Context, Prompt Refinement |
+| **G (Hoch)** | 64GB+ RAM / 24GB | **DeepSeek V4** / **Qwen 3 (235B)** | Vollständige lokale Autonomie |
+
+### 5.3 Wanda Voice Profiles (Installer Auswahl) 🗣️
+Zusätzlich zum "Gehirn" wählst du die "Stimme" von Wanda. Alle drei Optionen sind hochwertig und **weiblich**:
+
+| Audio-Klasse | Engine | Modell-Name | Charakteristik |
+|---|---|---|---|
+| **Premium** | **Coqui XTTS-v2** | "Wanda Cinema" | Emotional, atmend, ultra-realistisch. (Benötigt ~4GB VRAM) |
+| **Medium** | **StyleTTS2** | "Wanda Flow" | Sehr flüssig, geringe Latenz, dynamisch. |
+| **Low** | **VITS Hi-Fi** | "Wanda Spark" | Kristallklar, ressourcensparend (Besser als Standard). |
+| *Fallback* | *Piper* | *Kerstin (Low)* | *Notfall-System bei Hardware-Fehlern.* |
 
 ---
 

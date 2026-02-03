@@ -1,42 +1,59 @@
 <!DOCTYPE html>
 <html lang="de" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WANDA Sovereign OS v2.0 | Zentrale Steuerung</title>
+    <title>WANDA Sovereign OS v1.x | Unified Command</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ 
-            startOnLoad: true, 
+        mermaid.initialize({
+            startOnLoad: true,
             theme: 'base',
             themeVariables: {
-                darkMode: true, background: '#0a0a0a', fontFamily: 'JetBrains Mono', fontSize: '16px',
-                primaryColor: '#27272a', primaryTextColor: '#fff', lineColor: '#52525b',
-                secondaryColor: '#0061d5', tertiaryColor: '#fff'
+                darkMode: true, background: '#020202', fontFamily: 'JetBrains Mono', fontSize: '14px',
+                primaryColor: '#1a1a1a', primaryTextColor: '#fff', lineColor: '#3b82f6',
+                secondaryColor: '#8b5cf6', tertiaryColor: '#fff'
             },
             flowchart: { curve: 'basis', htmlLabels: true, useMaxWidth: true }
         });
         window.scrollToId = (id) => {
             const el = document.getElementById(id);
-            if(el) {
-                el.scrollIntoView({behavior: 'smooth', block: 'center'});
-                el.classList.add('ring-4', 'ring-blue-500', 'shadow-[0_0_50px_rgba(59,130,246,0.5)]');
-                setTimeout(() => el.classList.remove('ring-4', 'ring-blue-500', 'shadow-[0_0_50px_rgba(59,130,246,0.5)]'), 3000);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('ring-4', 'ring-blue-500/50', 'shadow-[0_0_50px_rgba(59,130,246,0.3)]');
+                setTimeout(() => el.classList.remove('ring-4', 'ring-blue-500/50', 'shadow-[0_0_50px_rgba(59,130,246,0.3)]'), 3000);
             }
         };
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        outfit: ['Outfit', 'sans-serif']
+                    },
                     colors: {
                         wanda: {
                             bg: '#020202', card: '#0a0a0a', border: '#27272a',
                             accent: '#3b82f6', secondary: '#8b5cf6', success: '#10b981',
                             warning: '#f59e0b', danger: '#ef4444'
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
                         }
                     }
                 }
@@ -44,428 +61,601 @@
         }
     </script>
     <style>
-        body { background-color: #020202; color: #e4e4e7; background-image: radial-gradient(circle at top center, #111 0%, #020202 50%); }
-        .glass { background: rgba(10, 10, 10, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 50px rgba(0,0,0,0.5); }
-        .neon-text { text-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-        .code-scroll::-webkit-scrollbar { height: 6px; }
-        .code-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        .cursor { display: inline-block; width: 10px; height: 18px; background: #10b981; animation: blink 1s infinite; vertical-align: middle; }
-        .mermaid { display: flex; justify-content: center; width: 100%; overflow-x: auto; }
+        body {
+            background-color: #020202;
+            color: #e4e4e7;
+            background-image: radial-gradient(circle at top center, #111 0%, #020202 50%);
+            overflow-x: hidden;
+        }
+
+        .glass {
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .neon-border {
+            position: relative;
+        }
+
+        .neon-border::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #10b981);
+            z-index: -1;
+            border-radius: inherit;
+            opacity: 0.3;
+            filter: blur(5px);
+        }
+
+        .neon-text {
+            text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .code-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .code-scroll::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: #3b82f6;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        .orb {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #3b82f633 0%, #8b5cf611 100%);
+            border-radius: 50%;
+            filter: blur(40px);
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            animation: pulse-slow 8s infinite;
+        }
     </style>
 </head>
-<body class="antialiased min-h-screen pb-20">
+
+<body class="antialiased min-h-screen pb-20 font-sans">
 
     <!-- Navbar -->
     <header class="fixed top-0 w-full z-50 glass border-b border-white/5">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-3 h-3 bg-wanda-success rounded-full shadow-[0_0_15px_#10b981] animate-pulse"></div>
-                <h1 class="text-xl font-bold tracking-widest font-mono">WANDA <span class="text-gray-600 font-normal">v2.0</span></h1>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <div class="w-3 h-3 bg-wanda-accent rounded-full shadow-[0_0_20px_#3b82f6] animate-pulse"></div>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter font-outfit uppercase">WANDA <span
+                        class="text-wanda-accent">Sovereign OS</span></h1>
             </div>
-            <nav class="hidden md:flex gap-8 text-xs font-bold font-mono text-gray-500 tracking-widest uppercase">
-                <a href="#kpi" class="hover:text-wanda-accent transition">KPIs</a>
-                <a href="#architecture" class="hover:text-wanda-accent transition">Kader</a>
-                <a href="#diagram" class="hover:text-wanda-accent transition">Fluss</a>
-                <a href="#models" class="hover:text-wanda-accent transition">Modelle</a>
-                <a href="#workflow" class="hover:text-wanda-accent transition">Prozess</a>
-                <a href="#skills" class="hover:text-wanda-accent transition">Skills</a>
+            <nav class="hidden lg:flex gap-8 text-[10px] font-bold font-mono text-gray-500 tracking-[0.2em] uppercase">
+                <a href="#kpi"
+                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">Status</a>
+                <a href="#architecture"
+                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">Agents</a>
+                <a href="#diagram"
+                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">Flow</a>
+                <a href="#models"
+                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">Models</a>
+                <a href="#workflow"
+                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">9-Layers</a>
+                <a href="#stack"
+                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">Stack</a>
             </nav>
+            <div
+                class="text-[10px] font-mono text-wanda-accent bg-wanda-accent/10 px-3 py-1 rounded-full border border-wanda-accent/20">
+                v1.x PROD</div>
         </div>
     </header>
 
-    <main class="pt-32 max-w-7xl mx-auto px-6 space-y-24">
+    <main class="pt-32 max-w-7xl mx-auto px-6 space-y-32">
+
+        <!-- Hero Section -->
+        <section class="text-center relative py-12">
+            <div class="orb"></div>
+            <h2 class="text-6xl md:text-8xl font-black font-outfit tracking-tighter mb-4 neon-text">UNIFIED INTELLIGENCE
+            </h2>
+            <p class="text-gray-500 max-w-2xl mx-auto text-sm uppercase tracking-[0.4em] font-mono">Consolidating
+                Opencode • OMO • MiCode • Orchestrator</p>
+        </section>
 
         <!-- KPI Dashboard -->
-        <section id="kpi" class="space-y-6">
+        <section id="kpi" class="space-y-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-accent group hover:border-wanda-accent/50 transition">
-                    <div class="text-xs text-gray-500 font-mono mb-2 uppercase tracking-widest">Autonomie</div>
-                    <div class="text-4xl font-black text-white group-hover:text-wanda-accent transition">100%</div>
-                    <p class="text-[10px] text-gray-600 mt-2 uppercase">Kernfunktionalität & Skalierbarkeit</p>
+                <div
+                    class="glass p-8 rounded-3xl border-l-4 border-l-wanda-accent group hover:bg-white/5 transition duration-500">
+                    <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest">Efficiency</div>
+                    <div class="text-5xl font-black text-white group-hover:neon-text transition">98.4%</div>
+                    <p class="text-[10px] text-gray-600 mt-3 uppercase font-bold tracking-tighter">Unified Agent Gateway
+                    </p>
                 </div>
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-secondary group hover:border-wanda-secondary/50 transition">
-                    <div class="text-xs text-gray-500 font-mono mb-2 uppercase tracking-widest">Latenz</div>
-                    <div class="text-4xl font-black text-white group-hover:text-wanda-secondary transition">&lt;200ms</div>
-                    <p class="text-[10px] text-gray-600 mt-2 uppercase">Performance & Gateway Speed</p>
+                <div
+                    class="glass p-8 rounded-3xl border-l-4 border-l-wanda-secondary group hover:bg-white/5 transition duration-500">
+                    <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest">Active Units</div>
+                    <div class="text-5xl font-black text-white group-hover:neon-text transition">17</div>
+                    <p class="text-[10px] text-gray-600 mt-3 uppercase font-bold tracking-tighter">Neural Specialists
+                    </p>
                 </div>
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-success group hover:border-wanda-success/50 transition">
-                    <div class="text-xs text-gray-500 font-mono mb-2 uppercase tracking-widest">Fehlerrate</div>
-                    <div class="text-4xl font-black text-white group-hover:text-wanda-success transition">&lt;5%</div>
-                    <p class="text-[10px] text-gray-600 mt-2 uppercase">UI-Konsistenz & Messung</p>
+                <div
+                    class="glass p-8 rounded-3xl border-l-4 border-l-wanda-success group hover:bg-white/5 transition duration-500">
+                    <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest">MCP Servers</div>
+                    <div class="text-5xl font-black text-white group-hover:neon-text transition">15</div>
+                    <p class="text-[10px] text-gray-600 mt-3 uppercase font-bold tracking-tighter">Tool Bindings</p>
                 </div>
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-warning group hover:border-wanda-warning/50 transition">
-                    <div class="text-xs text-gray-500 font-mono mb-2 uppercase tracking-widest">Intelligenz</div>
-                    <div class="text-4xl font-black text-white group-hover:text-wanda-warning transition">SOTA</div>
-                    <p class="text-[10px] text-gray-600 mt-2 uppercase">Gemini Flash + Claude Opus</p>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-gray-500 group hover:border-white/20 transition">
-                    <div class="text-xs text-gray-500 font-mono mb-2 uppercase tracking-widest">Agenten Kader</div>
-                    <div class="text-4xl font-black text-white group-hover:text-white transition">19</div>
-                    <p class="text-[10px] text-gray-600 mt-2 uppercase">Main + Subagenten</p>
-                </div>
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-gray-500 group hover:border-white/20 transition">
-                    <div class="text-xs text-gray-500 font-mono mb-2 uppercase tracking-widest">Layer / Phasen</div>
-                    <div class="text-4xl font-black text-white group-hover:text-white transition">7</div>
-                    <p class="text-[10px] text-gray-600 mt-2 uppercase">Lifecycle & Agent-Layer</p>
-                </div>
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-gray-500 group hover:border-white/20 transition">
-                    <div class="text-xs text-gray-500 font-mono mb-2 uppercase tracking-widest">Provider</div>
-                    <div class="text-4xl font-black text-white group-hover:text-white transition">5</div>
-                    <p class="text-[10px] text-gray-600 mt-2 uppercase">Provider & Quota-Routing</p>
-                </div>
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-gray-500 group hover:border-white/20 transition">
-                    <div class="text-xs text-gray-500 font-mono mb-2 uppercase tracking-widest">Modell Pool</div>
-                    <div class="text-4xl font-black text-white group-hover:text-white transition">7</div>
-                    <p class="text-[10px] text-gray-600 mt-2 uppercase">Verfügbare LLM Engines</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 00. Combined Trinity & Core Roster -->
-        <section id="architecture" class="space-y-12">
-            <h3 class="text-4xl font-bold font-mono text-white border-b border-white/5 pb-4 uppercase tracking-tighter text-center">00. ARCHITEKTUR-KERN & KOMMANDO</h3>
-            
-            <!-- Trinity Spheres -->
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="glass p-6 rounded-xl border-t-4 border-t-wanda-secondary">
-                    <div class="w-12 h-12 bg-wanda-secondary/20 rounded-lg flex items-center justify-center mb-4 text-2xl">🧠</div>
-                    <h4 class="text-xl font-bold mb-2 text-white text-center">Das Gehirn</h4>
-                    <p class="text-sm text-gray-400 text-center">Strategie, Design & Deep Reasoning. Fokus auf Ideation und Architektur-Validierung.</p>
-                </div>
-                <div class="glass p-6 rounded-xl border-t-4 border-t-wanda-accent">
-                    <div class="w-12 h-12 bg-wanda-accent/20 rounded-lg flex items-center justify-center mb-4 text-2xl">👑</div>
-                    <h4 class="text-xl font-bold mb-2 text-white text-center">Die Hände</h4>
-                    <p class="text-sm text-gray-400 text-center">Management & Ausführung. Nutzt Ultrawork für parallele Tmux-Sessions und TDD-Implementation.</p>
-                </div>
-                <div class="glass p-6 rounded-xl border-t-4 border-t-wanda-success">
-                    <div class="w-12 h-12 bg-wanda-success/20 rounded-lg flex items-center justify-center mb-4 text-2xl">🛡️</div>
-                    <h4 class="text-xl font-bold mb-2 text-white text-center">Der Support</h4>
-                    <p class="text-sm text-gray-400 text-center">Sicherheit, Wissen & Verifikation. Fokus auf RAG, Code-Style und Verifikation.</p>
+                <div
+                    class="glass p-8 rounded-3xl border-l-4 border-l-wanda-warning group hover:bg-white/5 transition duration-500">
+                    <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest">Intelligence</div>
+                    <div class="text-5xl font-black text-white group-hover:neon-text transition">2026</div>
+                    <p class="text-[10px] text-gray-600 mt-3 uppercase font-bold tracking-tighter">SOTA Model Stack</p>
                 </div>
             </div>
 
-            <!-- Core Agent Grid -->
-            <div class="space-y-6">
-                <h4 class="text-xs font-bold font-mono text-gray-500 uppercase tracking-[0.3em] text-center">KERN-AGENT (PRIMARY)</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div id="agent-commander" class="glass p-8 rounded-2xl border-t-4 border-t-wanda-accent relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 p-4 text-6xl opacity-10 group-hover:opacity-30 transition">👑</div>
-                        <h4 class="text-2xl font-bold mb-1 text-white">Commander</h4>
-                        <div class="text-xs font-mono text-wanda-accent mb-4 tracking-widest uppercase font-bold">Mission Controller</div>
-                        <p class="text-xs text-gray-400 mb-6 leading-relaxed">
-                            Streng regelbasiert. Orchestriert Tasks, Delegation, Policy-Gates und Routing zu Subagenten.
-                        </p>
-                        <div class="space-y-1">
-                            <div class="text-[10px] font-mono text-gray-500 uppercase">P: <span class="text-white">GPT 5.2 Codex</span></div>
-                            <div class="text-[10px] font-mono text-gray-500 uppercase">S: <span class="text-white">Gemini 3 Flash</span></div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass p-6 rounded-2xl flex items-center justify-between">
+                    <span class="text-xs text-gray-400 font-mono uppercase tracking-widest">Sync Status</span>
+                    <span class="text-xs text-wanda-success font-bold font-mono">LIVE • Symlink Active</span>
+                </div>
+                <div class="glass p-6 rounded-2xl flex items-center justify-between">
+                    <span class="text-xs text-gray-400 font-mono uppercase tracking-widest">Hardware Tier</span>
+                    <span class="text-xs text-wanda-accent font-bold font-mono uppercase tracking-tighter">Tier MH (50GB
+                        RAM)</span>
+                </div>
+                <div class="glass p-6 rounded-2xl flex items-center justify-between">
+                    <span class="text-xs text-gray-400 font-mono uppercase tracking-widest">Security Mode</span>
+                    <span class="text-xs text-white font-bold font-mono">Envsitter Guard Ver. 1.1</span>
+                </div>
+            </div>
+
+            <!-- Live Service Status Panel -->
+            <div class="glass p-6 rounded-2xl neon-border">
+                <h4 class="text-xs text-gray-400 font-mono uppercase tracking-widest mb-4">🔌 Live Services</h4>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-wanda-success rounded-full animate-pulse shadow-[0_0_10px_#10b981]">
                         </div>
+                        <span class="text-xs font-mono text-gray-300">Ollama</span>
                     </div>
-                    <div class="glass p-8 rounded-2xl border border-white/10 bg-black/40">
-                        <h4 class="text-xs font-bold font-mono text-gray-500 uppercase tracking-widest mb-3">Deaktivierte Hauptagenten</h4>
-                        <p class="text-xs text-gray-400 leading-relaxed">
-                            Sisyphus, Planner, Worker, Reviewer, Executor, Implementer und weitere sind als Hauptagenten deaktiviert.
-                            Ihre Logik fließt in Subagenten ein und wird vom Commander geroutet.
-                        </p>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-wanda-success rounded-full animate-pulse shadow-[0_0_10px_#10b981]">
+                        </div>
+                        <span class="text-xs font-mono text-gray-300">Voice Gateway</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-wanda-success rounded-full animate-pulse shadow-[0_0_10px_#10b981]">
+                        </div>
+                        <span class="text-xs font-mono text-gray-300">Telegram Bot</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-wanda-accent rounded-full shadow-[0_0_10px_#3b82f6]"></div>
+                        <span class="text-xs font-mono text-gray-300">OpenCode</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-wanda-secondary rounded-full shadow-[0_0_10px_#8b5cf6]"></div>
+                        <span class="text-xs font-mono text-gray-300">VPS Relay</span>
                     </div>
                 </div>
+                <p class="text-[9px] text-gray-600 mt-3 font-mono">Last checked: <span id="lastChecked">--</span> •
+                    <a href="#" class="text-wanda-accent hover:underline" onclick="location.reload()">Refresh</a>
+                </p>
             </div>
         </section>
 
-        <!-- 01. ORIGINAL System Flow Diagram -->
+        <!-- 00. Architecture Trinity -->
+        <section id="architecture" class="space-y-16">
+            <h3 class="text-5xl font-black font-outfit text-white text-center uppercase tracking-tighter">Neural
+                Architecture</h3>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Brain -->
+                <div
+                    class="glass p-10 rounded-[2.5rem] border-t-2 border-t-wanda-secondary relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 text-8xl opacity-5 group-hover:opacity-20 transition">🧠
+                    </div>
+                    <h4 class="text-2xl font-black mb-4 text-white uppercase italic">The Sovereign Brain</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-8">Strategische Planung & Deep Reasoning. Fokus
+                        auf Architektur-Integrität und Ideation.</p>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-[10px] font-mono"><span
+                                class="text-gray-400 uppercase">Orchestrator</span><span
+                                class="text-wanda-secondary">MASTER</span></div>
+                        <div class="flex justify-between text-[10px] font-mono"><span
+                                class="text-gray-400 uppercase">Brainstormer</span><span
+                                class="text-wanda-secondary">ACTIVE</span></div>
+                        <div class="flex justify-between text-[10px] font-mono"><span
+                                class="text-gray-400 uppercase">Architect</span><span
+                                class="text-wanda-secondary">STANDBY</span></div>
+                    </div>
+                </div>
+                <!-- Execution -->
+                <div
+                    class="glass p-10 rounded-[2.5rem] border-t-2 border-t-wanda-accent relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 text-8xl opacity-5 group-hover:opacity-20 transition">⌨️
+                    </div>
+                    <h4 class="text-2xl font-black mb-4 text-white uppercase italic">The Kinetic Core</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-8">Ausführung & Realisierung. Nutzt das SOTA
+                        Coding-Framework für 1:1 Umsetzung von Specs.</p>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-[10px] font-mono"><span
+                                class="text-gray-400 uppercase">Developer</span><span
+                                class="text-wanda-accent">ACTIVE</span></div>
+                        <div class="flex justify-between text-[10px] font-mono"><span
+                                class="text-gray-400 uppercase">Writer</span><span
+                                class="text-wanda-accent">ACTIVE</span></div>
+                        <div class="flex justify-between text-[10px] font-mono"><span
+                                class="text-gray-400 uppercase">Audit</span><span
+                                class="text-wanda-accent">STANDBY</span></div>
+                    </div>
+                </div>
+                <!-- Support -->
+                <div
+                    class="glass p-10 rounded-[2.5rem] border-t-2 border-t-wanda-success relative overflow-hidden group">
+                    <div class="absolute -top-10 -right-10 text-8xl opacity-5 group-hover:opacity-20 transition">📚
+                    </div>
+                    <h4 class="text-2xl font-black mb-4 text-white uppercase italic">The Oracle Pool</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed mb-8">Knowledge & Research. Zugriff auf RAG,
+                        Code-Pattern-Analysen und Web-Search-Cited Engines.</p>
+                    <div class="flex justify-between text-[10px] font-mono"><span
+                            class="text-gray-400 uppercase">Oracle</span><span class="text-wanda-success">READY</span>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-mono"><span
+                            class="text-gray-400 uppercase">Explore</span><span class="text-wanda-success">READY</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <!-- 01. The WANDA Pyramid -->
         <section id="diagram" class="glass p-10 rounded-3xl space-y-8">
-            <h3 class="text-4xl font-bold font-mono text-white border-b border-white/5 pb-4 uppercase tracking-tighter text-center">01. System-Ablauf</h3>
+            <h3
+                class="text-4xl font-bold font-mono text-white border-b border-white/5 pb-4 uppercase tracking-tighter text-center">
+                01. WANDA INTELLIGENZ-PYRAMIDE</h3>
             <div class="mermaid">
                 graph TD
+                %% Layers
+                L1[Voice Layer & User Intent]
+                L2[Local Gateway & Orchestration]
+                L3[Cloud Agent Core & Reasoning]
+
                 %% Nodes
-                User((User Voice/Chat))
-                Moltbot[Moltbot Gateway]
-                Router{Skill Router}
-                
-                %% Skills
-                Web[v0_web Skill]
-                N8N[v0_n8n Skill]
-                Ops[v0_ops Skill]
-                
-                %% Agents
-                Brain[Brainstormer]
-                Sis[Commander]
-                Front[Frontend-Dev]
-                Qual[Quality-Gate]
-                
-                %% Actions
-                Spec(UI_SPEC.yml)
-                Code(Code-Generierung)
-                Test(Verifikation)
-                Deploy(Deployment)
-                
-                %% Flow
-                User -->|Voice/WhatsApp| Moltbot
-                Moltbot --> Router
-                Router -->|Web App| Web
-                Router -->|Workflow| N8N
-                Router -->|Infrastruktur| Ops
-                
-                Web --> Brain
-                Brain -->|Erstellt Spec| Spec
-                Spec --> Sis
-                Spec --> Front
-                Sis -->|Ultrawork| Code
-                Front -->|Ultrawork| Code
-                Code --> Qual
-                Qual -->|Verifizieren| Test
-                Test -->|Pass| Deploy
-                Test -->|Fail| Sis
-                
-                Deploy -->|Feedback| Moltbot
-                Moltbot -->|Benachrichtigung| User
-                
-                %% Styles
-                style User fill:#fff,color:#000,stroke:#fff
-                style Moltbot fill:#8b5cf6,stroke:#8b5cf6,color:#fff
-                style Sis fill:#3b82f6,stroke:#3b82f6,color:#fff
-                style Front fill:#8b5cf6,stroke:#8b5cf6,color:#fff
-                style Qual fill:#10b981,stroke:#10b981,color:#fff
-                style Brain fill:#f59e0b,stroke:#f59e0b,color:#fff
-                style Spec fill:#27272a,stroke:#52525b,color:#fff
-                style Code fill:#27272a,stroke:#52525b,color:#fff
-                style Test fill:#27272a,stroke:#52525b,color:#fff
-                style Deploy fill:#27272a,stroke:#52525b,color:#fff
+                User((User))
+                Mic(Whisper Local)
+                Ollama(Ollama Gateway<br />Prompt-Refinement & Safety)
+                TTS(Premium Voice<br />XTTS-v2 / Piper)
 
-                %% Interactions
-                click Moltbot call window.scrollToId("moltbot")
-                click Brain call window.scrollToId("agent-brainstormer")
-                click Sis call window.scrollToId("agent-commander")
-                click Front call window.scrollToId("agent-frontend")
-                click Qual call window.scrollToId("agent-quality")
+                %% Core Agents
+                Orch(Orchestrator<br />Gemini 3 Flash)
+                Code(Coding & Arch<br />Claude 4.5 Sonnet)
+                Idea(Ideation<br />Gemini 3 Pro)
+                Safety(Audit Layer<br />Claude 4.5 Opus)
+
+                %% Connections - Voice Loop
+                User -->|Sprache| Mic
+                Mic -->|Text| Ollama
+                Ollama -->|Safety Check| Ollama
+                Ollama -->|Readback / Confirm| TTS
+                TTS -->|Sound| User
+
+                %% Connections - Agent Loop
+                Ollama -->|JSON Command| Orch
+                Orch -->|Delegation| Code
+                Orch -->|Brainstorm| Idea
+                Code -->|Audit Request| Safety
+                Safety -->|Approval| Orch
+                Orch -->|Result Summary| Ollama
+
+                %% Styling
+                classDef voice fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px;
+                classDef local fill:#3b82f6,stroke:#2563eb,color:#fff,stroke-width:2px;
+                classDef cloud fill:#6366f1,stroke:#4f46e5,color:#fff,stroke-width:2px;
+
+                class User,Mic,TTS voice;
+                class Ollama,L1,L2 local;
+                class Orch,Code,Idea,Safety,L3 cloud;
+            </div>
+            <div class="text-center text-xs font-mono text-gray-500 mt-4">
+                PYRAMIDE: <span class="text-wanda-success">Voice (Local)</span> ▲ <span
+                    class="text-wanda-accent">Gateway (Local)</span> ▲ <span class="text-indigo-400">Core (Cloud)</span>
             </div>
         </section>
 
-        <!-- 02. Specialist Neural Units -->
-        <section id="roster" class="space-y-10">
-            <h3 class="text-4xl font-bold font-mono text-white border-b border-white/5 pb-4 uppercase tracking-tighter text-center">02. SPEZIALISTEN-KADER</h3>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-accent space-y-4">
-                    <h4 class="text-xs font-bold font-mono text-gray-500 uppercase tracking-[0.3em]">Subagenten (Aktiv)</h4>
-                    <div class="grid grid-cols-2 gap-4 text-xs font-mono text-gray-400">
-                        <div>
-                            <div class="text-[10px] uppercase tracking-widest text-white/70 mb-2">oh-my-opencode</div>
-                            <ul class="space-y-1">
-                                <li>Oracle</li>
-                                <li>Librarian</li>
-                                <li>Explore</li>
-                                <li>Writer</li>
-                                <li>Multimodal-Looker</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <div class="text-[10px] uppercase tracking-widest text-white/70 mb-2">MiCode</div>
-                            <ul class="space-y-1">
-                                <li>Brainstormer</li>
-                                <li>Frontend-Dev</li>
-                                <li>Pattern-Hunter</li>
-                                <li>codebase-locator</li>
-                                <li>codebase-analyzer</li>
-                                <li>pattern-finder</li>
-                                <li>ledger-creator</li>
-                                <li>artifact-searcher</li>
-                                <li>mm-orchestrator</li>
-                                <li>mm-pattern-discoverer</li>
-                                <li>mm-stack-detector</li>
-                                <li>mm-dependency-mapper</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="text-[10px] font-mono text-gray-500 uppercase">Quality-Gate stammt aus <span class="text-white">opencode-orchestrator</span>.</div>
+        <!-- 02. Specialist Units -->
+        <section id="roster" class="space-y-12">
+            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase tracking-tighter">The Specialist
+                Roster</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- A selection of specialty agents -->
+                <div class="glass p-6 rounded-2xl border-l-2 border-l-wanda-accent">
+                    <h5 class="text-xs font-black text-white uppercase mb-4 tracking-widest">Multi-Modal Suite</h5>
+                    <ul class="text-[10px] font-mono text-gray-500 space-y-2">
+                        <li>• mm-orchestrator</li>
+                        <li>• mm-pattern-discoverer</li>
+                        <li>• mm-stack-detector</li>
+                        <li>• mm-dependency-mapper</li>
+                    </ul>
                 </div>
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-secondary space-y-4">
-                    <h4 class="text-xs font-bold font-mono text-gray-500 uppercase tracking-[0.3em]">Kategorien (Delegation)</h4>
-                    <div class="grid grid-cols-2 gap-3 text-xs font-mono text-gray-400">
-                        <div>visual-engineering</div>
-                        <div>ultrabrain</div>
-                        <div>artistry</div>
-                        <div>quick</div>
-                        <div>unspecified-low</div>
-                        <div>unspecified-high</div>
-                        <div>writing</div>
-                    </div>
-                    <p class="text-[10px] text-gray-500">Frontend-Model-Quelle: <span class="text-white">v0_web</span> (Skill Registry).</p>
+                <div class="glass p-6 rounded-2xl border-l-2 border-l-wanda-secondary">
+                    <h5 class="text-xs font-black text-white uppercase mb-4 tracking-widest">Codebase Intelligence</h5>
+                    <ul class="text-[10px] font-mono text-gray-500 space-y-2">
+                        <li>• codebase-locator</li>
+                        <li>• codebase-analyzer</li>
+                        <li>• pattern-finder</li>
+                        <li>• Pattern-Hunter</li>
+                    </ul>
+                </div>
+                <div class="glass p-6 rounded-2xl border-l-2 border-l-wanda-success">
+                    <h5 class="text-xs font-black text-white uppercase mb-4 tracking-widest">Continuity & Ledger</h5>
+                    <ul class="text-[10px] font-mono text-gray-500 space-y-2">
+                        <li>• ledger-creator</li>
+                        <li>• artifact-searcher</li>
+                        <li>• Supermemory</li>
+                        <li>• Handoff</li>
+                    </ul>
+                </div>
+                <div class="glass p-6 rounded-2xl border-l-2 border-l-wanda-warning">
+                    <h5 class="text-xs font-black text-white uppercase mb-4 tracking-widest">Visual Analysis</h5>
+                    <ul class="text-[10px] font-mono text-gray-500 space-y-2">
+                        <li>• Multimodal-Looker</li>
+                        <li>• Pattern-Finder (Visual)</li>
+                        <li>• UI Spec Generator</li>
+                        <li>• Component Auditor</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <!-- 03. Neural Model Matrix -->
-        <section id="models" class="space-y-10">
-            <h3 class="text-4xl font-bold font-mono text-white border-b border-white/5 pb-4 uppercase tracking-tighter text-center">03. Neurale Modell-Matrix</h3>
-            <div class="glass rounded-3xl overflow-hidden overflow-x-auto">
-                <table class="w-full text-left border-collapse min-w-[800px]">
+        <!-- 03. Model Matrix -->
+        <section id="models" class="space-y-12">
+            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase tracking-tighter">Model
+                Intelligence Matrix</h3>
+            <div class="glass rounded-[3rem] overflow-hidden">
+                <table class="w-full text-left">
                     <thead>
-                        <tr class="bg-white/5 font-mono text-[10px] text-gray-500 uppercase tracking-widest">
-                            <th class="p-6 border-b border-white/5">Neural Unit (Agent)</th>
-                            <th class="p-6 border-b border-white/5">Primäre Engine (SOTA)</th>
-                            <th class="p-6 border-b border-white/5">Sekundäre Engine (Fallback)</th>
-                            <th class="p-6 border-b border-white/5">Logik-Anwendungsfall</th>
+                        <tr
+                            class="bg-white/5 font-mono text-[9px] text-gray-500 uppercase tracking-widest border-b border-white/5 text-center">
+                            <th class="p-8">Unit Class</th>
+                            <th class="p-8">Preferred Model (SOTA 2026)</th>
+                            <th class="p-8">RAM/VRAM Requirement</th>
+                            <th class="p-8">System Rationale</th>
                         </tr>
                     </thead>
-                    <tbody class="text-sm font-mono">
-                        <tr class="border-b border-white/5 hover:bg-wanda-accent/5 transition"><td class="p-6 font-bold text-wanda-accent">👑 Commander</td><td class="p-6 text-white">GPT 5.2 Codex</td><td class="p-6 text-gray-500">Gemini 3 Flash</td><td class="p-6 text-[10px] text-gray-400">Orchestrierung & Routing</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition"><td class="p-6 font-bold text-white">🧠 Oracle</td><td class="p-6 text-white">OpenAI GPT 5.2</td><td class="p-6 text-gray-500">Gemini 3 Pro</td><td class="p-6 text-[10px] text-gray-400">Architektur & Deep Reasoning</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-indigo-500/5 transition"><td class="p-6 font-bold text-indigo-400">📚 Librarian</td><td class="p-6 text-white">Gemini 3 Flash</td><td class="p-6 text-gray-500">GPT-4o Mini</td><td class="p-6 text-[10px] text-gray-400">Fakten-Extraktion & RAG</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-wanda-warning/5 transition"><td class="p-6 font-bold text-wanda-warning">📝 Writer</td><td class="p-6 text-white">Gemini 3 Flash</td><td class="p-6 text-gray-500">GPT-4o Mini</td><td class="p-6 text-[10px] text-gray-400">Doku & Berichte</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-gray-500/5 transition"><td class="p-6 font-bold text-gray-400">⚡ Explore</td><td class="p-6 text-white">Gemini 3 Flash</td><td class="p-6 text-gray-500">Claude 4.5 Haiku</td><td class="p-6 text-[10px] text-gray-400">Exploration & Scanning</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-wanda-danger/5 transition"><td class="p-6 font-bold text-wanda-danger">🕵️ Pattern-Hunter</td><td class="p-6 text-white">GPT 5.2 Codex</td><td class="p-6 text-gray-500">Gemini 3 Pro</td><td class="p-6 text-[10px] text-gray-400">Konventionen & Mindmodel</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-wanda-success/5 transition"><td class="p-6 font-bold text-wanda-success">🛡️ Quality-Gate</td><td class="p-6 text-white">GPT 5.2 Codex</td><td class="p-6 text-gray-500">Gemini 3 Pro</td><td class="p-6 text-[10px] text-gray-400">Validierung & Audits</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-wanda-secondary/5 transition"><td class="p-6 font-bold text-wanda-secondary">🎨 Brainstormer</td><td class="p-6 text-white">Gemini 3 Flash</td><td class="p-6 text-gray-500">Claude Sonnet 4.5</td><td class="p-6 text-[10px] text-gray-400">Ideen-Skizzen & Specs</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-wanda-secondary/5 transition"><td class="p-6 font-bold text-wanda-secondary">🖥️ Frontend-Dev</td><td class="p-6 text-white">Gemini 3 Pro</td><td class="p-6 text-gray-500">Claude Sonnet 4.5</td><td class="p-6 text-[10px] text-gray-400">UI/UX & Design-Tokens</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition"><td class="p-6 font-bold text-white">🖼️ Multimodal-Looker</td><td class="p-6 text-white">Gemini 3 Pro</td><td class="p-6 text-gray-500">Gemini 3 Flash</td><td class="p-6 text-[10px] text-gray-400">Bild- & Diagramm-Analyse</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-gray-500/5 transition"><td class="p-6 font-bold text-gray-400">📍 codebase-locator</td><td class="p-6 text-white">Gemini 3 Flash</td><td class="p-6 text-gray-500">Claude 4.5 Haiku</td><td class="p-6 text-[10px] text-gray-400">WO liegen Dateien</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-gray-500/5 transition"><td class="p-6 font-bold text-gray-400">🔍 codebase-analyzer</td><td class="p-6 text-white">Gemini 3 Flash</td><td class="p-6 text-gray-500">Claude 4.5 Haiku</td><td class="p-6 text-[10px] text-gray-400">WIE funktioniert Code</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-gray-500/5 transition"><td class="p-6 font-bold text-gray-400">🧭 pattern-finder</td><td class="p-6 text-white">Gemini 3 Flash</td><td class="p-6 text-gray-500">Claude 4.5 Haiku</td><td class="p-6 text-[10px] text-gray-400">Pattern-Discovery</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-gray-500/5 transition"><td class="p-6 font-bold text-gray-400">🧾 ledger-creator</td><td class="p-6 text-white">Gemini 3 Flash</td><td class="p-6 text-gray-500">Claude 4.5 Haiku</td><td class="p-6 text-[10px] text-gray-400">Continuity Ledger</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-gray-500/5 transition"><td class="p-6 font-bold text-gray-400">🗂️ artifact-searcher</td><td class="p-6 text-white">Gemini 3 Flash</td><td class="p-6 text-gray-500">Claude 4.5 Haiku</td><td class="p-6 text-[10px] text-gray-400">Handoff-Archiv</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition"><td class="p-6 font-bold text-white">🧠 mm-orchestrator</td><td class="p-6 text-white">GPT 5.2 Codex</td><td class="p-6 text-gray-500">Gemini 3 Flash</td><td class="p-6 text-[10px] text-gray-400">Mindmodel-Steuerung</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition"><td class="p-6 font-bold text-white">🧪 mm-pattern-discoverer</td><td class="p-6 text-white">GPT 5.2 Codex</td><td class="p-6 text-gray-500">Gemini 3 Flash</td><td class="p-6 text-[10px] text-gray-400">Muster-Extraktion</td></tr>
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition"><td class="p-6 font-bold text-white">🧬 mm-stack-detector</td><td class="p-6 text-white">GPT 5.2 Codex</td><td class="p-6 text-gray-500">Gemini 3 Flash</td><td class="p-6 text-[10px] text-gray-400">Stack-Erkennung</td></tr>
-                        <tr class="hover:bg-white/5 transition"><td class="p-6 font-bold text-white">🧷 mm-dependency-mapper</td><td class="p-6 text-white">GPT 5.2 Codex</td><td class="p-6 text-gray-500">Gemini 3 Flash</td><td class="p-6 text-[10px] text-gray-400">Dependency-Map</td></tr>
+                    <tbody class="text-xs font-mono">
+                        <!-- CLOUD CORE -->
+                        <tr class="bg-indigo-500/10 border-b border-indigo-500/20">
+                            <td colspan="4" class="p-4 text-left font-black text-indigo-300 uppercase tracking-[0.3em]">
+                                WANDA Agent System (Cloud SOTA • 5 Subscriptions)</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                            <td class="p-6 font-black text-wanda-accent uppercase tracking-widest italic text-center">
+                                Core Engineering</td>
+                            <td class="p-6 text-white font-bold uppercase italic text-center">Claude 4.5 Sonnet / Opus
+                            </td>
+                            <td class="p-6 text-gray-400 font-bold text-center">Cloud SOTA</td>
+                            <td class="p-6 text-gray-500 text-[10px] uppercase text-left">High-Performance Coding,
+                                Architecture & TDD</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                            <td class="p-6 font-black text-wanda-accent uppercase tracking-widest italic text-center">
+                                Identity & Research</td>
+                            <td class="p-6 text-white font-bold uppercase italic text-center">Gemini 3 Pro / Flash</td>
+                            <td class="p-6 text-gray-400 font-bold text-center">Cloud SOTA</td>
+                            <td class="p-6 text-gray-500 text-[10px] uppercase text-left">Creative Ideation, Multi-Modal
+                                & Context Scanning</td>
+                        </tr>
+
+                        <!-- LOCAL VOICE -->
+                        <tr class="bg-wanda-success/10 border-b border-wanda-success/20">
+                            <td colspan="4"
+                                class="p-4 text-left font-black text-wanda-success uppercase tracking-[0.3em]">WANDA
+                                Voice Layer (Local • Ollama)</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                            <td class="p-6 font-black text-wanda-success uppercase tracking-widest italic text-center">
+                                Voice Orchestrator</td>
+                            <td class="p-6 text-white font-bold uppercase italic text-center">Ollama (brainstorm-36b)
+                            </td>
+                            <td class="p-6 text-gray-400 font-bold text-center">Local (50GB RAM)</td>
+                            <td class="p-6 text-gray-500 text-[10px] uppercase text-left">Real-time Intent Discovery,
+                                Routing & VAD Control</td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="p-6 font-black text-wanda-success uppercase tracking-widest italic text-center">
+                                Safety Gateway</td>
+                            <td class="p-6 text-white font-bold uppercase italic text-center">Ollama Middleware</td>
+                            <td class="p-6 text-gray-400 font-bold text-center">Native</td>
+                            <td class="p-6 text-gray-500 text-[10px] uppercase text-left">Pre-Cloud Policy Audit,
+                                Destructive Command Check & Briefing</td>
+                        </tr>
                     </tbody>
                 </table>
-                <div class="p-6 bg-wanda-danger/10 border-t border-wanda-danger/20">
-                    <p class="text-[10px] font-mono text-wanda-danger uppercase tracking-widest animate-pulse">Sicherheitsprotokoll: Quota-Check (Antigravity IDE vs Google CLI) | Provider Switch (Antigravity -> Anthropic -> OpenAI)</p>
+            </div>
+        </section>
+
+        <!-- 04. 9-Layer Kernel -->
+        <section id="workflow" class="space-y-16">
+            <div class="text-center space-y-4">
+                <h3 class="text-4xl font-black font-outfit text-white uppercase tracking-tighter">The 9-Layer Kernel
+                </h3>
+                <p class="text-xs font-mono text-gray-500 uppercase tracking-[0.5em]">Aligned with Master Prompt
+                    Architecture</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Layers 0-2 -->
+                <div class="space-y-6">
+                    <div class="glass p-8 rounded-3xl border-l-2 border-l-wanda-danger relative">
+                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-danger uppercase">L0</span>
+                        <h4 class="text-sm font-black text-white uppercase mb-2">Guardrails (Sovereign)</h4>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Envsitter-Guard &
+                            Security Policies</p>
+                    </div>
+                    <div class="glass p-8 rounded-3xl border-l-2 border-l-wanda-secondary relative">
+                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-secondary uppercase">L1</span>
+                        <h4 class="text-sm font-black text-white uppercase mb-2">Ideation (Brainstormer)</h4>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Creative Exploration &
+                            UX Mapping</p>
+                    </div>
+                    <div class="glass p-8 rounded-3xl border-l-2 border-l-wanda-accent relative">
+                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-accent uppercase">L2</span>
+                        <h4 class="text-sm font-black text-white uppercase mb-2">Orchestration (Sisyphus)</h4>
+                        <div class="w-full bg-wanda-accent/20 h-1 rounded-full overflow-hidden mt-4">
+                            <div class="bg-wanda-accent w-2/3 h-full"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Layers 3-5 -->
+                <div class="space-y-6">
+                    <div class="glass p-8 rounded-3xl border-l-2 border-l-white relative bg-white/5">
+                        <span class="absolute top-4 right-4 text-xs font-mono text-white uppercase">L3</span>
+                        <h4 class="text-sm font-black text-white uppercase mb-2">Core Architect (Opus)</h4>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Structural Integrity &
+                            Specs</p>
+                    </div>
+                    <div class="glass p-8 rounded-3xl border-l-2 border-l-wanda-success relative">
+                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-success uppercase">L4</span>
+                        <h4 class="text-sm font-black text-white uppercase mb-2">Software Engineer (Sonnet)</h4>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">TDD-Driven
+                            Implementation</p>
+                    </div>
+                    <div class="glass p-8 rounded-3xl border-l-2 border-l-indigo-400 relative">
+                        <span class="absolute top-4 right-4 text-xs font-mono text-indigo-400 uppercase">L5</span>
+                        <h4 class="text-sm font-black text-white uppercase mb-2">Specialists (Oracle/Writer)</h4>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Content & Deep
+                            Research</p>
+                    </div>
+                </div>
+                <!-- Layers 6-8 -->
+                <div class="space-y-6">
+                    <div class="glass p-8 rounded-3xl border-l-2 border-l-gray-500 relative">
+                        <span class="absolute top-4 right-4 text-xs font-mono text-gray-500 uppercase">L6</span>
+                        <h4 class="text-sm font-black text-white uppercase mb-2">Research (Locate/Analyze)</h4>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Codebase Context
+                            Discovery</p>
+                    </div>
+                    <div class="glass p-8 rounded-3xl border-l-2 border-l-wanda-warning relative">
+                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-warning uppercase">L7</span>
+                        <h4 class="text-sm font-black text-white uppercase mb-2">Continuity (Ledger)</h4>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">State Preservation &
+                            Handoff</p>
+                    </div>
+                    <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-accent neon-border relative">
+                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-accent uppercase">L8</span>
+                        <h4 class="text-sm font-black text-white uppercase mb-2">Meta (Metis/Audit)</h4>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Final Review & Global
+                            Control</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 04. Lifecycle Phases -->
-        <section id="workflow" class="space-y-10">
-            <h3 class="text-4xl font-bold font-mono text-white border-b border-white/5 pb-4 uppercase tracking-tighter text-center">04. Der 8-Phasen Lebenszyklus</h3>
-            <div class="grid md:grid-cols-2 gap-6 text-sm">
-                <div class="glass p-6 rounded-xl flex gap-6 items-start border-l-2 border-l-wanda-secondary"><div class="text-2xl font-black text-white/20">01</div><div><h4 class="font-bold text-wanda-secondary uppercase mb-1">Brainstorming & Konzept</h4><p class="text-xs text-gray-400">Ideen-Ping-Pong. Erstellung eines Concept Drafts via Brainstormer.</p></div></div>
-                <div class="glass p-6 rounded-xl flex gap-6 items-start border-l-2 border-l-gray-500"><div class="text-2xl font-black text-white/20">02</div><div><h4 class="font-bold text-white uppercase mb-1">Deep Research (SOTA)</h4><p class="text-xs text-gray-400">Prüfung auf SOTA-Lösungen (2026), Security & Tech-Stack Wahl.</p></div></div>
-                <div class="glass p-6 rounded-xl flex gap-6 items-start border-l-2 border-l-wanda-accent"><div class="text-2xl font-black text-white/20">03</div><div><h4 class="font-bold text-wanda-accent uppercase mb-1">Initialisierung</h4><p class="text-xs text-gray-400">Setup des Projekt-Skeletts, <code>.v0/</code> Ordnerstruktur und Specs.</p></div></div>
-                <div class="glass p-6 rounded-xl flex gap-6 items-start border-l-4 border-l-wanda-accent bg-wanda-accent/5"><div class="text-2xl font-black text-wanda-accent/40">04</div><div><h4 class="font-bold text-wanda-accent uppercase mb-1 text-lg">Implementierung (Ultrawork)</h4><p class="text-xs text-gray-400">Paralleles Backend (Commander) & Frontend Coding in Tmux-Sessions.</p></div></div>
-                <div class="glass p-6 rounded-xl flex gap-6 items-start border-l-2 border-l-wanda-success"><div class="text-2xl font-black text-white/20">05</div><div><h4 class="font-bold text-wanda-success uppercase mb-1">Umfassendes Testing</h4><p class="text-xs text-gray-400">Unit-, Integration- & E2E-Tests. Keine Freigabe ohne Beweise.</p></div></div>
-                <div class="glass p-6 rounded-xl flex gap-6 items-start border-l-2 border-l-wanda-warning"><div class="text-2xl font-black text-white/20">06</div><div><h4 class="font-bold text-wanda-warning uppercase mb-1">Refactoring & Optimierung</h4><p class="text-xs text-gray-400">Abgleich mit <code>.mindmodel</code>. Code-Style Enforcement & Performance.</p></div></div>
-                <div class="glass p-6 rounded-xl flex gap-6 items-start border-l-2 border-l-white"><div class="text-2xl font-black text-white/20">07</div><div><h4 class="font-bold text-white uppercase mb-1">Deployment & Ops</h4><p class="text-xs text-gray-400">Build-Pipeline, Containerisierung und Deployment auf Staging/Prod.</p></div></div>
-                <div class="glass p-6 rounded-xl flex gap-6 items-start border-l-2 border-l-wanda-secondary"><div class="text-2xl font-black text-white/20">08</div><div><h4 class="font-bold text-wanda-secondary uppercase mb-1">Feedback-Loop & Doku</h4><p class="text-xs text-gray-400">Abschlussbericht, README Update und Reset für das nächste Feature.</p></div></div>
+        <!-- 05. The Stack -->
+        <section id="stack" class="grid lg:grid-cols-2 gap-12 pb-32">
+            <div class="space-y-8">
+                <h3 class="text-4xl font-black font-outfit text-white uppercase tracking-tighter">Neural Stack SSOT</h3>
+                <div class="glass p-10 rounded-[2.5rem] space-y-10">
+                    <div>
+                        <h5 class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-6">Verified MCP Matrix
+                            (15 Units)</h5>
+                        <div class="flex flex-wrap gap-3">
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Brave</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Filesystem</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Memory</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400 font-bold text-wanda-accent">Sequential-Thinking</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Github</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Stripe</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400 font-bold text-wanda-secondary">n8n-pro</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Supabase</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Vercel</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Postgres</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400 font-bold text-wanda-success">Docker</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Playwright</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Firecrawl</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400 font-bold text-wanda-warning">Context7</span>
+                            <span
+                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Git</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
 
-        <!-- 05. Moltbot Gateway -->
-        <section id="moltbot" class="space-y-10 text-center lg:text-left">
-            <h3 class="text-4xl font-bold font-mono text-white border-b border-white/5 pb-4 uppercase tracking-tighter">05. Moltbot Gateway</h3>
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div class="space-y-8">
-                    <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-secondary flex gap-6 items-center">
-                        <div class="text-4xl">📱</div><div><h4 class="font-bold text-white uppercase">WhatsApp / Telegram</h4><p class="text-sm text-gray-400">Text-Input via Smartphone. Automatische Policy-Prüfung.</p></div>
-                    </div>
-                    <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-accent flex gap-6 items-center">
-                        <div class="text-4xl">🎙️</div><div><h4 class="font-bold text-white uppercase">Voice Call (Twilio)</h4><p class="text-sm text-gray-400">Full STT Integration. "Short Pack" für schnelle Aktionen.</p></div>
-                    </div>
-                    <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-danger flex gap-6 items-center">
-                        <div class="text-4xl text-wanda-danger">🛡️</div><div><h4 class="font-bold text-wanda-danger uppercase">Security Gate</h4><p class="text-sm text-gray-400">Allowlist für Inbound. Kritische Aktionen erfordern "JA, AUSFÜHREN".</p></div>
-                    </div>
-                </div>
-                <div class="glass p-8 rounded-3xl bg-black border border-wanda-secondary/30 relative shadow-[0_0_100px_rgba(139,92,246,0.1)]">
-                    <div class="flex gap-2 mb-6"><div class="w-3 h-3 rounded-full bg-red-500"></div><div class="w-3 h-3 rounded-full bg-yellow-500"></div><div class="w-3 h-3 rounded-full bg-green-500"></div></div>
-                    <div class="font-mono text-sm space-y-3 text-gray-400">
-                        <p class="text-green-400">jannis@wanda:~$ moltbot --status</p>
-                        <p>> [GATEWAY] WhatsApp: <span class="text-white">ONLINE</span></p>
-                        <p>> [GATEWAY] Voice: <span class="text-white">VERBUNDEN (Twilio)</span></p>
-                        <p>> [SYSTEM] Task <span class="text-wanda-secondary font-bold">#882-BUILD</span> läuft...</p>
-                        <p>> [PROGRESS] Phase 4: Backend Implementierung</p>
-                        <p class="pt-4"><span class="text-white">WANDA bereit für Anweisungen.</span><span class="cursor ml-2"></span></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 06. v0 Skill Registry -->
-        <section id="skills" class="space-y-10 pb-20">
-            <h3 class="text-4xl font-bold font-mono text-white border-b border-white/5 pb-4 uppercase tracking-tighter text-center">06. v0 Skill Registry (Deep Dive)</h3>
-            <div class="grid lg:grid-cols-3 gap-8 text-sm">
-                <!-- Skill Web -->
-                <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-accent space-y-6">
-                    <h4 class="text-2xl font-bold text-wanda-accent uppercase">v0_web Builder</h4>
-                    <ul class="text-xs font-mono text-gray-400 space-y-2 list-disc pl-4">
-                        <li>Brainstormer erstellt <code>UI_SPEC.yml</code></li>
-                        <li>Automated Build-Gate: <code>lint + build + typecheck</code></li>
-                        <li>Fix-Loop: 3 automatisierte Versuche bei Fehlern</li>
-                    </ul>
-                    <div class="bg-black/80 p-4 rounded-xl text-[10px] font-mono text-wanda-accent border border-wanda-accent/20 code-scroll overflow-x-auto">
-                        <pre>schema_version: 1<br>profile: web-mvp<br>stack: [nextjs, tailwind, shadcn]</pre>
-                    </div>
-                </div>
-                <!-- Skill n8n -->
-                <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-secondary space-y-6">
-                    <h4 class="text-2xl font-bold text-wanda-secondary uppercase">v0_n8n Automation</h4>
-                    <ul class="text-xs font-mono text-gray-400 space-y-2 list-disc pl-4">
-                        <li>Librarian zieht Specs aus <code>n8n-mcp</code></li>
-                        <li>Commander generiert <code>workflow.json</code></li>
-                        <li>Smoke Test: Webhook Trigger & Verifikation</li>
-                    </ul>
-                    <div class="bg-black/80 p-4 rounded-xl text-[10px] font-mono text-wanda-secondary border border-wanda-secondary/20 code-scroll overflow-x-auto">
-                        <pre>source: n8n-mcp<br>deploy: api_v1<br>secrets: placeholders_only</pre>
-                    </div>
-                </div>
-                <!-- Skill Ops -->
-                <div class="glass p-8 rounded-3xl border-l-4 border-l-white space-y-6">
-                    <h4 class="text-2xl font-bold text-white uppercase">v0_ops Infrastruktur</h4>
-                    <ul class="text-xs font-mono text-gray-400 space-y-2 list-disc pl-4">
-                        <li>Containerisierung via Docker & Compose</li>
-                        <li>Deployment auf Staging/Produktion</li>
-                        <li>Post-Deploy Check: Lighthouse & SEO</li>
-                    </ul>
-                    <div class="bg-black/80 p-4 rounded-xl text-[10px] font-mono text-gray-300 border border-white/10 code-scroll overflow-x-auto">
-                        <pre>targets: [vercel, Supabase, docker]<br>checks: [http_200, sitemap]<br>perf_budget: 0.8</pre>
-                    </div>
-                </div>
-            </div>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-accent">
-                    <h4 class="text-xs font-bold font-mono text-gray-500 uppercase tracking-[0.3em] mb-4">MCP Server (Standard)</h4>
-                    <div class="grid grid-cols-2 gap-2 text-xs font-mono text-gray-400">
-                        <div>brave</div>
-                        <div>filesystem</div>
-                        <div>memory</div>
-                        <div>sequential-thinking</div>
-                        <div>github</div>
-                        <div>stripe</div>
-                        <div>n8n-pro</div>
-                        <div>n8n-mcp</div>
-                        <div>supabase</div>
-                        <div>postgres</div>
-                        <div>vercel</div>
-                        <div>docker</div>
-                        <div>playwright</div>
-                        <div>firecrawl</div>
-                        <div>context7</div>
-                        <div>websearch</div>
-                        <div>grep_app</div>
-                        <div>exa</div>
-                        <div>git</div>
-                    </div>
-                </div>
-                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-secondary">
-                    <h4 class="text-xs font-bold font-mono text-gray-500 uppercase tracking-[0.3em] mb-4">Plugins (SSOT)</h4>
-                    <div class="grid grid-cols-2 gap-2 text-xs font-mono text-gray-400">
-                        <div>opencode-antigravity-auth</div>
-                        <div>opencode-openai-codex-auth</div>
-                        <div>oh-my-opencode</div>
-                        <div>opencode-knowledge</div>
-                        <div>opencode-supermemory</div>
-                        <div>opencode-scheduler</div>
-                        <div>opencode-antigravity-quota</div>
-                        <div>@cgasgarth/opencode-for-rust</div>
-                        <div>micode</div>
-                        <div>opencode-agent-skills</div>
-                        <div>opencode-orchestrator</div>
-                        <div>opencode-handoff</div>
-                        <div>opencode-gemini-auth</div>
-                        <div>@gitlab/opencode-gitlab-auth</div>
-                        <div>opencode-anthropic-auth</div>
+            <div class="space-y-8">
+                <h3 class="text-4xl font-black font-outfit text-white uppercase tracking-tighter opacity-0">Hidden</h3>
+                <div
+                    class="glass p-10 rounded-[2.5rem] bg-indigo-500/5 border border-indigo-500/20 group relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent"></div>
+                    <div class="relative z-10 space-y-6 italic">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></div>
+                            <h5 class="text-xs font-black text-indigo-300 uppercase tracking-widest">Active Pillars
+                                Integration</h5>
+                        </div>
+                        <ul class="text-xs font-mono text-indigo-200/50 space-y-4">
+                            <li class="flex gap-4">
+                                <span
+                                    class="bg-indigo-500/20 w-8 h-8 rounded-lg flex items-center justify-center shrink-0">01</span>
+                                <div><span
+                                        class="text-white block font-bold mb-1 uppercase tracking-tighter">Oh-My-Opencode</span>Subagent
+                                    management & Layer orchestration.</div>
+                            </li>
+                            <li class="flex gap-4">
+                                <span
+                                    class="bg-indigo-500/20 w-8 h-8 rounded-lg flex items-center justify-center shrink-0">02</span>
+                                <div><span class="text-white block font-bold mb-1 uppercase tracking-tighter">MiCode
+                                        Core</span>Neural codebase intelligence & AST discovery.</div>
+                            </li>
+                            <li class="flex gap-4">
+                                <span
+                                    class="bg-indigo-500/20 w-8 h-8 rounded-lg flex items-center justify-center shrink-0">03</span>
+                                <div><span class="text-white block font-bold mb-1 uppercase tracking-tighter">Opencode
+                                        Orchestrator</span>High-level project routing & safety controls.</div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -473,9 +663,12 @@
 
     </main>
 
-    <footer class="mt-32 py-12 border-t border-white/5 text-center bg-black/50 font-mono text-[10px] text-gray-600 tracking-[0.3em] uppercase">
-        WANDA Sovereign AI Operating System • v2.0 Final Edition
+    <footer
+        class="mt-32 py-16 border-t border-white/5 text-center bg-black/80 font-mono text-[9px] text-gray-600 tracking-[0.5em] uppercase">
+        WANDA Sovereign Operating System <span class="text-gray-400 mx-4">•</span> Local SOTA 2026 Core <span
+            class="text-gray-400 mx-4">•</span> Jannis LazyTechLab
     </footer>
 
 </body>
+
 </html>

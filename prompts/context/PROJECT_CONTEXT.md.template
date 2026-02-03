@@ -1,0 +1,85 @@
+<CONTEXT_FILE version="2026.11" type="WANDA_PROJECT_CONTEXT">
+
+<!--
+╔══════════════════════════════════════════════════════════════════════════════╗
+║  WANDA PROJECT CONTEXT - User-Agnostic Configuration                         ║
+║  This file is templated during installation with user-specific values        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+-->
+
+<USER_PROFILE>
+    <!--
+    These values are replaced by install.sh during setup
+    Tokens: {{USERNAME}}, {{WORKSPACE}}, {{LANGUAGE}}
+    -->
+    <name>{{USERNAME}}</name>
+    <workspace>{{WORKSPACE}}</workspace>
+    <language>{{LANGUAGE}}</language>
+</USER_PROFILE>
+
+<PROJECT_PATHS>
+    <!-- Relative to home directory -->
+    <config type="opencode">~/.config/opencode</config>
+    <config type="gemini">~/.gemini</config>
+    <config type="wanda">~/.wanda-system</config>
+    
+    <!-- User workspace (set during install) -->
+    <workspace>{{WORKSPACE}}</workspace>
+</PROJECT_PATHS>
+
+<LANGUAGE_PREFERENCE>
+    <!--
+    Determines language for:
+    - TTS voice selection
+    - Response language
+    - System messages
+    -->
+    <primary>{{LANGUAGE}}</primary>
+    <tts_voice type="xtts">{{LANGUAGE}}</tts_voice>
+    <tts_voice type="macos_siri">
+        <de>Anna</de>
+        <en>Samantha</en>
+        <es>Monica</es>
+        <fr>Thomas</fr>
+    </tts_voice>
+</LANGUAGE_PREFERENCE>
+
+<AI_ROUTING_DEFAULTS>
+    <!--
+    Default AI models for different task types
+    Users can customize in ~/.gemini/settings.json
+    -->
+    <route task="fast-tasks" model="gemini-3-flash"/>
+    <route task="code-implementation" model="claude-sonnet-4"/>
+    <route task="deep-reasoning" model="claude-opus-thinking"/>
+    <route task="creative-ui" model="gemini-3-pro"/>
+    <route task="multimodal" model="gemini-3-pro"/>
+    <route task="local-voice" model="brainstorm-36b"/>
+</AI_ROUTING_DEFAULTS>
+
+<INSTALLED_COMPONENTS>
+    <!--
+    Track what was installed during setup
+    Updated by install.sh
+    -->
+    <component name="agent-system" installed="{{AGENTS_INSTALLED}}"/>
+    <component name="voice-assistant" installed="{{VOICE_INSTALLED}}"/>
+    <component name="telegram-bot" installed="{{TELEGRAM_INSTALLED}}"/>
+    <component name="mcp-servers" installed="{{MCP_INSTALLED}}"/>
+</INSTALLED_COMPONENTS>
+
+<SECRETS_CHECKLIST>
+    <!--
+    Required secrets for full functionality
+    Checked during diagnostics
+    -->
+    <secret name="GITHUB_TOKEN" required="true"/>
+    <secret name="BRAVE_API_KEY" required="false"/>
+    <secret name="FIRECRAWL_API_KEY" required="false"/>
+    <secret name="SUPABASE_ACCESS_TOKEN" required="false"/>
+    <secret name="VERCEL_API_TOKEN" required="false"/>
+    <secret name="STRIPE_API_KEY" required="false"/>
+    <secret name="WANDA_TELEGRAM_BOT_TOKEN" required="false"/>
+</SECRETS_CHECKLIST>
+
+</CONTEXT_FILE>

@@ -1,0 +1,17 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "model": "google/antigravity-gemini-3-flash",
+    "plugin": [
+        "oh-my-opencode@3.2.1",
+        "micode@latest",
+        "opencode-orchestrator@latest",
+        "opencode-background-agents@latest"
+    ],
+    "agent": {
+        "experimental-orchestrator": {
+            "mode": "primary",
+            "model": "google/antigravity-gemini-3-flash"
+        }
+    },
+    "default_agent": "experimental-orchestrator"
+}
