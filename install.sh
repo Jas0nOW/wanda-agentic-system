@@ -680,6 +680,23 @@ process_templates() {
             "$INSTALL_DIR/templates/GEMINI.md.template" \
             > "$GEMINI_CONFIG/GEMINI.md"
     fi
+
+    # Process system.md (Gemini CLI system prompt override)
+    if [ -f "$INSTALL_DIR/templates/system.md.template" ]; then
+        sed -e "s|{{USERNAME}}|$USER_NAME|g" \
+            -e "s|{{WORKSPACE}}|$USER_WORKSPACE|g" \
+            -e "s|{{LANGUAGE}}|$USER_LANGUAGE|g" \
+            "$INSTALL_DIR/templates/system.md.template" \
+            > "$GEMINI_CONFIG/system.md"
+
+        if [ ! -f "$GEMINI_CONFIG/.env" ]; then
+            echo "GEMINI_SYSTEM_MD=1" > "$GEMINI_CONFIG/.env"
+        else
+            if ! grep -q "^GEMINI_SYSTEM_MD=" "$GEMINI_CONFIG/.env"; then
+                echo "GEMINI_SYSTEM_MD=1" >> "$GEMINI_CONFIG/.env"
+            fi
+        fi
+    fi
     
     # Process agents.yaml (Smart Model Assignment)
     if [ -f "$INSTALL_DIR/config/agents.yaml.template" ]; then
