@@ -50,33 +50,46 @@ WANDA is a comprehensive AI system consisting of two main components:
 
 ## 🚀 Installation
 
-### One-Command Install (Recommended)
+### Linux / macOS (One-Command)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/LazyTechLab/wanda-agentic-system/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/jas0nOW/wanda-agentic-system/main/install.sh | bash
+```
+
+### Windows
+
+```powershell
+# Option 1: WSL (recommended)
+wsl curl -fsSL https://raw.githubusercontent.com/jas0nOW/wanda-agentic-system/main/install.sh | bash
+
+# Option 2: Native (download and run)
+git clone https://github.com/jas0nOW/wanda-agentic-system
+cd wanda-agentic-system
+.\install.bat
 ```
 
 ### Manual Installation
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/LazyTechLab/wanda-agentic-system
+git clone https://github.com/jas0nOW/wanda-agentic-system
 cd wanda-agentic-system
-
-# 2. Run installer
 chmod +x install.sh
 ./install.sh
 ```
 
+### 🤖 AI-Assisted Install
+
+**Copy this to your AI:**
+> "Install WANDA from https://github.com/jas0nOW/wanda-agentic-system - follow docs/AI_INSTALL_PROMPT.md"
+
 ### System Requirements
 
-| Requirement | Minimum | Recommended |
-|-------------|---------|-------------|
-| OS | Linux (Ubuntu 22.04+) | Pop!_OS / Fedora |
-| Python | 3.10+ | 3.11+ |
-| RAM | 4 GB | 16 GB |
-| GPU | - | NVIDIA (CUDA) |
-| Display | Wayland/X11 | Wayland |
+| Requirement | Linux | macOS | Windows |
+|-------------|-------|-------|---------|
+| Python | 3.10+ | 3.10+ | 3.10+ |
+| RAM | 4GB+ | 4GB+ | 4GB+ |
+| GPU | Optional (CUDA) | Optional (MPS) | Optional |
+| Shell | bash | zsh/bash | WSL / PowerShell |
 
 <details>
 <summary><strong>📦 Dependencies</strong></summary>
@@ -354,7 +367,7 @@ git push origin feature/my-feature
 
 ## 📜 License
 
-MIT © [LazyTechLab](https://github.com/LazyTechLab)
+MIT © [jas0nOW](https://github.com/jas0nOW)
 
 ---
 

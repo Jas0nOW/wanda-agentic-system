@@ -1,6 +1,6 @@
 #!/bin/bash
 # WANDA Agentic System - One-Command Installer
-# https://github.com/LazyTechLab/wanda-agentic-system
+# https://github.com/jas0nOW/wanda-agentic-system
 
 set -e
 
@@ -11,18 +11,49 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
+# Detect OS
+detect_os() {
+    case "$(uname -s)" in
+        Linux*)     OS="linux";;
+        Darwin*)    OS="macos";;
+        CYGWIN*|MINGW*|MSYS*) OS="windows";;
+        *)          OS="unknown";;
+    esac
+    echo -e "${BLUE}Detected OS: $OS${NC}"
+}
+
+# Set paths based on OS
+set_paths() {
+    case "$OS" in
+        linux)
+            OPENCODE_CONFIG="$HOME/.config/opencode"
+            GEMINI_CONFIG="$HOME/.gemini"
+            ;;
+        macos)
+            OPENCODE_CONFIG="$HOME/.config/opencode"
+            GEMINI_CONFIG="$HOME/.gemini"
+            ;;
+        windows)
+            OPENCODE_CONFIG="$APPDATA/opencode"
+            GEMINI_CONFIG="$USERPROFILE/.gemini"
+            ;;
+    esac
+}
+
 echo -e "${BLUE}"
 echo "╔══════════════════════════════════════════════════════════════╗"
 echo "║           🌟 WANDA Agentic System Installer 🌟              ║"
 echo "║     Sovereign AI OS with 17 Agents + Voice Assistant        ║"
+echo "║           Linux • macOS • Windows (WSL)                     ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
+detect_os
+set_paths
+
 # Configuration
-REPO_URL="https://github.com/LazyTechLab/wanda-agentic-system"
+REPO_URL="https://github.com/jas0nOW/wanda-agentic-system"
 INSTALL_DIR="${WANDA_INSTALL_DIR:-$HOME/.wanda-system}"
-OPENCODE_CONFIG="$HOME/.config/opencode"
-GEMINI_CONFIG="$HOME/.gemini"
 
 # Check prerequisites
 check_prereqs() {
