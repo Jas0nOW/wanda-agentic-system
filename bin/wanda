@@ -209,6 +209,9 @@ cmd_start() {
     export WANDA_ACTIVE=1
     export WANDA_VERSION="$VERSION"
     
+    # Fix for MiCode auth error (restricted key)
+    unset ANTHROPIC_API_KEY
+    
     if command -v opencode &>/dev/null; then
         exec opencode
     elif command -v gemini &>/dev/null; then
