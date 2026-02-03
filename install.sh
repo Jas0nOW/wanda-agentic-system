@@ -450,6 +450,7 @@ process_templates() {
             -e "s|{{LIBRARIAN_MODEL}}|$LIBRARIAN_MODEL|g" \
             -e "s|{{AUDIT_MODEL}}|$AUDIT_MODEL|g" \
             -e "s|{{WRITER_MODEL}}|$WRITER_MODEL|g" \
+            -e "s|{{AGENTS_CONFIG_PATH}}|$INSTALL_DIR/config/agents.yaml|g" \
             "$INSTALL_DIR/plugins/oh-my-opencode/config.yaml.template" \
             > "$INSTALL_DIR/plugins/oh-my-opencode/config.yaml"
     fi

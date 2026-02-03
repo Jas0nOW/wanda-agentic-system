@@ -6,7 +6,7 @@ leader:
   name: "Sisyphus"
   model: "{{ORCHESTRATOR_MODEL}}"
   fallback: "{{ORCHESTRATOR_FALLBACK}}"
-  prompt_file: "config/agents.yaml"
+  prompt_file: "{{AGENTS_CONFIG_PATH}}"
 
 agents:
 

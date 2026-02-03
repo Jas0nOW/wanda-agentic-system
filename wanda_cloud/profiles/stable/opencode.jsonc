@@ -13,7 +13,9 @@
         "opencode-antigravity-auth@1.4.3",
         "opencode-antigravity-quota",
         "envsitter-guard",
-        "opencode-handoff",
+        "opencode-handoff@latest",
+        "opencode-scheduler@latest",
+        "opencode-knowledge@latest",
         "opencode-websearch-cited"
     ],
     // ──────────────────────────────────────────────────────────────────
@@ -42,50 +44,22 @@
             ],
             "enabled": true
         },
-        "memory": {
-            "type": "local",
-            "command": [
-                "npx",
-                "-y",
-                "@anthropic/mcp-memory"
-            ],
-            "enabled": true
-        },
-        "docker": {
-            "type": "local",
-            "command": [
-                "docker",
-                "run",
-                "-i",
-                "--rm",
-                "mcp/docker"
-            ],
-            "enabled": true
-        },
-        "github": {
-            "type": "local",
-            "command": [
-                "npx",
-                "-y",
-                "@anthropic/mcp-github"
-            ],
-            "enabled": true
-        },
-        "brave": {
-            "type": "local",
-            "command": [
-                "npx",
-                "-y",
-                "@anthropic/mcp-brave-search"
-            ],
-            "enabled": true
-        },
         "context7": {
             "type": "local",
             "command": [
                 "npx",
                 "-y",
                 "@upstash/context7-mcp"
+            ],
+            "enabled": true
+        },
+        "MCP_DOCKER": {
+            "type": "local",
+            "command": [
+                "docker",
+                "mcp",
+                "gateway",
+                "run"
             ],
             "enabled": true
         }
