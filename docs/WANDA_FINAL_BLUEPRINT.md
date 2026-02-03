@@ -91,8 +91,6 @@ Dieser Prozess wird von den Agenten strikt eingehalten, egal ob per Voice oder C
     *   `opencode-orchestrator@latest`
     *   `opencode-handoff@latest`
     *   `opencode-gemini-auth@latest`
-    *   `@gitlab/opencode-gitlab-auth@latest`
-    *   `opencode-anthropic-auth@latest`
 *   **MCPs:** `brave`, `filesystem`, `memory`, `sequential-thinking`, `github`, `stripe`, `n8n-API`, `n8n-mcp`, `supabase`, `postgres`, `vercel`, `docker`, `playwright`, `firecrawl`, `context7`, `websearch`, `grep_app`, `git`.
 
 ### C. Directory Structure

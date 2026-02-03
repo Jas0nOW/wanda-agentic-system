@@ -2,7 +2,7 @@
 
 > **A Hybrid AI Operating System combining Local Voice Intelligence with Cloud Agentic Power.**
 
-[![Version](https://img.shields.io/badge/version-1.0.4-blue)](https://github.com/jas0nOW/wanda-agentic-system)
+[![Version](https://img.shields.io/badge/version-1.0.5-blue)](https://github.com/jas0nOW/wanda-agentic-system)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ## Overview
@@ -168,4 +168,4 @@ MIT © 2026
 
 ---
 
-*WANDA v1.0.4 - Sovereign AI Operating System*
+*WANDA v1.0.5 - Sovereign AI Operating System*
