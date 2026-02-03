@@ -10,7 +10,7 @@
     <AGENT_ARCHITECTURE>
         <LAYERS count="7">
             <LAYER name="Ideation">Brainstormer (Gemini Pro) - Design-First, no code</LAYER>
-            <LAYER name="Orchestration">Sisyphus (Gemini Flash) - Quick-Mode Decision Engine</LAYER>
+            <LAYER name="Orchestration">Orchestrator (Gemini Flash / Kimi) - Main Brain & Task Coordinator</LAYER>
             <LAYER name="Core">Architect (Opus Thinking), Software-Engineer (Sonnet), Frontend-UI-UX (Pro), Audit (Opus Thinking)</LAYER>
             <LAYER name="Specialist">Oracle, Writer, Librarian, Explore, Multimodal-Looker</LAYER>
             <LAYER name="Research">Codebase-Locator, Codebase-Analyzer, Pattern-Finder (READ-ONLY)</LAYER>
