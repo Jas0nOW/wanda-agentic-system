@@ -5,7 +5,7 @@
 # ══════════════════════════════════════════════════════════════════════════════
 
 leader:
-  name: "Orchestrator"
+  name: "Orchestrator1"
   model: "{{ORCHESTRATOR_MODEL}}"
   fallback: "{{ORCHESTRATOR_FALLBACK}}"
   prompt_file: "config/agents.yaml"
@@ -15,15 +15,8 @@ leader:
 # ══════════════════════════════════════════════════════════════════════════════
 agents:
 
-  sisyphus:
-    name: "Sisyphus (DEACTIVATED)"
-    enabled: false
-    layer: 0
-    triggers: []
-    model: "void"
-
   orchestrator:
-    name: "Orchestrator"
+    name: "Orchestrator1"
     symbol: "🎯"
     layer: 2
     model: "{{ORCHESTRATOR_MODEL}}"
@@ -31,7 +24,7 @@ agents:
     triggers: ["always_active", "/plan", "/ralph-loop"]
     
   brainstormer:
-    name: "Brainstormer"
+    name: "Brainstormer1"
     symbol: "💡"
     layer: 1
     model: "kimi-k2.5-free"
@@ -39,7 +32,7 @@ agents:
     triggers: ["@brainstormer", "brainstorm", "ideas"]
     
   librarian:
-    name: "Librarian"
+    name: "Librarian1"
     symbol: "📚"
     layer: 4
     model: "{{LIBRARIAN_MODEL}}"
@@ -47,7 +40,7 @@ agents:
     triggers: ["@librarian", "remember", "research"]
     
   architect:
-    name: "Architect"
+    name: "Architect1"
     symbol: "🏗️"
     layer: 3
     model: "{{ARCHITECT_MODEL}}"
@@ -55,7 +48,7 @@ agents:
     triggers: ["@architect", "design", "plan"]
     
   developer:
-    name: "Developer"
+    name: "Developer1"
     symbol: "👨‍💻"
     layer: 3
     model: "{{DEVELOPER_MODEL}}"
@@ -63,7 +56,7 @@ agents:
     triggers: ["@dev", "code", "implement"]
     
   audit:
-    name: "Audit"
+    name: "Audit1"
     symbol: "🔍"
     layer: 3
     model: "{{AUDIT_MODEL}}"
@@ -71,7 +64,7 @@ agents:
     triggers: ["@audit", "@fix", "review", "debug"]
     
   writer:
-    name: "Writer"
+    name: "Writer1"
     symbol: "✍️"
     layer: 4
     model: "{{WRITER_MODEL}}"
@@ -82,7 +75,16 @@ agents:
 # DEACTIVATED
 # ══════════════════════════════════════════════════════════════════════════════
 deactivated:
-  - sisyphus  # Merged into Orchestrator
+  - sisyphus
+  - hephaestus
+  - prometheus
+  - atlas
+  - octto
+  - planner
+  - executor
+  - implementer
+  - reviewer
+  - worker
 
 # ══════════════════════════════════════════════════════════════════════════════
 # WORKFLOWS
