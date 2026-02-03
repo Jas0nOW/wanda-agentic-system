@@ -1062,6 +1062,13 @@ main() {
     [ "$INSTALL_TELEGRAM" = "1" ] && install_telegram
     
     setup_mcp
+    
+    # REBRANDING
+    if [ -f "$INSTALL_DIR/scripts/rebrand_binary.py" ]; then
+        echo -e "${BLUE}Applying WANDA Branding...${NC}"
+        python3 "$INSTALL_DIR/scripts/rebrand_binary.py" || true
+    fi
+    
     process_templates
     print_summary
 }
