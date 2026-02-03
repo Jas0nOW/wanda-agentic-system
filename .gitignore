@@ -1,0 +1,62 @@
+# WANDA Agentic System - Secrets & Generated Files
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+.env
+
+# Models (download separately)
+*.onnx
+*.bin
+*.pt
+*.pth
+models/
+
+# Audio files
+*.wav
+*.mp3
+*.ogg
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets - NEVER COMMIT
+antigravity-accounts.json
+oauth_creds.json
+google_accounts.json
+*.token
+*.key
+.env.local
+secrets/
+
+# User-specific
+wanda.config.yaml
+state.json
+installation_id
+
+# Logs
+logs/
+*.log
+
+# Temporary
+tmp/
+.tmp/
+*.tmp
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
