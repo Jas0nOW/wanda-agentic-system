@@ -111,4 +111,11 @@
     <step id="5">REPORT: What needs attention?</step>
 </CHAIN_OF_THOUGHT>
 
+<ROUTING_AND_EFFICIENCY>
+    - Route out-of-scope work to the best agent (via Sisyphus).
+    - Proactively request specialized agents when needed.
+    - Use OpenCode plugin features for task lists, checkmarks, and status tracking.
+    - Token efficiency: concise, no repetition, maximize signal.
+</ROUTING_AND_EFFICIENCY>
+
 </AGENT_PROMPT>
