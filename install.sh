@@ -876,7 +876,8 @@ install_voice() {
         echo -e "${CYAN}Downloading Vosk German model...${NC}"
         mkdir -p model
         cd model
-        wget -q --show-progress https://alphacephei.com/vosk/models/vosk-model-small-de-0.15.zip
+        # Use curl (available on both Linux and macOS) instead of wget
+        curl -fsSL --progress-bar -o vosk-model-small-de-0.15.zip https://alphacephei.com/vosk/models/vosk-model-small-de-0.15.zip
         unzip -q vosk-model-small-de-0.15.zip
         mv vosk-model-small-de-0.15/* . 2>/dev/null || true
         rm -rf vosk-model-small-de-0.15 vosk-model-small-de-0.15.zip
