@@ -22,14 +22,14 @@
     // INSTRUCTIONS (System prompts / context files)
     // ──────────────────────────────────────────────────────────────────
     "instructions": [
-        "prompts/AGENT_ROSTER.md",
-        "prompts/system/OPENCODE_SYSTEM.md",
-        "prompts/system/TERMINAL_POLICY.md",
-        "prompts/context/MCP_TOOL_MAPPING.md",
-        "prompts/agents/02_sisyphus.md",
-        "prompts/agents/03_prometheus.md",
-        "prompts/agents/03_atlas.md",
-        ".gemini/GEMINI.md"
+        "/home/jannis/wanda-agentic-system/prompts/AGENT_ROSTER.md",
+        "/home/jannis/wanda-agentic-system/prompts/system/OPENCODE_SYSTEM.md",
+        "/home/jannis/wanda-agentic-system/prompts/system/TERMINAL_POLICY.md",
+        "/home/jannis/wanda-agentic-system/prompts/context/MCP_TOOL_MAPPING.md",
+        "/home/jannis/wanda-agentic-system/prompts/agents/02_sisyphus.md",
+        "/home/jannis/wanda-agentic-system/prompts/agents/03_prometheus.md",
+        "/home/jannis/wanda-agentic-system/prompts/agents/03_atlas.md",
+        "/home/jannis/wanda-agentic-system/.gemini/GEMINI.md"
     ],
     // ──────────────────────────────────────────────────────────────────
     // MCP SERVERS (Core set)
