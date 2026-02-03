@@ -1,114 +1,155 @@
-# WANDA Agent Roster
-## Complete Agent Reference
+# WANDA Agent Roster v1.0.3
+## 7 Primary Agents | Clean Architecture
 
-> **17 Agents | 7 Layers | 4 Plugin Systems | 1 Unified System**
+> **7 Primary Agents | 10 Sub-Agents | Dual-Role Architecture**
 
 ---
 
 ## Quick Reference
 
-| Layer | Agent | Model | Trigger |
-|-------|-------|-------|---------|
-| 1 | Brainstormer | Gemini Pro | `@brainstormer`, "brainstorm" |
-| 2 | Sisyphus | Gemini Flash | Always active (router) |
-| 3 | Architect | Claude Opus | `/ralph-loop`, "design" |
-| 3 | Software-Engineer | Claude Sonnet | "code", "implement" |
-| 3 | Frontend-UI-UX | Gemini Pro | "ui", "frontend" |
-| 3 | Audit | Claude Opus | "review", "audit" |
-| 4 | Oracle | Gemini Pro | "research", "search" |
-| 4 | Writer | Gemini Pro | "document", "readme" |
-| 4 | Librarian | Gemini Flash | "remember", "recall" |
-| 4 | Explore | Gemini Flash | "explore", "find" |
-| 4 | Multimodal-Looker | Gemini Pro | "look at", "image" |
-| 5 | Codebase-Locator | Gemini Flash | Background (read-only) |
-| 5 | Codebase-Analyzer | Gemini Flash | Background (read-only) |
-| 5 | Pattern-Finder | Gemini Flash | Background (read-only) |
-| 6 | Ledger-Creator | Gemini Flash | Background (always) |
-| 6 | Artifact-Searcher | Gemini Flash | "previous", "last session" |
-| 7 | Metis | Claude Opus | `/plan`, complex tasks |
-| 7 | Momus | Claude Opus | After Metis (auto) |
+| # | Agent | Model (Primary) | Fallback | Trigger |
+|---|-------|-----------------|----------|---------|
+| 1 | 🎯 **Orchestrator** | kimi-code-k2p5 | kimi-k2.5-free | Always active |
+| 2 | 💡 **Brainstormer** | kimi-k2.5-free | gemini-3-flash | @brainstormer |
+| 3 | 📚 **Librarian** | gemini-3-flash | kimi-k2.5-free | @librarian |
+| 4 | 🏗️ **Architect** | kimi-k2.5-free | gemini-3-flash | @architect |
+| 5 | 👨‍💻 **Developer** | gemini-3-flash | kimi-k2.5-free | @dev |
+| 6 | 🔍 **Audit** | gemini-3-flash | kimi-k2.5-free | @audit |
+| 7 | ✍️ **Writer** | gemini-3-flash | kimi-k2.5-free | @writer |
 
 ---
 
-## Plugin System Mapping
+## Architecture Diagram
 
-| Plugin | Controls | Purpose |
-|--------|----------|---------|
-| **oh-my-opencode** | All agents | Primary orchestrator, agent routing |
-| **MiCode** | UI personas | Visual interface, agent status display |
-| **opencode-orchestrator** | Request classification | Intent detection, capability mapping |
-| **OpenCode Core** | Execution | MCP servers, file operations |
+```mermaid
+graph TB
+    User([User Input])
+
+    subgraph WANDA["WANDA Agent System v1.0.3"]
+        Orch["🎯 Orchestrator<br/>kimi-code-k2p5"]
+
+        Brain["💡 Brainstormer<br/>kimi-k2.5-free"]
+        Lib["📚 Librarian<br/>gemini-3-flash"]
+        Arch["🏗️ Architect<br/>kimi-k2.5-free"]
+        Dev["👨‍💻 Developer<br/>gemini-3-flash"]
+        Audit["🔍 Audit<br/>gemini-3-flash"]
+        Writer["✍️ Writer<br/>gemini-3-flash"]
+    end
+
+    User --> Orch
+    Orch --> Brain
+    Orch --> Lib
+    Orch --> Arch
+    Orch --> Dev
+    Orch --> Audit
+    Orch --> Writer
+    Orch --> Output([Result])
+```
 
 ---
 
-## Workflow: /ralph-loop
+## 7-Layer Architecture
+
+| Layer | Agents | Purpose |
+|-------|--------|---------|
+| 1 | Brainstormer | Ideation |
+| 2 | Orchestrator | Routing |
+| 3 | Architect, Developer, Audit | Core Work |
+| 4 | Librarian, Writer, Oracle, Explore | Specialist |
+| 5 | Codebase-Locator, Analyzer, Pattern-Finder | Research (READ-ONLY) |
+| 6 | Ledger-Creator, Artifact-Searcher | Continuity |
+| 7 | Metis, Momus | Meta Planning |
+
+---
+
+## Primary Agents (Dual-Role)
+
+All 7 primary agents have `is_primary: true` AND `is_subagent: true`:
+
+### 1. Orchestrator (Layer 2)
+- **Controls**: All agents, Metis, Momus
+- **Role**: Main brain - routes, plans, executes
+- **MCP**: filesystem, memory, github, docker, brave, context7
+
+### 2. Brainstormer (Layer 1)
+- **Role**: Creative exploration, NO code
+- **MCP**: memory
+
+### 3. Librarian (Layer 4)
+- **Controls**: Oracle, Explore, Artifact-Searcher, Codebase-Locator
+- **Role**: Research, knowledge, context
+- **MCP**: memory, context7, brave, firecrawl
+
+### 4. Architect (Layer 3)
+- **Controls**: Codebase-Analyzer
+- **Role**: Design, ADRs, planning
+- **MCP**: memory, filesystem, github, sequential-thinking
+
+### 5. Developer (Layer 3)
+- **Controls**: Frontend-UI-UX, Multimodal-Looker
+- **Role**: Implementation, UI, backend
+- **MCP**: filesystem, github, git, context7, playwright, vercel
+
+### 6. Audit (Layer 3)
+- **Controls**: Pattern-Finder
+- **Role**: Review, debug, security, QA
+- **MCP**: filesystem, github, sequential-thinking
+
+### 7. Writer (Layer 4)
+- **Role**: Documentation, README, tutorials
+- **MCP**: filesystem, memory
+
+---
+
+## Sub-Agents (10 total)
+
+| Sub-Agent | Layer | Controlled By |
+|-----------|-------|---------------|
+| Frontend-UI-UX | 3 | Developer |
+| Oracle | 4 | Librarian |
+| Explore | 4 | Librarian |
+| Multimodal-Looker | 4 | Developer |
+| Codebase-Locator | 5 | Librarian |
+| Codebase-Analyzer | 5 | Architect |
+| Pattern-Finder | 5 | Audit |
+| Ledger-Creator | 6 | Orchestrator |
+| Artifact-Searcher | 6 | Librarian |
+| Metis, Momus | 7 | Orchestrator |
+
+---
+
+## Deactivated (Merged)
+
+| Agent | Merged Into | Reason |
+|-------|-------------|--------|
+| ~~Sisyphus~~ | Orchestrator | Duplicate routing function |
+
+---
+
+## /ralph-loop Workflow
 
 ```mermaid
 graph LR
-    A[Request] --> B[Sisyphus Router]
-    B --> C{Complex?}
-    C -->|Yes| D[Metis/Momus]
-    D --> E[Architect]
-    C -->|No| E
-    E --> F[Software-Engineer]
-    F --> G[Audit]
-    G --> H[Done]
+    A[Request] --> O[🎯 Orchestrator]
+    O --> B["1. 🏗️ Architect<br/>Design"]
+    B --> C["2. 👨‍💻 Developer<br/>Implement"]
+    C --> D["3. 🔍 Audit<br/>Verify"]
+    D --> E[Done]
 ```
 
-**Phases:**
-1. **Design** → Architect creates plan
-2. **Implement** → Software-Engineer writes code
-3. **Verify** → Audit reviews and approves
-
 ---
 
-## Layer Descriptions
+## Model Selection Matrix
 
-### Layer 1: Ideation
-- **Pure creative exploration**
-- NO code generation
-- Design thinking, brainstorming
+Configure in `config/agents.yaml`:
 
-### Layer 2: Orchestration
-- **Task routing and priority**
-- Always active, invisible
-- Manages agent queue
-
-### Layer 3: Core
-- **Primary work horses**
-- Architecture, implementation, UI, review
-- Most user interactions
-
-### Layer 4: Specialist
-- **Domain experts**
-- Research, documentation, navigation
-- Support roles
-
-### Layer 5: Research (READ-ONLY)
-- **Background analysis**
-- Code understanding without modification
-- Pattern detection
-
-### Layer 6: Continuity
-- **State management**
-- Session persistence
-- Artifact tracking
-
-### Layer 7: Meta
-- **Planning oversight**
-- Plan before execute
-- Quality control
-
----
-
-## Conflict Resolution
-
-When multiple agents could handle a request:
-
-1. **Security First** → Audit takes priority
-2. **Specialize** → Prefer domain expert over generalist
-3. **Architecture Before Code** → Design then implement
-4. **User History** → Consider past preferences
+| Subscription | Orchestrator | Architect | Developer | Audit |
+|--------------|--------------|-----------|-----------|-------|
+| **Free** | kimi-k2.5-free | kimi-k2.5-free | gemini-3-flash | gemini-3-flash |
+| **Kimi K2P5** | kimi-code-k2p5 | kimi-k2.5-free | gemini-3-flash | gemini-3-flash |
+| **Claude Pro** | kimi-k2.5-free | claude-4.5-sonnet | gemini-3-flash | gemini-3-flash |
+| **Claude Max** | kimi-code-k2p5 | claude-4.5-opus | gemini-3-flash | claude-4.5-sonnet |
+| **OpenAI Pro** | kimi-k2.5-free | kimi-k2.5-free | openai/codex-5.2 | gemini-3-flash |
 
 ---
 
@@ -116,13 +157,11 @@ When multiple agents could handle a request:
 
 | File | Purpose |
 |------|---------|
-| `prompts/agents/*.md` | Individual agent SOTA prompts |
-| `plugins/oh-my-opencode/config.yaml` | Agent roster & routing |
-| `plugins/micode/config.json` | Visual personas |
-| `plugins/orchestrator/routing.yaml` | Intent classification |
-| `prompts/context/AGENT_REGISTRY.md` | Detailed agent specs |
-| `prompts/context/MCP_TOOL_MAPPING.md` | MCP server assignments |
+| `config/agents.yaml` | **MAIN CONFIG** - Edit models here |
+| `prompts/agents/*.md` | Agent system prompts |
+| `plugins/oh-my-opencode/config.yaml` | Plugin routing |
+| `docs/WANDA_HANDBOOK.html` | Visual documentation |
 
 ---
 
-*WANDA Agent Roster v1.0.2*
+*WANDA v1.0.3 - 7 Primary Agents, Clean Architecture*

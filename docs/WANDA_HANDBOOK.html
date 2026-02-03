@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WANDA Sovereign OS v1.x | Unified Command</title>
+    <title>WANDA Sovereign OS v1.0.3 | 7 Primary Agents</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
@@ -18,14 +18,6 @@
             },
             flowchart: { curve: 'basis', htmlLabels: true, useMaxWidth: true }
         });
-        window.scrollToId = (id) => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                el.classList.add('ring-4', 'ring-blue-500/50', 'shadow-[0_0_50px_rgba(59,130,246,0.3)]');
-                setTimeout(() => el.classList.remove('ring-4', 'ring-blue-500/50', 'shadow-[0_0_50px_rgba(59,130,246,0.3)]'), 3000);
-            }
-        };
     </script>
     <link
         href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&family=Outfit:wght@400;700;900&display=swap"
@@ -43,17 +35,7 @@
                         wanda: {
                             bg: '#020202', card: '#0a0a0a', border: '#27272a',
                             accent: '#3b82f6', secondary: '#8b5cf6', success: '#10b981',
-                            warning: '#f59e0b', danger: '#ef4444'
-                        }
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
+                            warning: '#f59e0b', danger: '#ef4444', kimi: '#ff6b35'
                         }
                     }
                 }
@@ -65,7 +47,6 @@
             background-color: #020202;
             color: #e4e4e7;
             background-image: radial-gradient(circle at top center, #111 0%, #020202 50%);
-            overflow-x: hidden;
         }
 
         .glass {
@@ -73,10 +54,6 @@
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8);
-        }
-
-        .neon-border {
-            position: relative;
         }
 
         .neon-border::after {
@@ -90,60 +67,12 @@
             filter: blur(5px);
         }
 
-        .neon-text {
-            text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-        }
-
-        .code-scroll::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .code-scroll::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 10px;
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0;
-            }
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 16px;
-            background: #3b82f6;
-            animation: blink 1s infinite;
-            vertical-align: middle;
-        }
-
         .mermaid {
             display: flex;
             justify-content: center;
             width: 100%;
             overflow-x: auto;
             padding: 20px 0;
-        }
-
-        .orb {
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, #3b82f633 0%, #8b5cf611 100%);
-            border-radius: 50%;
-            filter: blur(40px);
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: -1;
-            animation: pulse-slow 8s infinite;
         }
     </style>
 </head>
@@ -154,519 +83,369 @@
     <header class="fixed top-0 w-full z-50 glass border-b border-white/5">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <div class="relative">
-                    <div class="w-3 h-3 bg-wanda-accent rounded-full shadow-[0_0_20px_#3b82f6] animate-pulse"></div>
-                </div>
+                <div class="w-3 h-3 bg-wanda-accent rounded-full shadow-[0_0_20px_#3b82f6] animate-pulse"></div>
                 <h1 class="text-xl font-black tracking-tighter font-outfit uppercase">WANDA <span
-                        class="text-wanda-accent">Sovereign OS</span></h1>
+                        class="text-wanda-accent">v1.0.3</span></h1>
             </div>
             <nav class="hidden lg:flex gap-8 text-[10px] font-bold font-mono text-gray-500 tracking-[0.2em] uppercase">
-                <a href="#kpi"
-                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">Status</a>
-                <a href="#architecture"
-                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">Agents</a>
-                <a href="#diagram"
-                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">Flow</a>
-                <a href="#models"
-                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">Models</a>
-                <a href="#workflow"
-                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">9-Layers</a>
-                <a href="#stack"
-                    class="hover:text-wanda-accent border-b border-transparent hover:border-wanda-accent transition-all pb-1">Stack</a>
+                <a href="#agents" class="hover:text-wanda-accent transition-all">Agents</a>
+                <a href="#architecture" class="hover:text-wanda-accent transition-all">Architecture</a>
+                <a href="#models" class="hover:text-wanda-accent transition-all">Models</a>
+                <a href="#workflow" class="hover:text-wanda-accent transition-all">Workflow</a>
             </nav>
             <div
-                class="text-[10px] font-mono text-wanda-accent bg-wanda-accent/10 px-3 py-1 rounded-full border border-wanda-accent/20">
-                v1.x PROD</div>
+                class="text-[10px] font-mono text-wanda-success bg-wanda-success/10 px-3 py-1 rounded-full border border-wanda-success/20">
+                CLEAN SYSTEM</div>
         </div>
     </header>
 
-    <main class="pt-32 max-w-7xl mx-auto px-6 space-y-32">
+    <main class="pt-32 max-w-7xl mx-auto px-6 space-y-24">
 
         <!-- Hero Section -->
-        <section class="text-center relative py-12">
-            <div class="orb"></div>
-            <h2 class="text-6xl md:text-8xl font-black font-outfit tracking-tighter mb-4 neon-text">UNIFIED INTELLIGENCE
-            </h2>
-            <p class="text-gray-500 max-w-2xl mx-auto text-sm uppercase tracking-[0.4em] font-mono">Consolidating
-                Opencode • OMO • MiCode • Orchestrator</p>
+        <section class="text-center py-12">
+            <h2 class="text-6xl md:text-8xl font-black font-outfit tracking-tighter mb-4">7 PRIMARY AGENTS</h2>
+            <p class="text-gray-500 max-w-2xl mx-auto text-sm uppercase tracking-[0.4em] font-mono">Clean • No
+                Duplicates • Optimized Models</p>
         </section>
 
         <!-- KPI Dashboard -->
-        <section id="kpi" class="space-y-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div
-                    class="glass p-8 rounded-3xl border-l-4 border-l-wanda-accent group hover:bg-white/5 transition duration-500">
-                    <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest">Efficiency</div>
-                    <div class="text-5xl font-black text-white group-hover:neon-text transition">98.4%</div>
-                    <p class="text-[10px] text-gray-600 mt-3 uppercase font-bold tracking-tighter">Unified Agent Gateway
-                    </p>
-                </div>
-                <div
-                    class="glass p-8 rounded-3xl border-l-4 border-l-wanda-secondary group hover:bg-white/5 transition duration-500">
-                    <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest">Active Units</div>
-                    <div class="text-5xl font-black text-white group-hover:neon-text transition">17</div>
-                    <p class="text-[10px] text-gray-600 mt-3 uppercase font-bold tracking-tighter">Neural Specialists
-                    </p>
-                </div>
-                <div
-                    class="glass p-8 rounded-3xl border-l-4 border-l-wanda-success group hover:bg-white/5 transition duration-500">
-                    <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest">MCP Servers</div>
-                    <div class="text-5xl font-black text-white group-hover:neon-text transition">15</div>
-                    <p class="text-[10px] text-gray-600 mt-3 uppercase font-bold tracking-tighter">Tool Bindings</p>
-                </div>
-                <div
-                    class="glass p-8 rounded-3xl border-l-4 border-l-wanda-warning group hover:bg-white/5 transition duration-500">
-                    <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-widest">Intelligence</div>
-                    <div class="text-5xl font-black text-white group-hover:neon-text transition">2026</div>
-                    <p class="text-[10px] text-gray-600 mt-3 uppercase font-bold tracking-tighter">SOTA Model Stack</p>
-                </div>
+        <section id="kpi" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-kimi">
+                <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase">Primary Agents</div>
+                <div class="text-5xl font-black text-white">7</div>
+                <p class="text-[10px] text-gray-600 mt-3 uppercase">Clean Architecture</p>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass p-6 rounded-2xl flex items-center justify-between">
-                    <span class="text-xs text-gray-400 font-mono uppercase tracking-widest">Sync Status</span>
-                    <span class="text-xs text-wanda-success font-bold font-mono">LIVE • Symlink Active</span>
-                </div>
-                <div class="glass p-6 rounded-2xl flex items-center justify-between">
-                    <span class="text-xs text-gray-400 font-mono uppercase tracking-widest">Hardware Tier</span>
-                    <span class="text-xs text-wanda-accent font-bold font-mono uppercase tracking-tighter">Tier MH (50GB
-                        RAM)</span>
-                </div>
-                <div class="glass p-6 rounded-2xl flex items-center justify-between">
-                    <span class="text-xs text-gray-400 font-mono uppercase tracking-widest">Security Mode</span>
-                    <span class="text-xs text-white font-bold font-mono">Envsitter Guard Ver. 1.1</span>
-                </div>
+            <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-secondary">
+                <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase">MCP Servers</div>
+                <div class="text-5xl font-black text-white">7</div>
+                <p class="text-[10px] text-gray-600 mt-3 uppercase">Tool Bindings</p>
             </div>
-
-            <!-- Live Service Status Panel -->
-            <div class="glass p-6 rounded-2xl neon-border">
-                <h4 class="text-xs text-gray-400 font-mono uppercase tracking-widest mb-4">🔌 Live Services</h4>
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-wanda-success rounded-full animate-pulse shadow-[0_0_10px_#10b981]">
-                        </div>
-                        <span class="text-xs font-mono text-gray-300">Ollama</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-wanda-success rounded-full animate-pulse shadow-[0_0_10px_#10b981]">
-                        </div>
-                        <span class="text-xs font-mono text-gray-300">Voice Gateway</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-wanda-success rounded-full animate-pulse shadow-[0_0_10px_#10b981]">
-                        </div>
-                        <span class="text-xs font-mono text-gray-300">Telegram Bot</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-wanda-accent rounded-full shadow-[0_0_10px_#3b82f6]"></div>
-                        <span class="text-xs font-mono text-gray-300">OpenCode</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-wanda-secondary rounded-full shadow-[0_0_10px_#8b5cf6]"></div>
-                        <span class="text-xs font-mono text-gray-300">VPS Relay</span>
-                    </div>
-                </div>
-                <p class="text-[9px] text-gray-600 mt-3 font-mono">Last checked: <span id="lastChecked">--</span> •
-                    <a href="#" class="text-wanda-accent hover:underline" onclick="location.reload()">Refresh</a>
-                </p>
+            <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-success">
+                <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase">Primary Model</div>
+                <div class="text-2xl font-black text-white">Kimi K2.5</div>
+                <p class="text-[10px] text-gray-600 mt-3 uppercase">131K Context</p>
+            </div>
+            <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-accent">
+                <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase">Fallback</div>
+                <div class="text-2xl font-black text-white">Gemini 3 Flash</div>
+                <p class="text-[10px] text-gray-600 mt-3 uppercase">1M Context</p>
             </div>
         </section>
 
-        <!-- 00. Architecture Trinity -->
-        <section id="architecture" class="space-y-16">
-            <h3 class="text-5xl font-black font-outfit text-white text-center uppercase tracking-tighter">Neural
-                Architecture</h3>
+        <!-- 7 Agents Grid -->
+        <section id="agents" class="space-y-8">
+            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase">The 7 Agents</h3>
 
-            <div class="grid lg:grid-cols-3 gap-8">
-                <!-- Brain -->
-                <div
-                    class="glass p-10 rounded-[2.5rem] border-t-2 border-t-wanda-secondary relative overflow-hidden group">
-                    <div class="absolute -top-10 -right-10 text-8xl opacity-5 group-hover:opacity-20 transition">🧠
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Orchestrator -->
+                <div class="glass p-8 rounded-3xl border-t-4 border-t-wanda-kimi lg:col-span-3">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="text-4xl">🎯</div>
+                        <div>
+                            <h4 class="text-2xl font-black text-white uppercase">#1 Orchestrator</h4>
+                            <p class="text-xs text-gray-500 font-mono">Main Brain - Controls Everything</p>
+                        </div>
                     </div>
-                    <h4 class="text-2xl font-black mb-4 text-white uppercase italic">The Sovereign Brain</h4>
-                    <p class="text-sm text-gray-500 leading-relaxed mb-8">Strategische Planung & Deep Reasoning. Fokus
-                        auf Architektur-Integrität und Ideation.</p>
-                    <div class="space-y-3">
-                        <div class="flex justify-between text-[10px] font-mono"><span
-                                class="text-gray-400 uppercase">Orchestrator</span><span
-                                class="text-wanda-secondary">MASTER</span></div>
-                        <div class="flex justify-between text-[10px] font-mono"><span
-                                class="text-gray-400 uppercase">Brainstormer</span><span
-                                class="text-wanda-secondary">ACTIVE</span></div>
-                        <div class="flex justify-between text-[10px] font-mono"><span
-                                class="text-gray-400 uppercase">Architect</span><span
-                                class="text-wanda-secondary">STANDBY</span></div>
+                    <div class="grid md:grid-cols-3 gap-4 text-xs font-mono">
+                        <div><span class="text-gray-500">Primary:</span> <span
+                                class="text-wanda-kimi font-bold">kimi-code-k2p5</span></div>
+                        <div><span class="text-gray-500">Fallback:</span> <span class="text-white">kimi-k2.5-free</span>
+                        </div>
+                        <div><span class="text-gray-500">Trigger:</span> <span class="text-wanda-accent">Always Active,
+                                /plan</span></div>
                     </div>
+                    <p class="text-gray-500 text-sm mt-4">Task routing, agent coordination, planning, execution, code
+                        generation, debugging, research, documentation - does it all.</p>
                 </div>
-                <!-- Execution -->
-                <div
-                    class="glass p-10 rounded-[2.5rem] border-t-2 border-t-wanda-accent relative overflow-hidden group">
-                    <div class="absolute -top-10 -right-10 text-8xl opacity-5 group-hover:opacity-20 transition">⌨️
+
+                <!-- Brainstormer -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-yellow-500">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">💡</div>
+                        <h4 class="text-lg font-black text-white uppercase">#2 Brainstormer</h4>
                     </div>
-                    <h4 class="text-2xl font-black mb-4 text-white uppercase italic">The Kinetic Core</h4>
-                    <p class="text-sm text-gray-500 leading-relaxed mb-8">Ausführung & Realisierung. Nutzt das SOTA
-                        Coding-Framework für 1:1 Umsetzung von Specs.</p>
-                    <div class="space-y-3">
-                        <div class="flex justify-between text-[10px] font-mono"><span
-                                class="text-gray-400 uppercase">Developer</span><span
-                                class="text-wanda-accent">ACTIVE</span></div>
-                        <div class="flex justify-between text-[10px] font-mono"><span
-                                class="text-gray-400 uppercase">Writer</span><span
-                                class="text-wanda-accent">ACTIVE</span></div>
-                        <div class="flex justify-between text-[10px] font-mono"><span
-                                class="text-gray-400 uppercase">Audit</span><span
-                                class="text-wanda-accent">STANDBY</span></div>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-yellow-400">kimi-k2.5-free</span></div>
+                        <div>Trigger: @brainstormer, "ideas"</div>
                     </div>
+                    <p class="text-gray-500 text-xs mt-3">Creative ideation, NO code generation</p>
                 </div>
-                <!-- Support -->
-                <div
-                    class="glass p-10 rounded-[2.5rem] border-t-2 border-t-wanda-success relative overflow-hidden group">
-                    <div class="absolute -top-10 -right-10 text-8xl opacity-5 group-hover:opacity-20 transition">📚
+
+                <!-- Librarian -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-accent">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">📚</div>
+                        <h4 class="text-lg font-black text-white uppercase">#3 Librarian</h4>
                     </div>
-                    <h4 class="text-2xl font-black mb-4 text-white uppercase italic">The Oracle Pool</h4>
-                    <p class="text-sm text-gray-500 leading-relaxed mb-8">Knowledge & Research. Zugriff auf RAG,
-                        Code-Pattern-Analysen und Web-Search-Cited Engines.</p>
-                    <div class="flex justify-between text-[10px] font-mono"><span
-                            class="text-gray-400 uppercase">Oracle</span><span class="text-wanda-success">READY</span>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-wanda-accent">gemini-3-flash</span></div>
+                        <div>Trigger: @librarian, "search"</div>
                     </div>
-                    <div class="flex justify-between text-[10px] font-mono"><span
-                            class="text-gray-400 uppercase">Explore</span><span class="text-wanda-success">READY</span>
-                    </div>
+                    <p class="text-gray-500 text-xs mt-3">Research, context, documentation lookup</p>
                 </div>
-            </div>
+
+                <!-- Architect -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-secondary">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">🏗️</div>
+                        <h4 class="text-lg font-black text-white uppercase">#4 Architect</h4>
+                    </div>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-wanda-secondary">kimi-k2.5-free</span></div>
+                        <div>Trigger: @architect, "design"</div>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-3">System design, ADRs, trade-off analysis</p>
+                </div>
+
+                <!-- Developer -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-success">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">👨‍💻</div>
+                        <h4 class="text-lg font-black text-white uppercase">#5 Developer</h4>
+                    </div>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-wanda-success">gemini-3-flash</span></div>
+                        <div>Trigger: @dev, "code"</div>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-3">Code implementation, UI, frontend, backend</p>
+                </div>
+
+                <!-- Audit -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-danger">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">🔍</div>
+                        <h4 class="text-lg font-black text-white uppercase">#6 Audit</h4>
+                    </div>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-wanda-danger">gemini-3-flash</span></div>
+                        <div>Trigger: @audit, "fix", "debug"</div>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-3">Review, debugging, security, bug fixing</p>
+                </div>
+
+                <!-- Writer -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-gray-500">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">✍️</div>
+                        <h4 class="text-lg font-black text-white uppercase">#7 Writer</h4>
+                    </div>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-gray-300">gemini-3-flash</span></div>
+                        <div>Trigger: @writer, "docs"</div>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-3">Documentation, README, changelogs</p>
+                </div>
             </div>
         </section>
 
-        <!-- 01. The WANDA Pyramid -->
-        <section id="diagram" class="glass p-10 rounded-3xl space-y-8">
-            <h3
-                class="text-4xl font-bold font-mono text-white border-b border-white/5 pb-4 uppercase tracking-tighter text-center">
-                01. WANDA INTELLIGENZ-PYRAMIDE</h3>
+        <!-- Architecture Diagram -->
+        <section id="architecture" class="glass p-10 rounded-3xl space-y-8">
+            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase">Agent Architecture</h3>
             <div class="mermaid">
-                graph TD
-                %% Layers
-                L1[Voice Layer & User Intent]
-                L2[Local Gateway & Orchestration]
-                L3[Cloud Agent Core & Reasoning]
+                graph TB
+                User([User Input])
 
-                %% Nodes
-                User((User))
-                Mic(Whisper Local)
-                Ollama(Ollama Gateway<br />Prompt-Refinement & Safety)
-                TTS(Premium Voice<br />XTTS-v2 / Piper)
+                subgraph WANDA["WANDA Agent System v1.0.3"]
+                Orch["🎯 Orchestrator<br />kimi-code-k2p5"]
 
-                %% Core Agents
-                Orch(Orchestrator<br />Gemini 3 Flash)
-                Code(Coding & Arch<br />Claude 4.5 Sonnet)
-                Idea(Ideation<br />Gemini 3 Pro)
-                Safety(Audit Layer<br />Claude 4.5 Opus)
+                Brain["💡 Brainstormer<br />kimi-k2.5-free"]
+                Lib["📚 Librarian<br />gemini-3-flash"]
+                Arch["🏗️ Architect<br />kimi-k2.5-free"]
+                Dev["👨‍💻 Developer<br />gemini-3-flash"]
+                Audit["🔍 Audit<br />gemini-3-flash"]
+                Writer["✍️ Writer<br />gemini-3-flash"]
+                end
 
-                %% Connections - Voice Loop
-                User -->|Sprache| Mic
-                Mic -->|Text| Ollama
-                Ollama -->|Safety Check| Ollama
-                Ollama -->|Readback / Confirm| TTS
-                TTS -->|Sound| User
+                User --> Orch
+                Orch --> Brain
+                Orch --> Lib
+                Orch --> Arch
+                Orch --> Dev
+                Orch --> Audit
+                Orch --> Writer
+                Orch --> Output([Result])
 
-                %% Connections - Agent Loop
-                Ollama -->|JSON Command| Orch
-                Orch -->|Delegation| Code
-                Orch -->|Brainstorm| Idea
-                Code -->|Audit Request| Safety
-                Safety -->|Approval| Orch
-                Orch -->|Result Summary| Ollama
+                classDef orchestrator fill:#ff6b35,stroke:#e55a2b,color:#fff;
+                classDef kimi fill:#8b5cf6,stroke:#7c3aed,color:#fff;
+                classDef gemini fill:#3b82f6,stroke:#2563eb,color:#fff;
 
-                %% Styling
-                classDef voice fill:#10b981,stroke:#059669,color:#fff,stroke-width:2px;
-                classDef local fill:#3b82f6,stroke:#2563eb,color:#fff,stroke-width:2px;
-                classDef cloud fill:#6366f1,stroke:#4f46e5,color:#fff,stroke-width:2px;
-
-                class User,Mic,TTS voice;
-                class Ollama,L1,L2 local;
-                class Orch,Code,Idea,Safety,L3 cloud;
+                class Orch orchestrator;
+                class Brain,Arch kimi;
+                class Lib,Dev,Audit,Writer gemini;
             </div>
-            <div class="text-center text-xs font-mono text-gray-500 mt-4">
-                PYRAMIDE: <span class="text-wanda-success">Voice (Local)</span> ▲ <span
-                    class="text-wanda-accent">Gateway (Local)</span> ▲ <span class="text-indigo-400">Core (Cloud)</span>
-            </div>
+            <p class="text-center text-xs text-gray-500 font-mono">All agents are both PRIMARY and SUBAGENT capable</p>
         </section>
 
-        <!-- 02. Specialist Units -->
-        <section id="roster" class="space-y-12">
-            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase tracking-tighter">The Specialist
-                Roster</h3>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- A selection of specialty agents -->
-                <div class="glass p-6 rounded-2xl border-l-2 border-l-wanda-accent">
-                    <h5 class="text-xs font-black text-white uppercase mb-4 tracking-widest">Multi-Modal Suite</h5>
-                    <ul class="text-[10px] font-mono text-gray-500 space-y-2">
-                        <li>• mm-orchestrator</li>
-                        <li>• mm-pattern-discoverer</li>
-                        <li>• mm-stack-detector</li>
-                        <li>• mm-dependency-mapper</li>
-                    </ul>
+        <!-- Workflow -->
+        <section id="workflow" class="glass p-10 rounded-3xl space-y-8">
+            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase">/ralph-loop Workflow</h3>
+            <div class="mermaid">
+                graph LR
+                A[Request] --> O[🎯 Orchestrator]
+                O --> B["1. 🏗️ Architect<br />Design"]
+                B --> C["2. 👨‍💻 Developer<br />Implement"]
+                C --> D["3. 🔍 Audit<br />Verify"]
+                D --> E[Done]
+
+                classDef phase1 fill:#8b5cf6,stroke:#7c3aed,color:#fff;
+                classDef phase2 fill:#10b981,stroke:#059669,color:#fff;
+                classDef phase3 fill:#ef4444,stroke:#dc2626,color:#fff;
+
+                class B phase1;
+                class C phase2;
+                class D phase3;
+            </div>
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div class="p-4">
+                    <div class="text-wanda-secondary font-bold">Phase 1: Design</div>
+                    <div class="text-xs text-gray-500">Architect creates plan</div>
                 </div>
-                <div class="glass p-6 rounded-2xl border-l-2 border-l-wanda-secondary">
-                    <h5 class="text-xs font-black text-white uppercase mb-4 tracking-widest">Codebase Intelligence</h5>
-                    <ul class="text-[10px] font-mono text-gray-500 space-y-2">
-                        <li>• codebase-locator</li>
-                        <li>• codebase-analyzer</li>
-                        <li>• pattern-finder</li>
-                        <li>• Pattern-Hunter</li>
-                    </ul>
+                <div class="p-4">
+                    <div class="text-wanda-success font-bold">Phase 2: Implement</div>
+                    <div class="text-xs text-gray-500">Developer writes code</div>
                 </div>
-                <div class="glass p-6 rounded-2xl border-l-2 border-l-wanda-success">
-                    <h5 class="text-xs font-black text-white uppercase mb-4 tracking-widest">Continuity & Ledger</h5>
-                    <ul class="text-[10px] font-mono text-gray-500 space-y-2">
-                        <li>• ledger-creator</li>
-                        <li>• artifact-searcher</li>
-                        <li>• Supermemory</li>
-                        <li>• Handoff</li>
-                    </ul>
-                </div>
-                <div class="glass p-6 rounded-2xl border-l-2 border-l-wanda-warning">
-                    <h5 class="text-xs font-black text-white uppercase mb-4 tracking-widest">Visual Analysis</h5>
-                    <ul class="text-[10px] font-mono text-gray-500 space-y-2">
-                        <li>• Multimodal-Looker</li>
-                        <li>• Pattern-Finder (Visual)</li>
-                        <li>• UI Spec Generator</li>
-                        <li>• Component Auditor</li>
-                    </ul>
+                <div class="p-4">
+                    <div class="text-wanda-danger font-bold">Phase 3: Verify</div>
+                    <div class="text-xs text-gray-500">Audit reviews & approves</div>
                 </div>
             </div>
         </section>
 
-        <!-- 03. Model Matrix -->
-        <section id="models" class="space-y-12">
-            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase tracking-tighter">Model
-                Intelligence Matrix</h3>
-            <div class="glass rounded-[3rem] overflow-hidden">
+        <!-- Model Matrix -->
+        <section id="models" class="space-y-8">
+            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase">Model Matrix</h3>
+            <div class="glass rounded-3xl overflow-hidden">
                 <table class="w-full text-left">
                     <thead>
                         <tr
-                            class="bg-white/5 font-mono text-[9px] text-gray-500 uppercase tracking-widest border-b border-white/5 text-center">
-                            <th class="p-8">Unit Class</th>
-                            <th class="p-8">Preferred Model (SOTA 2026)</th>
-                            <th class="p-8">RAM/VRAM Requirement</th>
-                            <th class="p-8">System Rationale</th>
+                            class="bg-white/5 font-mono text-[10px] text-gray-500 uppercase tracking-widest border-b border-white/5">
+                            <th class="p-6">Agent</th>
+                            <th class="p-6">Primary Model</th>
+                            <th class="p-6">Fallback Model</th>
+                            <th class="p-6">Context</th>
                         </tr>
                     </thead>
                     <tbody class="text-xs font-mono">
-                        <!-- CLOUD CORE -->
-                        <tr class="bg-indigo-500/10 border-b border-indigo-500/20">
-                            <td colspan="4" class="p-4 text-left font-black text-indigo-300 uppercase tracking-[0.3em]">
-                                WANDA Agent System (Cloud SOTA • 5 Subscriptions)</td>
+                        <tr class="border-b border-white/5 bg-wanda-kimi/10">
+                            <td class="p-4 font-bold text-white">🎯 Orchestrator</td>
+                            <td class="p-4 text-wanda-kimi font-bold">kimi-code-k2p5</td>
+                            <td class="p-4 text-gray-400">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-500">131K</td>
                         </tr>
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition">
-                            <td class="p-6 font-black text-wanda-accent uppercase tracking-widest italic text-center">
-                                Core Engineering</td>
-                            <td class="p-6 text-white font-bold uppercase italic text-center">Claude 4.5 Sonnet / Opus
-                            </td>
-                            <td class="p-6 text-gray-400 font-bold text-center">Cloud SOTA</td>
-                            <td class="p-6 text-gray-500 text-[10px] uppercase text-left">High-Performance Coding,
-                                Architecture & TDD</td>
+                        <tr class="border-b border-white/5">
+                            <td class="p-4 font-bold text-white">💡 Brainstormer</td>
+                            <td class="p-4 text-wanda-secondary font-bold">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-400">gemini-3-flash</td>
+                            <td class="p-4 text-gray-500">131K</td>
                         </tr>
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition">
-                            <td class="p-6 font-black text-wanda-accent uppercase tracking-widest italic text-center">
-                                Identity & Research</td>
-                            <td class="p-6 text-white font-bold uppercase italic text-center">Gemini 3 Pro / Flash</td>
-                            <td class="p-6 text-gray-400 font-bold text-center">Cloud SOTA</td>
-                            <td class="p-6 text-gray-500 text-[10px] uppercase text-left">Creative Ideation, Multi-Modal
-                                & Context Scanning</td>
+                        <tr class="border-b border-white/5">
+                            <td class="p-4 font-bold text-white">📚 Librarian</td>
+                            <td class="p-4 text-wanda-accent font-bold">gemini-3-flash</td>
+                            <td class="p-4 text-gray-400">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-500">1M</td>
                         </tr>
-
-                        <!-- LOCAL VOICE -->
-                        <tr class="bg-wanda-success/10 border-b border-wanda-success/20">
-                            <td colspan="4"
-                                class="p-4 text-left font-black text-wanda-success uppercase tracking-[0.3em]">WANDA
-                                Voice Layer (Local • Ollama)</td>
+                        <tr class="border-b border-white/5">
+                            <td class="p-4 font-bold text-white">🏗️ Architect</td>
+                            <td class="p-4 text-wanda-secondary font-bold">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-400">gemini-3-flash</td>
+                            <td class="p-4 text-gray-500">131K</td>
                         </tr>
-                        <tr class="border-b border-white/5 hover:bg-white/5 transition">
-                            <td class="p-6 font-black text-wanda-success uppercase tracking-widest italic text-center">
-                                Voice Orchestrator</td>
-                            <td class="p-6 text-white font-bold uppercase italic text-center">Ollama (brainstorm-36b)
-                            </td>
-                            <td class="p-6 text-gray-400 font-bold text-center">Local (50GB RAM)</td>
-                            <td class="p-6 text-gray-500 text-[10px] uppercase text-left">Real-time Intent Discovery,
-                                Routing & VAD Control</td>
+                        <tr class="border-b border-white/5">
+                            <td class="p-4 font-bold text-white">👨‍💻 Developer</td>
+                            <td class="p-4 text-wanda-success font-bold">gemini-3-flash</td>
+                            <td class="p-4 text-gray-400">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-500">1M</td>
                         </tr>
-                        <tr class="hover:bg-white/5 transition">
-                            <td class="p-6 font-black text-wanda-success uppercase tracking-widest italic text-center">
-                                Safety Gateway</td>
-                            <td class="p-6 text-white font-bold uppercase italic text-center">Ollama Middleware</td>
-                            <td class="p-6 text-gray-400 font-bold text-center">Native</td>
-                            <td class="p-6 text-gray-500 text-[10px] uppercase text-left">Pre-Cloud Policy Audit,
-                                Destructive Command Check & Briefing</td>
+                        <tr class="border-b border-white/5">
+                            <td class="p-4 font-bold text-white">🔍 Audit</td>
+                            <td class="p-4 text-wanda-danger font-bold">gemini-3-flash</td>
+                            <td class="p-4 text-gray-400">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-500">1M</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold text-white">✍️ Writer</td>
+                            <td class="p-4 text-gray-300 font-bold">gemini-3-flash</td>
+                            <td class="p-4 text-gray-400">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-500">1M</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- 04. 9-Layer Kernel -->
-        <section id="workflow" class="space-y-16">
-            <div class="text-center space-y-4">
-                <h3 class="text-4xl font-black font-outfit text-white uppercase tracking-tighter">The 9-Layer Kernel
-                </h3>
-                <p class="text-xs font-mono text-gray-500 uppercase tracking-[0.5em]">Aligned with Master Prompt
-                    Architecture</p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Layers 0-2 -->
-                <div class="space-y-6">
-                    <div class="glass p-8 rounded-3xl border-l-2 border-l-wanda-danger relative">
-                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-danger uppercase">L0</span>
-                        <h4 class="text-sm font-black text-white uppercase mb-2">Guardrails (Sovereign)</h4>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Envsitter-Guard &
-                            Security Policies</p>
-                    </div>
-                    <div class="glass p-8 rounded-3xl border-l-2 border-l-wanda-secondary relative">
-                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-secondary uppercase">L1</span>
-                        <h4 class="text-sm font-black text-white uppercase mb-2">Ideation (Brainstormer)</h4>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Creative Exploration &
-                            UX Mapping</p>
-                    </div>
-                    <div class="glass p-8 rounded-3xl border-l-2 border-l-wanda-accent relative">
-                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-accent uppercase">L2</span>
-                        <h4 class="text-sm font-black text-white uppercase mb-2">Orchestration (Sisyphus)</h4>
-                        <div class="w-full bg-wanda-accent/20 h-1 rounded-full overflow-hidden mt-4">
-                            <div class="bg-wanda-accent w-2/3 h-full"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Layers 3-5 -->
-                <div class="space-y-6">
-                    <div class="glass p-8 rounded-3xl border-l-2 border-l-white relative bg-white/5">
-                        <span class="absolute top-4 right-4 text-xs font-mono text-white uppercase">L3</span>
-                        <h4 class="text-sm font-black text-white uppercase mb-2">Core Architect (Opus)</h4>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Structural Integrity &
-                            Specs</p>
-                    </div>
-                    <div class="glass p-8 rounded-3xl border-l-2 border-l-wanda-success relative">
-                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-success uppercase">L4</span>
-                        <h4 class="text-sm font-black text-white uppercase mb-2">Software Engineer (Sonnet)</h4>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">TDD-Driven
-                            Implementation</p>
-                    </div>
-                    <div class="glass p-8 rounded-3xl border-l-2 border-l-indigo-400 relative">
-                        <span class="absolute top-4 right-4 text-xs font-mono text-indigo-400 uppercase">L5</span>
-                        <h4 class="text-sm font-black text-white uppercase mb-2">Specialists (Oracle/Writer)</h4>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Content & Deep
-                            Research</p>
-                    </div>
-                </div>
-                <!-- Layers 6-8 -->
-                <div class="space-y-6">
-                    <div class="glass p-8 rounded-3xl border-l-2 border-l-gray-500 relative">
-                        <span class="absolute top-4 right-4 text-xs font-mono text-gray-500 uppercase">L6</span>
-                        <h4 class="text-sm font-black text-white uppercase mb-2">Research (Locate/Analyze)</h4>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Codebase Context
-                            Discovery</p>
-                    </div>
-                    <div class="glass p-8 rounded-3xl border-l-2 border-l-wanda-warning relative">
-                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-warning uppercase">L7</span>
-                        <h4 class="text-sm font-black text-white uppercase mb-2">Continuity (Ledger)</h4>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">State Preservation &
-                            Handoff</p>
-                    </div>
-                    <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-accent neon-border relative">
-                        <span class="absolute top-4 right-4 text-xs font-mono text-wanda-accent uppercase">L8</span>
-                        <h4 class="text-sm font-black text-white uppercase mb-2">Meta (Metis/Audit)</h4>
-                        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Final Review & Global
-                            Control</p>
-                    </div>
-                </div>
+        <!-- Merged Agents -->
+        <section class="glass p-8 rounded-3xl">
+            <h3 class="text-2xl font-black text-white mb-6 uppercase">Merged Agents (Disabled)</h3>
+            <p class="text-gray-500 text-sm mb-4">These agents were merged into the 7 primary agents to eliminate
+                duplicates:</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-mono text-gray-600">
+                <div>• Sisyphus → Orchestrator</div>
+                <div>• Oracle → Librarian</div>
+                <div>• Explore → Librarian</div>
+                <div>• Frontend-UI-UX → Developer</div>
+                <div>• Software-Engineer → Developer</div>
+                <div>• Multimodal-Looker → Developer</div>
+                <div>• Metis → Orchestrator</div>
+                <div>• Momus → Audit</div>
+                <div>• Codebase-Locator → Librarian</div>
+                <div>• Codebase-Analyzer → Audit</div>
+                <div>• Pattern-Finder → Audit</div>
+                <div>• Ledger-Creator → Librarian</div>
+                <div>• Artifact-Searcher → Librarian</div>
             </div>
         </section>
 
-        <!-- 05. The Stack -->
-        <section id="stack" class="grid lg:grid-cols-2 gap-12 pb-32">
-            <div class="space-y-8">
-                <h3 class="text-4xl font-black font-outfit text-white uppercase tracking-tighter">Neural Stack SSOT</h3>
-                <div class="glass p-10 rounded-[2.5rem] space-y-10">
-                    <div>
-                        <h5 class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-6">Verified MCP Matrix
-                            (15 Units)</h5>
-                        <div class="flex flex-wrap gap-3">
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Brave</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Filesystem</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Memory</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400 font-bold text-wanda-accent">Sequential-Thinking</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Github</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Stripe</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400 font-bold text-wanda-secondary">n8n-pro</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Supabase</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Vercel</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Postgres</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400 font-bold text-wanda-success">Docker</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Playwright</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Firecrawl</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400 font-bold text-wanda-warning">Context7</span>
-                            <span
-                                class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[9px] font-mono uppercase text-gray-400">Git</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Config File -->
+        <section class="glass p-8 rounded-3xl neon-border relative">
+            <h3 class="text-2xl font-black text-white mb-4 uppercase">📁 Configuration</h3>
+            <p class="text-gray-500 text-sm mb-4">Edit models and agents in:</p>
+            <code class="block bg-black/50 p-4 rounded-xl text-wanda-accent font-mono text-lg">
+                config/agents.yaml
+            </code>
+        </section>
 
-            <div class="space-y-8">
-                <h3 class="text-4xl font-black font-outfit text-white uppercase tracking-tighter opacity-0">Hidden</h3>
-                <div
-                    class="glass p-10 rounded-[2.5rem] bg-indigo-500/5 border border-indigo-500/20 group relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent"></div>
-                    <div class="relative z-10 space-y-6 italic">
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></div>
-                            <h5 class="text-xs font-black text-indigo-300 uppercase tracking-widest">Active Pillars
-                                Integration</h5>
-                        </div>
-                        <ul class="text-xs font-mono text-indigo-200/50 space-y-4">
-                            <li class="flex gap-4">
-                                <span
-                                    class="bg-indigo-500/20 w-8 h-8 rounded-lg flex items-center justify-center shrink-0">01</span>
-                                <div><span
-                                        class="text-white block font-bold mb-1 uppercase tracking-tighter">Oh-My-Opencode</span>Subagent
-                                    management & Layer orchestration.</div>
-                            </li>
-                            <li class="flex gap-4">
-                                <span
-                                    class="bg-indigo-500/20 w-8 h-8 rounded-lg flex items-center justify-center shrink-0">02</span>
-                                <div><span class="text-white block font-bold mb-1 uppercase tracking-tighter">MiCode
-                                        Core</span>Neural codebase intelligence & AST discovery.</div>
-                            </li>
-                            <li class="flex gap-4">
-                                <span
-                                    class="bg-indigo-500/20 w-8 h-8 rounded-lg flex items-center justify-center shrink-0">03</span>
-                                <div><span class="text-white block font-bold mb-1 uppercase tracking-tighter">Opencode
-                                        Orchestrator</span>High-level project routing & safety controls.</div>
-                            </li>
-                        </ul>
-                    </div>
+        <!-- MCP Servers -->
+        <section class="space-y-8">
+            <h3 class="text-2xl font-black text-white text-center uppercase">MCP Servers</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">📂</div>
+                    <div class="text-xs font-mono text-gray-400">filesystem</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">🧠</div>
+                    <div class="text-xs font-mono text-gray-400">memory</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">🐙</div>
+                    <div class="text-xs font-mono text-gray-400">github</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">🐳</div>
+                    <div class="text-xs font-mono text-gray-400">docker</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">🔎</div>
+                    <div class="text-xs font-mono text-gray-400">brave</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">📖</div>
+                    <div class="text-xs font-mono text-gray-400">context7</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">🎭</div>
+                    <div class="text-xs font-mono text-gray-400">playwright</div>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <footer
-        class="mt-32 py-16 border-t border-white/5 text-center bg-black/80 font-mono text-[9px] text-gray-600 tracking-[0.5em] uppercase">
-        WANDA Sovereign Operating System <span class="text-gray-400 mx-4">•</span> Local SOTA 2026 Core <span
-            class="text-gray-400 mx-4">•</span> Jannis LazyTechLab
+    <!-- Footer -->
+    <footer class="mt-24 py-8 border-t border-white/5 text-center">
+        <p class="text-xs font-mono text-gray-600">WANDA Sovereign AI OS v1.0.3 • Clean 7-Agent Architecture • Kimi K2.5
+            + Gemini 3 Flash</p>
+        <p class="text-xs font-mono text-gray-700 mt-2">© 2026 LtL Digital Solutions</p>
     </footer>
 
 </body>

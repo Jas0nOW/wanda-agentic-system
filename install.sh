@@ -57,7 +57,7 @@ print_banner() {
     echo "║   ╚███╔███╔╝██║  ██║██║ ╚████║██████╔╝██║  ██║                           ║"
     echo "║    ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝                           ║"
     echo "║                                                                          ║"
-    echo "║        Sovereign AI OS • 17 Agents • 7 Layers • 15 MCP Servers           ║"
+    echo "║        Sovereign AI OS • 7 Primary Agents • 7 Layers • 7 MCP             ║"
     echo "║                                                                          ║"
     echo "╚══════════════════════════════════════════════════════════════════════════╝"
     echo -e "${NC}"
@@ -146,6 +146,97 @@ collect_user_info() {
     fi
     
     echo ""
+    
+    # ══════════════════════════════════════════════════════════════════════════
+    # STEP 5: Cloud Provider Subscriptions (Smart Model Assignment)
+    # ══════════════════════════════════════════════════════════════════════════
+    echo -e "${BLUE}5. Cloud Provider Subscriptions${NC}"
+    echo "   Let's configure your AI provider access for optimal model assignment."
+    echo ""
+    
+    # Claude
+    echo -e "   ${YELLOW}Claude (Anthropic):${NC}"
+    echo "   1) No Claude subscription"
+    echo "   2) Claude Pro ($20/mo)"
+    echo "   3) Claude Max ($100/mo - includes Opus)"
+    read -p "   Your Claude tier [1]: " CLAUDE_TIER
+    CLAUDE_TIER=${CLAUDE_TIER:-1}
+    
+    # Gemini
+    echo ""
+    echo -e "   ${YELLOW}Google Gemini:${NC}"
+    echo "   1) No Gemini subscription (using Antigravity)"
+    echo "   2) Gemini (free tier)"
+    echo "   3) Gemini Advanced ($20/mo)"
+    read -p "   Your Gemini tier [2]: " GEMINI_TIER
+    GEMINI_TIER=${GEMINI_TIER:-2}
+    
+    # OpenAI
+    echo ""
+    echo -e "   ${YELLOW}OpenAI:${NC}"
+    echo "   1) No OpenAI subscription"
+    echo "   2) ChatGPT Plus ($20/mo)"
+    echo "   3) ChatGPT Pro ($200/mo - includes Codex 5.2)"
+    read -p "   Your OpenAI tier [1]: " OPENAI_TIER
+    OPENAI_TIER=${OPENAI_TIER:-1}
+    
+    # Kimi
+    echo ""
+    echo -e "   ${YELLOW}Kimi (Moonshot):${NC}"
+    echo "   1) Kimi K2.5 Free (always available via OpenCode)"
+    echo "   2) Kimi K2P5 Paid (premium orchestration)"
+    read -p "   Your Kimi tier [1]: " KIMI_TIER
+    KIMI_TIER=${KIMI_TIER:-1}
+    
+    echo ""
+    
+    # ══════════════════════════════════════════════════════════════════════════
+    # SMART MODEL ASSIGNMENT
+    # ══════════════════════════════════════════════════════════════════════════
+    assign_smart_models() {
+        echo -e "${BLUE}   Configuring optimal model assignment...${NC}"
+        
+        # Defaults (free tier / no subs)
+        ORCHESTRATOR_MODEL="kimi-k2.5-free"
+        ORCHESTRATOR_FALLBACK="gemini-3-flash"
+        ARCHITECT_MODEL="kimi-k2.5-free"
+        LIBRARIAN_MODEL="gemini-3-flash"
+        DEVELOPER_MODEL="gemini-3-flash"
+        AUDIT_MODEL="gemini-3-flash"
+        WRITER_MODEL="gemini-3-flash"
+        
+        # Kimi K2P5 for Orchestrator (premium)
+        if [ "$KIMI_TIER" == "2" ]; then
+            ORCHESTRATOR_MODEL="kimi-code-k2p5"
+            ORCHESTRATOR_FALLBACK="kimi-k2.5-free"
+        fi
+        
+        # Claude Max → Use Opus for Architect (big brain decisions)
+        if [ "$CLAUDE_TIER" == "3" ]; then
+            ARCHITECT_MODEL="claude-4.5-opus"
+            AUDIT_MODEL="claude-4.5-sonnet"
+        elif [ "$CLAUDE_TIER" == "2" ]; then
+            ARCHITECT_MODEL="claude-4.5-sonnet"
+        fi
+        
+        # OpenAI Pro → Use Codex for Developer
+        if [ "$OPENAI_TIER" == "3" ]; then
+            DEVELOPER_MODEL="openai/codex-5.2"
+        elif [ "$OPENAI_TIER" == "2" ]; then
+            DEVELOPER_MODEL="openai/gpt-5.1"
+        fi
+        
+        # Gemini Advanced → Use Pro for research
+        if [ "$GEMINI_TIER" == "3" ]; then
+            LIBRARIAN_MODEL="gemini-3-pro"
+        fi
+        
+        echo "   ✓ Models assigned based on your subscriptions"
+    }
+    
+    assign_smart_models
+    
+    echo ""
     echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
     echo -e "${GREEN}  Configuration:${NC}"
     echo -e "${GREEN}  • Name: $USER_NAME${NC}"
@@ -153,6 +244,13 @@ collect_user_info() {
     echo -e "${GREEN}  • Language: $USER_LANGUAGE${NC}"
     echo -e "${GREEN}  • Ollama Primary: $OLLAMA_PRIMARY${NC}"
     echo -e "${GREEN}  • Ollama Fallback: $OLLAMA_FALLBACK${NC}"
+    echo -e "${GREEN}  ────────────────────────────────────────────────────${NC}"
+    echo -e "${GREEN}  • Orchestrator: $ORCHESTRATOR_MODEL${NC}"
+    echo -e "${GREEN}  • Architect: $ARCHITECT_MODEL${NC}"
+    echo -e "${GREEN}  • Developer: $DEVELOPER_MODEL${NC}"
+    echo -e "${GREEN}  • Librarian: $LIBRARIAN_MODEL${NC}"
+    echo -e "${GREEN}  • Audit: $AUDIT_MODEL${NC}"
+    echo -e "${GREEN}  • Writer: $WRITER_MODEL${NC}"
     echo -e "${GREEN}═══════════════════════════════════════════════════════════════${NC}"
     echo ""
     
