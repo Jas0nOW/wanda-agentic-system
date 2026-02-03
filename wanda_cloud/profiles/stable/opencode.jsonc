@@ -24,8 +24,9 @@
         "prompts/system/OPENCODE_SYSTEM.md",
         "prompts/system/TERMINAL_POLICY.md",
         "prompts/context/MCP_TOOL_MAPPING.md",
-        "prompts/agents/03_architect.md",
-        "prompts/agents/03_software_engineer.md",
+        "prompts/agents/02_sisyphus.md",
+        "prompts/agents/03_prometheus.md",
+        "prompts/agents/03_atlas.md",
         ".gemini/GEMINI.md"
     ],
     // ──────────────────────────────────────────────────────────────────

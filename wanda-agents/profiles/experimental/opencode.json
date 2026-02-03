@@ -12,8 +12,8 @@
     "opencode-knowledge@latest"
   ],
   "agent": {
-    "orchestrator": {
-      "description": "Orchestrator - Main Brain & Task Coordinator",
+    "sisyphus": {
+      "description": "Orchestrator mit Quick-Mode Decision Engine",
       "mode": "primary",
       "model": "google/antigravity-gemini-3-flash",
       "temperature": 0.2
@@ -240,5 +240,5 @@
     "edit": "ask",
     "write": "ask"
   },
-  "default_agent": "orchestrator"
+  "default_agent": "sisyphus"
 }

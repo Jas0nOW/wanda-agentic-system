@@ -221,7 +221,7 @@
     -->
     
     <agent name="Brainstormer" servers="memory"/>
-    <agent name="Orchestrator" servers="memory, docker"/>
+    <agent name="Sisyphus" servers="memory, docker"/>
     <agent name="Architect" servers="memory, github, sequential-thinking"/>
     <agent name="Software-Engineer" servers="filesystem, github, git, context7"/>
     <agent name="Frontend-UI-UX" servers="filesystem, playwright, vercel"/>

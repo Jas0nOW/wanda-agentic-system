@@ -15,17 +15,6 @@ version: "1.0.3"
 primary_agents:
 
   # ────────────────────────────────────────────────────────────────────────────
-  # DEACTIVATED (Override Defaults)
-  # ────────────────────────────────────────────────────────────────────────────
-  sisyphus:
-    name: "Sisyphus"
-    enabled: false
-    is_primary: false
-    triggers: []
-    layer: 0
-    model: { primary: "void", fallback: "void" }
-
-  # ────────────────────────────────────────────────────────────────────────────
   # 1. ORCHESTRATOR (Main Brain) - Layer 2
   # Controls everything, routes to all other agents
   # ────────────────────────────────────────────────────────────────────────────

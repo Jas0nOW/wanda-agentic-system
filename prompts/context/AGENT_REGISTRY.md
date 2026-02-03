@@ -34,18 +34,18 @@
     <!-- ════════════════════════════════════════════════════════════════════ -->
 
     <layer id="2" name="Orchestration">
-        <agent id="agent-02" name="Orchestrator">
-            <model>Gemini Flash / Kimi</model>
+        <agent id="agent-02" name="Sisyphus">
+            <model>Gemini Flash</model>
             <mode>quick-decision</mode>
-            <purpose>Main Brain: Task routing, planning, and orchestration</purpose>
-            <triggers>Automatic (Major Controller)</triggers>
+            <purpose>Task routing, priority management, orchestration</purpose>
+            <triggers>Automatic (always active as dispatcher)</triggers>
             <behavior>
                 - Analyze incoming requests
                 - Route to appropriate agent
                 - Manage task queues and priorities
                 - Coordinate multi-agent workflows
             </behavior>
-            <mcp_servers>memory, docker, github</mcp_servers>
+            <mcp_servers>memory, docker</mcp_servers>
         </agent>
     </layer>
 

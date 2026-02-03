@@ -19,12 +19,12 @@ classification:
       
     architecture:
       keywords: ["design", "architecture", "plan", "structure", "system", "ADR"]
-      agent: architect
+      agent: prometheus
       priority: high
       
     implementation:
       keywords: ["code", "implement", "fix", "debug", "build", "write", "create"]
-      agent: developer
+      agent: atlas
       priority: high
       
     frontend:
@@ -75,12 +75,12 @@ capabilities:
     can: [ideate, explore, compare]
     cannot: [code, execute, modify]
     
-  architect:
+  prometheus:
     can: [design, plan, evaluate]
     cannot: [implement]
-    hands_off_to: [developer, audit]
+    hands_off_to: [atlas, audit]
     
-  developer:
+  atlas:
     can: [code, debug, refactor, test]
     cannot: [deploy_production]
     hands_off_to: [audit, writer]
@@ -92,7 +92,7 @@ capabilities:
   audit:
     can: [review, analyze, report]
     cannot: [fix_directly]
-    hands_off_to: [developer]
+    hands_off_to: [atlas]
     
   oracle:
     can: [search, research, summarize]
@@ -117,7 +117,7 @@ capabilities:
   metis:
     can: [plan, decompose, estimate]
     cannot: [execute]
-    hands_off_to: [architect, developer]
+    hands_off_to: [prometheus, atlas]
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Conflict Resolution
@@ -131,8 +131,8 @@ conflict_resolution:
     - "When equal, use user history preference"
     
   tie_breakers:
-    - agent: architect    # For design/code ambiguity
-    - agent: developer  # For general tasks
+    - agent: prometheus    # For design/code ambiguity
+    - agent: atlas  # For general tasks
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Handoff Protocol

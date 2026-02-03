@@ -1,101 +1,92 @@
 # ══════════════════════════════════════════════════════════════════════════════
 # OH-MY-OPENCODE Configuration v1.0.3
 # ══════════════════════════════════════════════════════════════════════════════
-# 7 Primary Agents | Dual-Role Architecture | Clean System
+# ALIGNED WITH SYSTEM AGENTS (Sisyphus, Prometheus, Atlas)
 # ══════════════════════════════════════════════════════════════════════════════
 
 leader:
-  name: "Orchestrator1"
+  name: "Sisyphus"
   model: "{{ORCHESTRATOR_MODEL}}"
   fallback: "{{ORCHESTRATOR_FALLBACK}}"
   prompt_file: "config/agents.yaml"
 
-# ══════════════════════════════════════════════════════════════════════════════
-# 7 PRIMARY AGENTS (All Dual-Role: Primary + Subagent)
-# ══════════════════════════════════════════════════════════════════════════════
 agents:
 
-  orchestrator:
-    name: "Orchestrator1"
+  sisyphus:
+    name: "Sisyphus"
     symbol: "🎯"
     layer: 2
     model: "{{ORCHESTRATOR_MODEL}}"
     fallback: "{{ORCHESTRATOR_FALLBACK}}"
     triggers: ["always_active", "/plan", "/ralph-loop"]
     
-  brainstormer:
-    name: "Brainstormer1"
-    symbol: "💡"
-    layer: 1
-    model: "kimi-k2.5-free"
-    fallback: "gemini-3-flash"
-    triggers: ["@brainstormer", "brainstorm", "ideas"]
-    
-  librarian:
-    name: "Librarian1"
-    symbol: "📚"
-    layer: 4
-    model: "{{LIBRARIAN_MODEL}}"
-    fallback: "kimi-k2.5-free"
-    triggers: ["@librarian", "remember", "research"]
-    
-  architect:
-    name: "Architect1"
+  prometheus:
+    name: "Prometheus"
     symbol: "🏗️"
     layer: 3
     model: "{{ARCHITECT_MODEL}}"
     fallback: "gemini-3-flash"
-    triggers: ["@architect", "design", "plan"]
+    triggers: ["design", "plan", "architecture"]
     
-  developer:
-    name: "Developer1"
+  atlas:
+    name: "Atlas"
     symbol: "👨‍💻"
     layer: 3
     model: "{{DEVELOPER_MODEL}}"
     fallback: "kimi-k2.5-free"
-    triggers: ["@dev", "code", "implement"]
+    triggers: ["code", "implement", "build"]
+    
+  brainstormer:
+    name: "Brainstormer"
+    symbol: "💡"
+    layer: 1
+    model: "kimi-k2.5-free"
+    fallback: "gemini-3-flash"
+    triggers: ["brainstorm", "ideas"]
+    
+  librarian:
+    name: "Librarian"
+    symbol: "📚"
+    layer: 4
+    model: "{{LIBRARIAN_MODEL}}"
+    fallback: "kimi-k2.5-free"
+    triggers: ["remember", "research"]
     
   audit:
-    name: "Audit1"
+    name: "Audit"
     symbol: "🔍"
     layer: 3
     model: "{{AUDIT_MODEL}}"
     fallback: "kimi-k2.5-free"
-    triggers: ["@audit", "@fix", "review", "debug"]
+    triggers: ["review", "debug", "security"]
     
   writer:
-    name: "Writer1"
+    name: "Writer"
     symbol: "✍️"
     layer: 4
     model: "{{WRITER_MODEL}}"
     fallback: "kimi-k2.5-free"
-    triggers: ["@writer", "docs", "readme"]
+    triggers: ["docs", "readme"]
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DEACTIVATED
 # ══════════════════════════════════════════════════════════════════════════════
 deactivated:
-  - sisyphus
   - hephaestus
-  - prometheus
-  - atlas
   - octto
-  - planner
-  - executor
-  - implementer
-  - reviewer
-  - worker
+  - commander
+  - orchestrator
+  - architect
+  - developer
+  - software_engineer
 
-# ══════════════════════════════════════════════════════════════════════════════
-# WORKFLOWS
-# ══════════════════════════════════════════════════════════════════════════════
 workflows:
   ralph_loop:
     description: "3-Phase Autopilot: Design → Implement → Verify"
     phases:
-      - agent: architect
+      - agent: prometheus
         name: "Design"
-      - agent: developer
+      - agent: atlas
         name: "Implement"
       - agent: audit
         name: "Verify"
