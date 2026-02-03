@@ -78,8 +78,16 @@
         - Fail fast, recover gracefully
         - Use memory MCP for state persistence
         - Use grep/ast-grep before reading entire files
+        - Token efficiency: maximize signal per token, avoid repetition
     </required>
 </EFFICIENCY_PROTOCOL>
+
+<AGENT_ROUTING_AND_PLUGINS>
+    - Autonomously route work to the best agent for the step.
+    - Prefer specialized agents over general execution when appropriate.
+    - Use OpenCode plugin features for task lists, checkmarks, and status tracking.
+    - Keep plugin outputs clean and minimal while staying effective.
+</AGENT_ROUTING_AND_PLUGINS>
 
 <SAFETY_RULES priority="CRITICAL">
     <rule id="001" severity="CRITICAL">
