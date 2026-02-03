@@ -1063,11 +1063,11 @@ main() {
     
     setup_mcp
     
-    # REBRANDING
-    if [ -f "$INSTALL_DIR/scripts/rebrand_binary.py" ]; then
-        echo -e "${BLUE}Applying WANDA Branding...${NC}"
-        python3 "$INSTALL_DIR/scripts/rebrand_binary.py" || true
-    fi
+    # REBRANDING (Disabled - causes binary corruption)
+    # if [ -f "$INSTALL_DIR/scripts/rebrand_binary.py" ]; then
+    #     echo -e "${BLUE}Applying WANDA Branding...${NC}"
+    #     python3 "$INSTALL_DIR/scripts/rebrand_binary.py" || true
+    # fi
     
     process_templates
     print_summary

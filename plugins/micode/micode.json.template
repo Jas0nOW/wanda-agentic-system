@@ -1,29 +1,23 @@
 {
-  "$schema": "https://micode.dev/schema.json",
-  "version": "1.0.4",
-  
-  "_comment": "WANDA MiCode Configuration - Jas0n's Setup",
-  
-  "agents": {
-    "brainstormer": {
-      "model": "{{BRAINSTORMER_MODEL}}",
-      "temperature": 0.8
+    "version": "1.0.4",
+    "_comment": "WANDA MiCode Config - Fix Auth Error",
+    "agents": {
+        "brainstormer": {
+            "model": "google/antigravity-gemini-3-flash",
+            "temperature": 0.8
+        },
+        "commander": {
+            "disable": true
+        },
+        "planner": {
+            "disable": true
+        },
+        "default": {
+            "model": "google/antigravity-gemini-3-flash"
+        }
     },
-    "commander": {
-      "disable": true
+    "features": {
+        "mindmodelInjection": true
     },
-    "planner": {
-      "disable": true
-    }
-  },
-  
-  "features": {
-    "mindmodelInjection": true
-  },
-  
-  "compactionThreshold": 0.5,
-  
-  "fragments": {
-    "brainstormer": ["prompts/fragments/brainstorm.md"]
-  }
+    "compactionThreshold": 0.5
 }
