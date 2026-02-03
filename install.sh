@@ -78,9 +78,11 @@ check_hardware() {
     
     # Recommend Brain
     echo -e "${YELLOW}Recommended Local Brain:${NC}"
-    if [ "$VRAM_GB" -ge 16 ]; then
-        RECOMMENDED_MODEL="deepseek-r1:8b (High-End Reasoning)"
-    elif [ "$VRAM_GB" -ge 6 ]; then
+    if [ "$VRAM_GB" -ge 16 ] || [ "$RAM_GB" -ge 64 ]; then
+        RECOMMENDED_MODEL="deepseek-r1:32b+ (High-End Master)"
+    elif [ "$VRAM_GB" -ge 10 ] || [ "$RAM_GB" -ge 32 ]; then
+        RECOMMENDED_MODEL="qwen2.5:14b or 32b (Medium-High Power)"
+    elif [ "$VRAM_GB" -ge 6 ] || [ "$RAM_GB" -ge 16 ]; then
         RECOMMENDED_MODEL="gemma2:9b (SOTA Balance)"
     elif [ "$RAM_GB" -ge 8 ]; then
         RECOMMENDED_MODEL="llama3.2:3b (Fast CPU-Hybrid)"

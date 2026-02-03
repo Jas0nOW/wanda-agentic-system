@@ -62,11 +62,12 @@ WANDA strebt eine Konversationsqualität auf "JARVIS-Niveau" an.
 
 WANDA nutzt kein einzelnes Modell, sondern eine dynamische Auswahl an "Brains" basierend auf deiner Hardware.
 
-| System-Klasse | VRAM | Empfohlenes lokales LLM | Fähigkeiten |
+| System-Klasse | RAM/VRAM | Empfohlenes lokales LLM | Fähigkeiten |
 |---|---|---|---|
-| **S (Niedrig)** | < 4GB | Llama 3.2 (3B) | Basis-Aufgaben, Diktat |
-| **M (Mittel)** | 6-8GB | **Gemma 2 (9B)** / DeepSeek (8B) | Research, Brainstorming |
-| **G (Hoch)** | 16GB+ | DeepSeek-R1 / Llama 3.3 (70B) | Volle Autonomie, Architektur |
+| **S (Niedrig)** | < 8GB RAM / 4GB V | Llama 3.2 (3B) | Basis-Aufgaben, Diktat |
+| **M (Mittel)** | 16GB RAM / 8GB V | **Gemma 2 (9B)** / Mistral (7B) | Research, Brainstorming |
+| **MH (Mittel-Hoch)** | 32GB+ RAM / 12GB V | **Qwen 2.5 (14B/32B)** / Command-R | Komplettes Reasoning, Deep Research |
+| **G (Hoch)** | 64GB+ RAM / 24GB V | DeepSeek-R1 / Llama 3.3 (70B) | Volle Autonomie, Architektur |
 
 **Unified Installer:** Erkennt VRAM/RAM/CPU und installiert das optimale Gehirn automatisch.
 
