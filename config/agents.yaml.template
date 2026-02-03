@@ -2,20 +2,18 @@
 # WANDA Agent Configuration v1.0.3
 # ══════════════════════════════════════════════════════════════════════════════
 # ALIGNMENT WITH SYSTEM AGENTS (Sisyphus, Prometheus, Atlas)
+# + TEST SUFFIX '1' FOR CONTROLLED AGENTS
 # ══════════════════════════════════════════════════════════════════════════════
 
 version: "1.0.3"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # PRIMARY AGENTS
-# Mapped to the immutable System Agents observed by User
 # ══════════════════════════════════════════════════════════════════════════════
 
 primary_agents:
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # 1. SISYPHUS (The System Orchestrator)
-  # ────────────────────────────────────────────────────────────────────────────
+  # 1. SYSTEM ORCHESTRATOR (Immutable Identity)
   sisyphus:
     name: "Sisyphus"
     symbol: "🎯"
@@ -23,23 +21,15 @@ primary_agents:
     enabled: true
     is_primary: true
     is_subagent: true
-    
     model:
       primary: "{{ORCHESTRATOR_MODEL}}"
       fallback: "{{ORCHESTRATOR_FALLBACK}}"
-    
-    role: "Main controller - routes, plans, executes, coordinates ALL agents"
+    role: "Main controller - routes, plans, executes"
     triggers: ["always_active", "/plan", "/ralph-loop"]
-    
-    controls_subagents:
-      - metis
-      - momus
-    
+    controls_subagents: [metis, momus]
     mcp_servers: [filesystem, memory, github, docker, brave, context7]
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # 2. PROMETHEUS (The System Architect)
-  # ────────────────────────────────────────────────────────────────────────────
+  # 2. SYSTEM ARCHITECT (Immutable Identity)
   prometheus:
     name: "Prometheus"
     symbol: "🏗️"
@@ -47,22 +37,15 @@ primary_agents:
     enabled: true
     is_primary: true
     is_subagent: true
-    
     model:
       primary: "{{ARCHITECT_MODEL}}"
       fallback: "gemini-3-flash"
-    
-    role: "System design, architecture decisions, technical planning"
-    triggers: ["design", "architecture", "plan", "structure", "ADR"]
-    
-    controls_subagents:
-      - codebase_analyzer
-    
+    role: "System design, architecture"
+    triggers: ["design", "architecture", "plan"]
+    controls_subagents: [codebase_analyzer]
     mcp_servers: [memory, filesystem, github, sequential-thinking]
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # 3. ATLAS (The System Executor/Developer)
-  # ────────────────────────────────────────────────────────────────────────────
+  # 3. SYSTEM DEVELOPER (Immutable Identity)
   atlas:
     name: "Atlas"
     symbol: "👨‍💻"
@@ -70,25 +53,17 @@ primary_agents:
     enabled: true
     is_primary: true
     is_subagent: true
-    
     model:
       primary: "{{DEVELOPER_MODEL}}"
       fallback: "kimi-k2.5-free"
-    
-    role: "Code implementation, UI/UX, feature development"
-    triggers: ["code", "implement", "build", "ui", "fix"]
-    
-    controls_subagents:
-      - frontend_ui_ux
-      - multimodal_looker
-    
+    role: "Code implementation, UI/UX"
+    triggers: ["code", "implement", "build"]
+    controls_subagents: [frontend_ui_ux, multimodal_looker]
     mcp_servers: [filesystem, github, git, context7, playwright, vercel]
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # 4. BRAINSTORMER (Creative)
-  # ────────────────────────────────────────────────────────────────────────────
+  # 4. CUSTOM AGENT (Renamed for Control Verification)
   brainstormer:
-    name: "Brainstormer"
+    name: "Brainstormer1"
     symbol: "💡"
     layer: 1
     enabled: true
@@ -97,15 +72,13 @@ primary_agents:
     model:
       primary: "kimi-k2.5-free"
       fallback: "gemini-3-flash"
-    role: "Creative exploration, design thinking"
-    triggers: ["brainstorm", "ideas", "creative"]
+    role: "Creative exploration"
+    triggers: ["brainstorm", "ideas"]
     mcp_servers: [memory]
     
-  # ────────────────────────────────────────────────────────────────────────────
-  # 5. LIBRARIAN (Research/Context)
-  # ────────────────────────────────────────────────────────────────────────────
+  # 5. CUSTOM AGENT (Renamed for Control Verification)
   librarian:
-    name: "Librarian"
+    name: "Librarian1"
     symbol: "📚"
     layer: 4
     enabled: true
@@ -114,20 +87,14 @@ primary_agents:
     model:
       primary: "{{LIBRARIAN_MODEL}}"
       fallback: "kimi-k2.5-free"
-    role: "Research, knowledge management"
+    role: "Research, knowledge"
     triggers: ["remember", "search", "research"]
-    controls_subagents:
-      - oracle
-      - explore
-      - artifact_searcher
-      - codebase_locator
+    controls_subagents: [oracle, explore, artifact_searcher, codebase_locator]
     mcp_servers: [memory, context7, brave, firecrawl]
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # 6. AUDIT (Security/Review)
-  # ────────────────────────────────────────────────────────────────────────────
+  # 6. CUSTOM AGENT (Renamed for Control Verification)
   audit:
-    name: "Audit"
+    name: "Audit1"
     symbol: "🔍"
     layer: 3
     enabled: true
@@ -136,17 +103,14 @@ primary_agents:
     model:
       primary: "{{AUDIT_MODEL}}"
       fallback: "kimi-k2.5-free"
-    role: "Code review, security analysis"
+    role: "Code review, security"
     triggers: ["review", "debug", "security"]
-    controls_subagents:
-      - pattern_finder
+    controls_subagents: [pattern_finder]
     mcp_servers: [filesystem, github, sequential-thinking]
 
-  # ────────────────────────────────────────────────────────────────────────────
-  # 7. WRITER (Docs)
-  # ────────────────────────────────────────────────────────────────────────────
+  # 7. CUSTOM AGENT (Renamed for Control Verification)
   writer:
-    name: "Writer"
+    name: "Writer1"
     symbol: "✍️"
     layer: 4
     enabled: true
@@ -155,7 +119,7 @@ primary_agents:
     model:
       primary: "{{WRITER_MODEL}}"
       fallback: "kimi-k2.5-free"
-    role: "Documentation, technical writing"
+    role: "Documentation"
     triggers: ["document", "readme", "docs"]
     mcp_servers: [filesystem, memory]
 
@@ -177,17 +141,17 @@ sub_agents:
   artifact_searcher: { controlled_by: librarian }
 
 # ══════════════════════════════════════════════════════════════════════════════
-# DEACTIVATED / BLOCKED
+# HALL OF SHAME (Deactivated)
 # ══════════════════════════════════════════════════════════════════════════════
 
 deactivated:
   - hephaestus
   - octto
   - commander
-  - orchestrator  # Replaced by Sisyphus
-  - architect     # Replaced by Prometheus
-  - developer     # Replaced by Atlas
-  - software_engineer # Replaced by Atlas
+  - orchestrator
+  - architect
+  - developer
+  - software_engineer
   - planner
   - executor
   - implementer

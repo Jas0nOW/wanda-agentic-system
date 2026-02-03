@@ -1,0 +1,68 @@
+{
+    "name": "wanda-micode",
+    "version": "1.0.3",
+    "description": "MiCode Visual GUI Configuration for WANDA",
+    "ui": {
+        "theme": "dark",
+        "primaryColor": "#7c3aed",
+        "accentColor": "#10b981",
+        "showAgentStatus": true,
+        "showTokenCount": true,
+        "showMcpStatus": true
+    },
+    "personas": {
+        "default": {
+            "name": "Sisyphus",
+            "avatar": "🎯",
+            "greeting": "Hallo {{USERNAME}}! Ich bin Sisyphus. Was ist der Plan?"
+        },
+        "sisyphus": {
+            "name": "Sisyphus",
+            "avatar": "🎯",
+            "accent": "#7c3aed"
+        },
+        "prometheus": {
+            "name": "Prometheus",
+            "avatar": "🏗️",
+            "accent": "#3b82f6"
+        },
+        "atlas": {
+            "name": "Atlas",
+            "avatar": "👨‍💻",
+            "accent": "#10b981"
+        },
+        "brainstormer": {
+            "name": "Brainstormer1",
+            "avatar": "💡",
+            "accent": "#fbbf24"
+        },
+        "librarian": {
+            "name": "Librarian1",
+            "avatar": "📚",
+            "accent": "#8b5cf6"
+        },
+        "audit": {
+            "name": "Audit1",
+            "avatar": "🔍",
+            "accent": "#ef4444"
+        },
+        "writer": {
+            "name": "Writer1",
+            "avatar": "✍️",
+            "accent": "#64748b"
+        }
+    },
+    "statusIndicators": {
+        "thinking": "⏳ Denke...",
+        "searching": "🔎 Suche...",
+        "coding": "💻 Code...",
+        "reviewing": "🔍 Review...",
+        "complete": "✅ Fertig"
+    },
+    "shortcuts": {
+        "ctrl+shift+b": "brainstorm",
+        "ctrl+shift+p": "prometheus",
+        "ctrl+shift+a": "atlas",
+        "ctrl+shift+r": "audit"
+    }
+}

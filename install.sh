@@ -453,6 +453,13 @@ process_templates() {
             "$INSTALL_DIR/plugins/oh-my-opencode/config.yaml.template" \
             > "$INSTALL_DIR/plugins/oh-my-opencode/config.yaml"
     fi
+
+    # Process MiCode config (UI)
+    if [ -f "$INSTALL_DIR/plugins/micode/config.json.template" ]; then
+        sed -e "s|{{USERNAME}}|$USER_NAME|g" \
+            "$INSTALL_DIR/plugins/micode/config.json.template" \
+            > "$INSTALL_DIR/plugins/micode/config.json"
+    fi
     
     echo -e "${GREEN}✓ Templates processed${NC}"
 }

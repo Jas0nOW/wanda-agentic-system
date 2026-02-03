@@ -1,8 +1,6 @@
 # ══════════════════════════════════════════════════════════════════════════════
 # OH-MY-OPENCODE Configuration v1.0.3
 # ══════════════════════════════════════════════════════════════════════════════
-# ALIGNED WITH SYSTEM AGENTS (Sisyphus, Prometheus, Atlas)
-# ══════════════════════════════════════════════════════════════════════════════
 
 leader:
   name: "Sisyphus"
@@ -17,60 +15,50 @@ agents:
     symbol: "🎯"
     layer: 2
     model: "{{ORCHESTRATOR_MODEL}}"
-    fallback: "{{ORCHESTRATOR_FALLBACK}}"
-    triggers: ["always_active", "/plan", "/ralph-loop"]
+    triggers: ["always_active", "/plan"]
     
   prometheus:
     name: "Prometheus"
     symbol: "🏗️"
     layer: 3
     model: "{{ARCHITECT_MODEL}}"
-    fallback: "gemini-3-flash"
-    triggers: ["design", "plan", "architecture"]
+    triggers: ["design", "architecture"]
     
   atlas:
     name: "Atlas"
     symbol: "👨‍💻"
     layer: 3
     model: "{{DEVELOPER_MODEL}}"
-    fallback: "kimi-k2.5-free"
-    triggers: ["code", "implement", "build"]
+    triggers: ["code", "implement"]
     
   brainstormer:
-    name: "Brainstormer"
+    name: "Brainstormer1"
     symbol: "💡"
     layer: 1
     model: "kimi-k2.5-free"
-    fallback: "gemini-3-flash"
-    triggers: ["brainstorm", "ideas"]
+    triggers: ["brainstorm"]
     
   librarian:
-    name: "Librarian"
+    name: "Librarian1"
     symbol: "📚"
     layer: 4
     model: "{{LIBRARIAN_MODEL}}"
-    fallback: "kimi-k2.5-free"
     triggers: ["remember", "research"]
     
   audit:
-    name: "Audit"
+    name: "Audit1"
     symbol: "🔍"
     layer: 3
     model: "{{AUDIT_MODEL}}"
-    fallback: "kimi-k2.5-free"
-    triggers: ["review", "debug", "security"]
+    triggers: ["review", "debug"]
     
   writer:
-    name: "Writer"
+    name: "Writer1"
     symbol: "✍️"
     layer: 4
     model: "{{WRITER_MODEL}}"
-    fallback: "kimi-k2.5-free"
-    triggers: ["docs", "readme"]
+    triggers: ["docs"]
 
-# ══════════════════════════════════════════════════════════════════════════════
-# DEACTIVATED
-# ══════════════════════════════════════════════════════════════════════════════
 deactivated:
   - hephaestus
   - octto
@@ -82,7 +70,7 @@ deactivated:
 
 workflows:
   ralph_loop:
-    description: "3-Phase Autopilot: Design → Implement → Verify"
+    description: "3-Phase Autopilot"
     phases:
       - agent: prometheus
         name: "Design"
