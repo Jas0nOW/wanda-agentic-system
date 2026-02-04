@@ -624,92 +624,91 @@ create_wanda_cli() {
 WANDA_DIR="${WANDA_INSTALL_DIR:-$HOME/.wanda-system}"
 VERSION_FILE="$WANDA_DIR/.wanda-version"
 
-    case "${1:-}" in
-    update|--update|-u)
-        echo "Checking for WANDA updates..."
-        if [ -d "$WANDA_DIR" ]; then
-            cd "$WANDA_DIR" && git pull --ff-only
-            echo "WANDA updated!"
-            echo "Run 'wanda' to see available commands"
-        else
-            echo "Error: WANDA directory not found at $WANDA_DIR"
-            exit 1
-        fi
-        ;;
-    status|--status|-s)
-        echo "WANDA System Status"
-        echo "==================="
-        echo "Install directory: $WANDA_DIR"
-        if [ -f "$VERSION_FILE" ]; then
-            echo "Version: $(cat "$VERSION_FILE")"
-        fi
-        if [ -d "$WANDA_DIR/.git" ]; then
-            cd "$WANDA_DIR"
-            echo "Git branch: $(git branch --show-current 2>/dev/null || echo 'unknown')"
-            echo "Last commit: $(git log -1 --format=%h 2>/dev/null || echo 'unknown')"
-        fi
-        ;;
-    voice|--voice|-v)
-        echo "Starting WANDA Voice Assistant..."
-        if [ -f "$WANDA_DIR/wanda_local/main.py" ]; then
-            cd "$WANDA_DIR/wanda_local" && python3 main.py
-        else
-            echo "Voice assistant not installed."
-            echo "Try: wanda update"
-            exit 1
-        fi
-        ;;
-    opencode|agent)
-        if command -v opencode >/dev/null 2>&1; then
-            opencode "$@"
-        else
-            echo "opencode CLI not found. Run 'wanda reinstall' to install it."
-            exit 1
-        fi
-        ;;
-    reinstall|--reinstall)
-        echo "Reinstalling WANDA..."
-        if [ -f "$WANDA_DIR/install.sh" ]; then
-            cd "$WANDA_DIR" && sh install.sh
-        else
-            echo "Install script not found. Run: wanda update"
-            exit 1
-        fi
-        ;;
-    help|--help|-h)
-        echo "WANDA - Sovereign AI OS"
-        echo ""
-        echo "Usage: wanda [command]"
-        echo ""
-        echo "Commands:"
-        echo "  wanda              Start Agent System (default)"
-        echo "  wanda update       Update WANDA from git"
-        echo "  wanda status       Show system status"
-        echo "  wanda voice        Start voice assistant"
-        echo "  wanda opencode     Run opencode CLI"
-        echo "  wanda reinstall    Run installer again"
-        echo "  wanda help         Show this help"
-        ;;
-    *)
-        # Try finding opencode in PATH or default locations
-        OPENCODE_BIN=""
-        if command -v opencode >/dev/null 2>&1; then
-            OPENCODE_BIN="opencode"
-        elif [ -f "$HOME/.opencode/bin/opencode" ]; then
-            OPENCODE_BIN="$HOME/.opencode/bin/opencode"
-        fi
+case "${1:-}" in
+update|--update|-u)
+    echo "Checking for WANDA updates..."
+    if [ -d "$WANDA_DIR" ]; then
+        cd "$WANDA_DIR" && git pull --ff-only
+        echo "WANDA updated!"
+        echo "Run 'wanda' to see available commands"
+    else
+        echo "Error: WANDA directory not found at $WANDA_DIR"
+        exit 1
+    fi
+    ;;
+status|--status|-s)
+    echo "WANDA System Status"
+    echo "==================="
+    echo "Install directory: $WANDA_DIR"
+    if [ -f "$VERSION_FILE" ]; then
+        echo "Version: $(cat "$VERSION_FILE")"
+    fi
+    if [ -d "$WANDA_DIR/.git" ]; then
+        cd "$WANDA_DIR"
+        echo "Git branch: $(git branch --show-current 2>/dev/null || echo 'unknown')"
+        echo "Last commit: $(git log -1 --format=%h 2>/dev/null || echo 'unknown')"
+    fi
+    ;;
+voice|--voice|-v)
+    echo "Starting WANDA Voice Assistant..."
+    if [ -f "$WANDA_DIR/wanda_local/main.py" ]; then
+        cd "$WANDA_DIR/wanda_local" && python3 main.py
+    else
+        echo "Voice assistant not installed."
+        echo "Try: wanda update"
+        exit 1
+    fi
+    ;;
+opencode|agent)
+    if command -v opencode >/dev/null 2>&1; then
+        opencode "$@"
+    else
+        echo "opencode CLI not found. Run 'wanda reinstall' to install it."
+        exit 1
+    fi
+    ;;
+reinstall|--reinstall)
+    echo "Reinstalling WANDA..."
+    if [ -f "$WANDA_DIR/install.sh" ]; then
+        cd "$WANDA_DIR" && sh install.sh
+    else
+        echo "Install script not found. Run: wanda update"
+        exit 1
+    fi
+    ;;
+help|--help|-h)
+    echo "WANDA - Sovereign AI OS"
+    echo ""
+    echo "Usage: wanda [command]"
+    echo ""
+    echo "Commands:"
+    echo "  wanda              Start Agent System (default)"
+    echo "  wanda update       Update WANDA from git"
+    echo "  wanda status       Show system status"
+    echo "  wanda voice        Start voice assistant"
+    echo "  wanda opencode     Run opencode CLI"
+    echo "  wanda reinstall    Run installer again"
+    echo "  wanda help         Show this help"
+    ;;
+*)
+    OPENCODE_BIN=""
+    if command -v opencode >/dev/null 2>&1; then
+        OPENCODE_BIN="opencode"
+    elif [ -f "$HOME/.opencode/bin/opencode" ]; then
+        OPENCODE_BIN="$HOME/.opencode/bin/opencode"
+    fi
 
-        if [ -n "$OPENCODE_BIN" ]; then
-            "$OPENCODE_BIN"
-        else
-            echo "WANDA is installed at: $WANDA_DIR"
-            echo ""
-            echo "Note: opencode CLI not found. Run 'wanda reinstall' to install it."
-            echo "Or run 'source ~/.zshrc' if you just installed it."
-            echo ""
-            echo "Run 'wanda help' for more commands."
-        fi
-        ;;
+    if [ -n "$OPENCODE_BIN" ]; then
+        "$OPENCODE_BIN"
+    else
+        echo "WANDA is installed at: $WANDA_DIR"
+        echo ""
+        echo "Note: opencode CLI not found. Run 'wanda reinstall' to install it."
+        echo "Or run 'source ~/.zshrc' if you just installed it."
+        echo ""
+        echo "Run 'wanda help' for more commands."
+    fi
+    ;;
 esac
 WANDA_EOF
     chmod +x "$INSTALL_DIR/bin/wanda"
