@@ -680,23 +680,6 @@ process_templates() {
             "$INSTALL_DIR/templates/GEMINI.md.template" \
             > "$GEMINI_CONFIG/GEMINI.md"
     fi
-
-    # Process system.md (Gemini CLI system prompt override)
-    if [ -f "$INSTALL_DIR/templates/system.md.template" ]; then
-        sed -e "s|{{USERNAME}}|$USER_NAME|g" \
-            -e "s|{{WORKSPACE}}|$USER_WORKSPACE|g" \
-            -e "s|{{LANGUAGE}}|$USER_LANGUAGE|g" \
-            "$INSTALL_DIR/templates/system.md.template" \
-            > "$GEMINI_CONFIG/system.md"
-
-        if [ ! -f "$GEMINI_CONFIG/.env" ]; then
-            echo "GEMINI_SYSTEM_MD=1" > "$GEMINI_CONFIG/.env"
-        else
-            if ! grep -q "^GEMINI_SYSTEM_MD=" "$GEMINI_CONFIG/.env"; then
-                echo "GEMINI_SYSTEM_MD=1" >> "$GEMINI_CONFIG/.env"
-            fi
-        fi
-    fi
     
     # Process agents.yaml (Smart Model Assignment)
     if [ -f "$INSTALL_DIR/config/agents.yaml.template" ]; then
@@ -1083,6 +1066,26 @@ print_summary() {
     [ "$INSTALL_VOICE" = "1" ] && echo "  • Voice Assistant: cd $INSTALL_DIR/wanda_local && python main.py"
     [ "$INSTALL_TELEGRAM" = "1" ] && echo "  • Telegram Bot: pm2 start wanda_local/telegram_bot.py"
     echo ""
+    
+    # Check if opencode is installed and provide instructions if not
+    if [ "$INSTALL_AGENTS" = "1" ] && ! command -v opencode >/dev/null 2>&1; then
+        echo -e "${YELLOW}⚠️  opencode CLI not found${NC}"
+        echo "Install it with:"
+        case "$OS" in
+            macos)
+                echo "  brew install opencode-ai/tap/opencode"
+                echo "  # Or: curl -fsSL https://opencode.ai/install | sh"
+                ;;
+            linux)
+                echo "  curl -fsSL https://opencode.ai/install | sh"
+                ;;
+            *)
+                echo "  curl -fsSL https://opencode.ai/install | sh"
+                ;;
+        esac
+        echo ""
+    fi
+    
     echo -e "${BLUE}Update:${NC}"
     echo "  cd $INSTALL_DIR && git pull"
     echo ""
@@ -1091,38 +1094,111 @@ print_summary() {
     echo ""
     
     # Setup wanda CLI in PATH
-    if [ -f "$INSTALL_DIR/bin/wanda" ]; then
-        chmod +x "$INSTALL_DIR/bin/wanda"
-        
-        # Add to PATH via shell profile
-        SHELL_PROFILE=""
-        if [ -f "$HOME/.zshrc" ]; then
-            SHELL_PROFILE="$HOME/.zshrc"
-        elif [ -f "$HOME/.bashrc" ]; then
-            SHELL_PROFILE="$HOME/.bashrc"
+    # Create bin directory and wanda CLI script if it doesn't exist
+    mkdir -p "$INSTALL_DIR/bin"
+    
+    if [ ! -f "$INSTALL_DIR/bin/wanda" ]; then
+        # Create a basic wanda CLI script
+        cat > "$INSTALL_DIR/bin/wanda" << 'WANDA_EOF'
+#!/bin/sh
+# WANDA CLI - Main entry point
+
+WANDA_DIR="${WANDA_INSTALL_DIR:-$HOME/.wanda-system}"
+VERSION_FILE="$WANDA_DIR/.wanda-version"
+
+case "${1:-}" in
+    update|--update|-u)
+        echo "Checking for WANDA updates..."
+        cd "$WANDA_DIR" && git pull --ff-only
+        echo "WANDA updated!"
+        ;;
+    status|--status|-s)
+        echo "WANDA System Status"
+        echo "==================="
+        echo "Install directory: $WANDA_DIR"
+        if [ -f "$VERSION_FILE" ]; then
+            echo "Version: $(cat "$VERSION_FILE")"
         fi
-        
-        if [ -n "$SHELL_PROFILE" ]; then
-            if ! grep -q "WANDA_INSTALL_DIR" "$SHELL_PROFILE"; then
-                echo "" >> "$SHELL_PROFILE"
-                echo "# WANDA System" >> "$SHELL_PROFILE"
-                echo "export WANDA_INSTALL_DIR=\"$INSTALL_DIR\"" >> "$SHELL_PROFILE"
-                echo "export PATH=\"\$WANDA_INSTALL_DIR/bin:\$PATH\"" >> "$SHELL_PROFILE"
-                echo -e "${GREEN}✓ Added 'wanda' command to PATH${NC}"
+        echo "Git status:"
+        cd "$WANDA_DIR" && git status --short 2>/dev/null || echo "  (not a git repo)"
+        ;;
+    voice|--voice|-v)
+        echo "Starting WANDA Voice Assistant..."
+        if [ -f "$WANDA_DIR/wanda_local/main.py" ]; then
+            cd "$WANDA_DIR/wanda_local" && python3 main.py
+        else
+            echo "Voice assistant not installed. Run: wanda update"
+            exit 1
+        fi
+        ;;
+    help|--help|-h)
+        echo "WANDA - Sovereign AI OS"
+        echo ""
+        echo "Usage: wanda [command]"
+        echo ""
+        echo "Commands:"
+        echo "  wanda          Start WANDA (default)"
+        echo "  wanda update   Check and apply updates"
+        echo "  wanda status   Show system status"
+        echo "  wanda voice    Start voice assistant"
+        echo "  wanda help     Show this help"
+        ;;
+    *)
+        # Default: check for updates and show info
+        if [ -d "$WANDA_DIR/.git" ]; then
+            cd "$WANDA_DIR"
+            LOCAL=$(git rev-parse HEAD 2>/dev/null)
+            REMOTE=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null)
+            if [ -n "$LOCAL" ] && [ -n "$REMOTE" ] && [ "$LOCAL" != "$REMOTE" ]; then
+                echo "Update available! Run: wanda update"
             fi
         fi
-        
-        # Create version file
-        cp "$INSTALL_DIR/VERSION" "$INSTALL_DIR/.wanda-version" 2>/dev/null || echo "1.0.4" > "$INSTALL_DIR/.wanda-version"
-        
-        echo ""
-        echo -e "${CYAN}Commands:${NC}"
-        echo "  wanda          - Start WANDA (checks for updates)"
-        echo "  wanda update   - Check and apply updates"
-        echo "  wanda status   - Show system status"
-        echo "  wanda voice    - Start voice assistant"
+        echo "WANDA is ready. Run 'wanda help' for commands."
+        ;;
+esac
+WANDA_EOF
+        chmod +x "$INSTALL_DIR/bin/wanda"
+        echo -e "${GREEN}✓ Created 'wanda' CLI${NC}"
+    else
+        chmod +x "$INSTALL_DIR/bin/wanda"
     fi
     
+    # Add to PATH via shell profile
+    SHELL_PROFILE=""
+    if [ -f "$HOME/.zshrc" ]; then
+        SHELL_PROFILE="$HOME/.zshrc"
+    elif [ -f "$HOME/.bashrc" ]; then
+        SHELL_PROFILE="$HOME/.bashrc"
+    fi
+    
+    if [ -n "$SHELL_PROFILE" ]; then
+        if ! grep -q "WANDA_INSTALL_DIR" "$SHELL_PROFILE" 2>/dev/null; then
+            echo "" >> "$SHELL_PROFILE"
+            echo "# WANDA System" >> "$SHELL_PROFILE"
+            echo "export WANDA_INSTALL_DIR=\"$INSTALL_DIR\"" >> "$SHELL_PROFILE"
+            echo "export PATH=\"\$WANDA_INSTALL_DIR/bin:\$PATH\"" >> "$SHELL_PROFILE"
+            echo -e "${GREEN}✓ Added 'wanda' command to PATH${NC}"
+        fi
+    fi
+    
+    # Export PATH immediately for current session
+    export WANDA_INSTALL_DIR="$INSTALL_DIR"
+    export PATH="$INSTALL_DIR/bin:$PATH"
+    
+    # Create version file
+    cp "$INSTALL_DIR/VERSION" "$INSTALL_DIR/.wanda-version" 2>/dev/null || echo "1.0.4" > "$INSTALL_DIR/.wanda-version"
+    
+    echo ""
+    echo -e "${CYAN}Commands:${NC}"
+    echo "  wanda          - Start WANDA (checks for updates)"
+    echo "  wanda update   - Check and apply updates"
+    echo "  wanda status   - Show system status"
+    echo "  wanda voice    - Start voice assistant"
+    
+    echo ""
+    echo -e "${YELLOW}⚠️  Important: To use 'wanda' in new terminal windows, run:${NC}"
+    echo -e "   ${CYAN}source $SHELL_PROFILE${NC}"
+    echo -e "   ${CYAN}# Or restart your terminal${NC}"
     echo ""
     echo "🌟 Enjoy WANDA, $USER_NAME!"
 }
