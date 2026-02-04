@@ -691,11 +691,23 @@ VERSION_FILE="$WANDA_DIR/.wanda-version"
         echo "  wanda help         Show this help"
         ;;
     *)
+        # Try finding opencode in PATH or default locations
+        OPENCODE_BIN=""
         if command -v opencode >/dev/null 2>&1; then
-            opencode
+            OPENCODE_BIN="opencode"
+        elif [ -f "$HOME/.opencode/bin/opencode" ]; then
+            OPENCODE_BIN="$HOME/.opencode/bin/opencode"
+        fi
+
+        if [ -n "$OPENCODE_BIN" ]; then
+            "$OPENCODE_BIN"
         else
             echo "WANDA is installed at: $WANDA_DIR"
-            echo "Run 'wanda help' for commands."
+            echo ""
+            echo "Note: opencode CLI not found. Run 'wanda reinstall' to install it."
+            echo "Or run 'source ~/.zshrc' if you just installed it."
+            echo ""
+            echo "Run 'wanda help' for more commands."
         fi
         ;;
 esac
