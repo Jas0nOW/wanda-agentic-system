@@ -624,10 +624,10 @@ create_wanda_cli() {
 WANDA_DIR="${WANDA_INSTALL_DIR:-$HOME/.wanda-system}"
 VERSION_FILE="$WANDA_DIR/.wanda-version"
 
-case "${1:-}" in
+    case "${1:-}" in
     update|--update|-u)
         echo "Checking for WANDA updates..."
-        if [ -d "$WANDA_DIR/.git" ]; then
+        if [ -d "$WANDA_DIR" ]; then
             cd "$WANDA_DIR" && git pull --ff-only
             echo "WANDA updated!"
             echo "Run 'wanda' to see available commands"
@@ -659,6 +659,14 @@ case "${1:-}" in
             exit 1
         fi
         ;;
+    opencode|agent)
+        if command -v opencode >/dev/null 2>&1; then
+            opencode "$@"
+        else
+            echo "opencode CLI not found. Run 'wanda reinstall' to install it."
+            exit 1
+        fi
+        ;;
     reinstall|--reinstall)
         echo "Reinstalling WANDA..."
         if [ -f "$WANDA_DIR/install.sh" ]; then
@@ -674,25 +682,20 @@ case "${1:-}" in
         echo "Usage: wanda [command]"
         echo ""
         echo "Commands:"
-        echo "  wanda              Show status (default)"
+        echo "  wanda              Start Agent System (default)"
         echo "  wanda update       Update WANDA from git"
         echo "  wanda status       Show system status"
         echo "  wanda voice        Start voice assistant"
+        echo "  wanda opencode     Run opencode CLI"
         echo "  wanda reinstall    Run installer again"
         echo "  wanda help         Show this help"
         ;;
     *)
-        # Default: show status
-        echo "WANDA is installed at: $WANDA_DIR"
-        if [ -d "$WANDA_DIR/.git" ]; then
-            cd "$WANDA_DIR"
-            LOCAL=$(git rev-parse HEAD 2>/dev/null)
-            REMOTE=$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/master 2>/dev/null)
-            if [ -n "$LOCAL" ] && [ -n "$REMOTE" ] && [ "$LOCAL" != "$REMOTE" ]; then
-                echo "Update available! Run: wanda update"
-            else
-                echo "Up to date. Run 'wanda help' for commands."
-            fi
+        if command -v opencode >/dev/null 2>&1; then
+            opencode
+        else
+            echo "WANDA is installed at: $WANDA_DIR"
+            echo "Run 'wanda help' for commands."
         fi
         ;;
 esac
@@ -912,6 +915,22 @@ install_agents() {
         echo "    ✓ Agent roster copied"
     fi
     
+    if ! command -v opencode >/dev/null 2>&1; then
+        echo "  - opencode CLI not found. Installing..."
+        case "$OS" in
+            macos)
+                if curl -fsSL https://opencode.ai/install | sh; then
+                    if [ -f "$HOME/.opencode/bin/opencode" ]; then
+                        xattr -dr com.apple.quarantine "$HOME/.opencode/bin/opencode" 2>/dev/null || true
+                    fi
+                fi
+                ;;
+            *)
+                curl -fsSL https://opencode.ai/install | sh
+                ;;
+        esac
+    fi
+
     echo -e "${GREEN}✓ Agent System installed (with all plugins)${NC}"
 }
 
@@ -1183,19 +1202,24 @@ print_summary() {
     [ "$INSTALL_TELEGRAM" = "1" ] && echo "  • Telegram Bot: pm2 start wanda_local/telegram_bot.py"
     echo ""
     
-    # Check if opencode is installed and provide instructions if not
     if [ "$INSTALL_AGENTS" = "1" ] && ! command -v opencode >/dev/null 2>&1; then
         echo -e "${YELLOW}⚠️  opencode CLI not found${NC}"
-        echo "Install it with:"
         case "$OS" in
             macos)
-                echo "  brew install opencode-ai/tap/opencode"
-                echo "  # Or: curl -fsSL https://opencode.ai/install | sh"
-                ;;
-            linux)
-                echo "  curl -fsSL https://opencode.ai/install | sh"
+                echo "Installing opencode via curl (recommended for macOS M-series)..."
+                if curl -fsSL https://opencode.ai/install | sh; then
+                    echo -e "${GREEN}✓ opencode installed successfully${NC}"
+                    if [ -f "$HOME/.opencode/bin/opencode" ]; then
+                        xattr -dr com.apple.quarantine "$HOME/.opencode/bin/opencode" 2>/dev/null || true
+                        echo "  ✓ Removed macOS quarantine attributes"
+                    fi
+                else
+                    echo -e "${RED}✗ opencode installation failed${NC}"
+                    echo "Try manually: curl -fsSL https://opencode.ai/install | sh"
+                fi
                 ;;
             *)
+                echo "Install it with:"
                 echo "  curl -fsSL https://opencode.ai/install | sh"
                 ;;
         esac
