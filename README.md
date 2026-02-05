@@ -120,6 +120,7 @@ wanda -d   # Debug mode - zeigt Fehler nach 10/20 Sek
 | `config.toml` | `~/.codex/config.toml` | Codex CLI config & API keys |
 | `instructions.md` | `~/.codex/instructions.md` | Codex global system rules |
 | `AGENTS.md` | `./AGENTS.md` | Shared agent context (Codex/Gemini/Claude) |
+| `prompts/agents/` | `./prompts/agents/` | Agent prompt definitions (18 agents) |
 
 ---
 
@@ -173,20 +174,32 @@ wanda -d   # Debug mode - zeigt Fehler nach 10/20 Sek
 └─────────────────────────────────────────────────────────┘
 ```
 
-### 9 Layers
-1. Brainstorming → 2. Planning → 3. Architecture → 4. Development  
-5. Audit → 6. Refactor → 7. Testing → 8. User-Approval → 9. Deploy
+### 7 Layers
+1. **Brainstorming** (Layer 1) → Creative ideation and exploration
+2. **Planning** (Layer 2) → Orchestration and task routing
+3. **Architecture** (Layer 3) → System design and implementation
+4. **Research** (Layer 4) → Knowledge management and documentation
+5. **Deep Research** (Layer 5) → Codebase analysis and pattern finding
+6. **Continuity** (Layer 6) → Session state and context preservation
+7. **Meta** (Layer 7) → Pre-planning and quality gates
+
+**7 Primary Agents**: Orchestrator, Brainstormer, Librarian, Architect, Developer, Audit, Writer
+
+**11 Sub-Agents**: Frontend-UI-UX, Oracle, Explore, Multimodal-Looker, Codebase-Locator, Codebase-Analyzer, Pattern-Finder, Ledger-Creator, Artifact-Searcher, Metis, Momus
 
 ---
 
 ## MCP Servers (Docker)
+| Server | Zweck |
+|--------|-------|
+| `github` | Repository ops |
+| `brave` | Web search |
+| `playwright` | Browser automation |
+| `context7` | Library docs |
+| `supermemory` | Persistent context |
+| `filesystem` | File operations |
 
-SSOT list:
-- docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md
-
-Hinweis:
-- Docker MCP Registry listet die verfügbaren Server.
-- OpenCode nutzt zusätzlich Oh‑My‑OpenCode Default MCPs: context7, grep_app, websearch.
+> Full list + compose file: see `docs/AI_INSTALLATION.md` / upcoming `docs/MCP.md`.
 
 ---
 

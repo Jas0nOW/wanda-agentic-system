@@ -13,6 +13,9 @@ from wanda_voice_core.event_bus import EventBus
 CONFIRM_COMMANDS = {
     ConfirmationState.SEND: [
         "abschicken",
+        "abschike",
+        "abschik",
+        "abschick",
         "senden",
         "send",
         "ja",
@@ -20,6 +23,7 @@ CONFIRM_COMMANDS = {
         "go",
         "los",
         "schick ab",
+        "schick",
         "ok",
         "das passt",
     ],
@@ -51,15 +55,37 @@ CONFIRM_COMMANDS = {
 
 def detect_confirmation_command(text: str) -> Optional[ConfirmationState]:
     """Detect a confirmation command from text."""
+    import difflib
+
+    if not text:
+        return None
+
     normalized = text.lower().strip()
+
     for state, keywords in CONFIRM_COMMANDS.items():
         for kw in keywords:
+            if normalized == kw:
+                return state
+
             if (
-                normalized == kw
-                or normalized.startswith(kw + " ")
+                normalized.startswith(kw + " ")
                 or normalized.endswith(" " + kw)
+                or f" {kw} " in normalized
             ):
                 return state
+
+            if len(kw) > 3:
+                ratio = difflib.SequenceMatcher(None, normalized, kw).ratio()
+                if ratio > 0.8:
+                    return state
+
+                words = normalized.split()
+                for word in words:
+                    if len(word) > 3:
+                        word_ratio = difflib.SequenceMatcher(None, word, kw).ratio()
+                        if word_ratio > 0.85:
+                            return state
+
     return None
 
 

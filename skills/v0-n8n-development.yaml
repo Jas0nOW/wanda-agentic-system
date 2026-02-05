@@ -3,7 +3,7 @@
 
 name: v0-n8n-development
 version: 1.0.0
-target_agents: [software-engineer, atlas]
+target_agents: [software-engineer]
 description: |
   V0 skill for n8n workflow design, validation, and deployment.
   Emphasizes reliability, observability, and safe operations.

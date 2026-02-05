@@ -3,7 +3,7 @@
 
 name: v0-automation-no-ai
 version: 1.0.0
-target_agents: [software-engineer, atlas]
+target_agents: [software-engineer]
 description: |
   V0 skill for non-AI automation using scripts, CLIs, and pipelines.
   Focuses on determinism, idempotency, and repeatability.

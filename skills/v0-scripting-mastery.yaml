@@ -3,7 +3,7 @@
 
 name: v0-scripting-mastery
 version: 1.0.0
-target_agents: [software-engineer, atlas]
+target_agents: [software-engineer]
 description: |
   V0 skill for robust scripting in Python and other languages
   to solve automation and integration tasks end-to-end.

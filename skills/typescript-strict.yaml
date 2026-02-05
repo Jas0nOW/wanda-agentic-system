@@ -3,7 +3,7 @@
 
 name: typescript-strict
 version: 1.0.0
-target_agents: [atlas, audit]
+target_agents: [software-engineer, audit]
 description: |
   TypeScript strict mode patterns.
   Focus on type safety, inference, and Zod validation.

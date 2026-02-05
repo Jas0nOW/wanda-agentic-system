@@ -3,7 +3,7 @@
 
 name: tailwind-shadcn-mastery
 version: 1.0.0
-target_agents: [frontend-ui-ux, atlas]
+target_agents: [frontend-ui-ux, software-engineer]
 description: |
   Tailwind v4 and shadcn/ui best practices.
   Focus on design tokens, component composition, and accessibility.

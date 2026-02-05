@@ -1,0 +1,90 @@
+repos:
+  # Standard pre-commit hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: detect-private-key
+      - id: mixed-line-ending
+
+  # Python code formatting
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
+    hooks:
+      - id: black
+        language_version: python3.11
+        args: ['--line-length=100']
+        files: ^(wanda_voice_core|tests)/.*\.py$
+
+  # Python import sorting
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ['--profile=black', '--line-length=100']
+        files: ^(wanda_voice_core|tests)/.*\.py$
+
+  # Python linting
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        args: ['--max-line-length=100', '--extend-ignore=E203,W503']
+        files: ^(wanda_voice_core|tests)/.*\.py$
+
+  # Security scanning
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.7
+    hooks:
+      - id: bandit
+        args: ['-c', 'pyproject.toml', '-r', 'wanda_voice_core/']
+        additional_dependencies: ['bandit[toml]']
+
+  # Local WANDA tests
+  - repo: local
+    hooks:
+      - id: wanda-unit-tests
+        name: WANDA Unit Tests
+        entry: pytest tests/unit/ -xvs -m unit
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+      
+      - id: wanda-regression-tests
+        name: WANDA Regression Tests
+        entry: pytest tests/regression/ -xvs -m regression
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [commit]
+      
+      - id: wanda-integration-tests
+        name: WANDA Integration Tests
+        entry: pytest tests/integration/ -xvs -m integration
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [push]
+      
+      - id: wanda-coverage-check
+        name: WANDA Coverage Check
+        entry: pytest tests/unit/ tests/integration/ --cov=wanda_voice_core --cov-fail-under=80
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [push]
+
+  # Commit message validation
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.13.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]

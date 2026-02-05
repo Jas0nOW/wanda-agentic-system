@@ -30,12 +30,12 @@ WANDA operiert über eine spezialisierte Hierarchie von **17 Agenten** in 7 funk
 
 ## 3. Die vier Säulen (Plugin-Ökosystem)
 
-3.  Das OS basiert auf einer strikten Plugin-Hierarchie (SSOT 2026):
+Das OS basiert auf vier fundamentalen Plugin-Modulen, die live über GitHub synchronisiert werden:
 
-1.  **OhMyOpencode (Chefdirigent):** Das **primäre** Orchestrierungs-Plugin. Verwaltet Session, Auth und Token-Budget. "Der Boss".
-2.  **MiCode (Playbook):** Eine **manuelle** Workflow-Engine für komplexe Tasks (Brainstorm → Plan → Code). Wird bewusst aufgerufen, ist *kein* dauerhafter Hintergrund-Orchestrator.
-3.  **Opencode-Orchestrator (Experimentell):** Nur im `experimental` Profil aktiv. Dient als Testlabor für Multi-Agent-Schwärme.
-4.  **Wanda Voice (Interface):** Das lokale Gateway (Ollama + XTTS). Es injiziert Befehle direkt in die CLI.
+1.  **OhMyOpencode (Orchestrator):** Das zentrale Nervensystem. Veraltet Agenten-Lebenszyklen, Layer-Übergänge und Tool-Berechtigungen.
+2.  **MiCode (Intelligence):** Die "Augen" des Systems. Nutzt AST-Parsing und semantische Analyse, um Codebasen besser zu verstehen als reiner Text.
+3.  **Opencore (Tooling):** Die "Hände". Verwaltet MCP-Server (Docker, Filesystem, GitHub, Browser) für autonome Aktionen.
+4.  **Wanda UI (Feedback):** Das "Gesicht". Ein hochwertiger, animierter Orb im Siri-Stil mit Mikro-Animationen, die den internen Status widerspiegeln (Zuhören, Denken, Sprechen).
 
 ---
 

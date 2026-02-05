@@ -124,10 +124,10 @@ Agents:
 - librarian
 - explore
 - multimodal-looker
-- prometheus
+- architect
 - metis
 - momus
-- atlas
+- software-engineer
 
 Categories:
 - visual-engineering

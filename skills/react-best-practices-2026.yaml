@@ -3,7 +3,7 @@
 
 name: react-best-practices-2026
 version: 1.0.0
-target_agents: [frontend-ui-ux, atlas]
+target_agents: [frontend-ui-ux, software-engineer]
 description: |
   SOTA React 19 patterns for production-grade UIs.
   Focuses on Server Components, Suspense, and modern data fetching.

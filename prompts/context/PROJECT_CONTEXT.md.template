@@ -34,8 +34,9 @@
     - Response language
     - System messages
     -->
-    <primary>{{LANGUAGE}}</primary>
-    <tts_voice type="xtts">{{LANGUAGE}}</tts_voice>
+    <policy>Internal: English | User Response: German</policy>
+    <primary>German</primary>
+    <tts_voice type="xtts">de</tts_voice>
     <tts_voice type="macos_siri">
         <de>Anna</de>
         <en>Samantha</en>

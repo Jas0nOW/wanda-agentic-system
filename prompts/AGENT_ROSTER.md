@@ -18,8 +18,8 @@ graph TD
     end
     
     subgraph Layer3[L3: Core]
-        P[Prometheus<br/>Architect]
-        A[Atlas<br/>Developer]
+        ARC[Architect]
+        SE[Software-Engineer]
         AU[Audit]
         F[Frontend-UI-UX]
     end
@@ -48,21 +48,21 @@ graph TD
     end
     
     S --> B
-    S --> P
-    S --> A
+    S --> ARC
+    S --> SE
     S --> AU
     S --> L
     S --> W
     S --> LC
     S --> MM
     
-    A --> F
-    A --> M
+    SE --> F
+    SE --> M
     L --> O
     L --> E
     L --> CL
     L --> AS
-    P --> CA
+    ARC --> CA
     AU --> PF
 ```
 
@@ -74,8 +74,8 @@ graph TD
 |---|-------|-------|------|-------|----------|--------|
 | 1 | **Sisyphus** | 2 | PRIMARY | kimi-code-k2p5 | kimi-k2.5-free | prompt-engineering |
 | 2 | **Brainstormer** | 1 | PRIMARY+SUB | kimi-k2.5-free | gemini-3-flash | prompt-engineering |
-| 3 | **Prometheus** | 3 | PRIMARY+SUB | claude-4.5-sonnet | kimi-k2.5-free | nextjs, api-design |
-| 4 | **Atlas** | 3 | PRIMARY+SUB | claude-4.5-sonnet | kimi-code-k2p5 | react, tailwind, ts |
+| 3 | **Architect** | 3 | PRIMARY+SUB | claude-4.5-sonnet | kimi-k2.5-free | nextjs, api-design |
+| 4 | **Software-Engineer** | 3 | PRIMARY+SUB | claude-4.5-sonnet | kimi-code-k2p5 | react, tailwind, ts |
 | 5 | **Audit** | 3 | PRIMARY+SUB | codex-5.2 | kimi-k2.5-free | security, testing |
 | 6 | **Librarian** | 4 | PRIMARY+SUB | gemini-3-flash | kimi-k2.5-free | - |
 | 7 | **Writer** | 4 | PRIMARY+SUB | gemini-3-flash | kimi-k2.5-free | docs, git-commits |
@@ -114,8 +114,8 @@ graph TD
 |-------|---------|
 | Sisyphus | Always active (default) |
 | Brainstormer | `@brainstormer` |
-| Prometheus | `@architect` |
-| Atlas | `@dev` |
+| Architect | `@architect` |
+| Software-Engineer | `@dev` |
 | Audit | `@audit` |
 | Librarian | `@librarian` |
 | Writer | `@writer` |

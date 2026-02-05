@@ -148,8 +148,9 @@
 </ROUTING_HEURISTICS>
 
 <COMMUNICATION>
-    <language>Match user (German or English)</language>
+    <language>Internal Thinking: English | User Interaction: German</language>
     <style>Terse, efficient</style>
+    <rule>Process all internal logic and routing in English. Respond to the user strictly in German.</rule>
 </COMMUNICATION>
 
 <TOKEN_EFFICIENCY>

@@ -391,9 +391,9 @@ collect_user_info() {
             echo ""
             read -p "   Sisyphus (Orchestrator) model: " ORCHESTRATOR_MODEL
             ORCHESTRATOR_MODEL=${ORCHESTRATOR_MODEL:-kimi-k2.5-free}
-            read -p "   Prometheus (Architect) model: " ARCHITECT_MODEL
+            read -p "   Architect (Architect) model: " ARCHITECT_MODEL
             ARCHITECT_MODEL=${ARCHITECT_MODEL:-kimi-k2.5-free}
-            read -p "   Atlas (Developer) model: " DEVELOPER_MODEL
+            read -p "   Software-Engineer (Developer) model: " DEVELOPER_MODEL
             DEVELOPER_MODEL=${DEVELOPER_MODEL:-gemini-3-flash}
             read -p "   Audit model: " AUDIT_MODEL
             AUDIT_MODEL=${AUDIT_MODEL:-gemini-3-flash}
@@ -470,8 +470,8 @@ collect_user_info() {
     echo -e "${GREEN}  7 PRIMARY AGENTS:${NC}"
     echo -e "${GREEN}  • Sisyphus (Orch):   $ORCHESTRATOR_MODEL${NC}"
     echo -e "${GREEN}  • Brainstormer:      $BRAINSTORMER_MODEL${NC}"
-    echo -e "${GREEN}  • Prometheus (Arch): $ARCHITECT_MODEL${NC}"
-    echo -e "${GREEN}  • Atlas (Dev):       $DEVELOPER_MODEL${NC}"
+    echo -e "${GREEN}  • Architect (Arch): $ARCHITECT_MODEL${NC}"
+    echo -e "${GREEN}  • Software-Engineer (Dev):       $DEVELOPER_MODEL${NC}"
     echo -e "${GREEN}  • Audit:             $AUDIT_MODEL${NC}"
     echo -e "${GREEN}  • Librarian:         $LIBRARIAN_MODEL${NC}"
     echo -e "${GREEN}  • Writer:            $WRITER_MODEL${NC}"
@@ -975,18 +975,19 @@ install_voice() {
                     gir1.2-gtk-3.0 \
                     portaudio19-dev \
                     libportaudio2 \
+                    ffmpeg \
                     2>/dev/null || echo -e "${YELLOW}Some system packages may already be installed${NC}"
             elif command -v dnf >/dev/null 2>&1; then
-                sudo dnf install -y gcc cairo-devel pkgconfig python3-devel portaudio-devel || echo -e "${YELLOW}Some packages may already be installed${NC}"
+                sudo dnf install -y gcc cairo-devel pkgconfig python3-devel portaudio-devel ffmpeg || echo -e "${YELLOW}Some packages may already be installed${NC}"
             elif command -v pacman >/dev/null 2>&1; then
-                sudo pacman -S --noconfirm gcc cairo pkgconf python portaudio || echo -e "${YELLOW}Some packages may already be installed${NC}"
+                sudo pacman -S --noconfirm gcc cairo pkgconf python portaudio ffmpeg || echo -e "${YELLOW}Some packages may already be installed${NC}"
             else
                 echo -e "${YELLOW}Could not detect package manager. Please install dependencies manually.${NC}"
             fi
             ;;
         macos)
             if command -v brew >/dev/null 2>&1; then
-                brew install pkg-config portaudio || echo -e "${YELLOW}Some packages may already be installed${NC}"
+                brew install pkg-config portaudio ffmpeg || echo -e "${YELLOW}Some packages may already be installed${NC}"
             else
                 echo -e "${YELLOW}Homebrew not found. Install from https://brew.sh${NC}"
                 echo -e "${YELLOW}Voice Assistant may not work without portaudio${NC}"
@@ -1012,7 +1013,9 @@ install_voice() {
         numpy \
         vosk \
         faster-whisper \
+        edge-tts \
         piper-tts \
+        openwakeword \
         evdev \
         PyGObject \
         --quiet 2>/dev/null || echo -e "${YELLOW}Some packages may have warnings${NC}"

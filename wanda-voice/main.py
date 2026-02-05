@@ -700,8 +700,6 @@ class WandaVoiceAssistant:
 
     def _listen_short(self):
         """Listen for a short confirmation response (blocking)."""
-        previous_cb = self.recorder.on_auto_stop
-        self.recorder.on_auto_stop = None
         self.recorder.start_recording()
         start = time.time()
         while self.recorder.is_recording and time.time() - start < 8:
@@ -710,7 +708,6 @@ class WandaVoiceAssistant:
             audio = self.recorder.stop_recording()
         else:
             audio = self.recorder.consume_last_audio()
-        self.recorder.on_auto_stop = previous_cb
         if audio is not None:
             return self.stt.transcribe(audio, language="de")
         return None

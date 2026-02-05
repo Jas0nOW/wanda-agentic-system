@@ -173,7 +173,14 @@ class SimpleWakeWordDetector:
         "wunder",
         "wonda",
         "wonder",
+        "wander",
+        "wanderer",
+        "waller",
+        "wala",
+        "vanda",
     ]
+
+    PHONETIC_SIMILARITY_THRESHOLD = 0.7
 
     def __init__(self, on_wake: Optional[Callable[[], None]] = None, stt_engine=None):
         """
@@ -235,17 +242,51 @@ class SimpleWakeWordDetector:
                 text = self.stt.transcribe(audio.flatten(), language="de")
                 text_lower = text.lower().strip()
 
-                # Check for wake phrases
+                # Check for wake phrases (exact match or phonetic similarity)
+                detected = False
                 for phrase in self.WAKE_PHRASES:
                     if phrase in text_lower:
                         print(f"[WakeWord] Detected: '{phrase}'")
-                        if self.on_wake:
-                            self.on_wake()
-                        time.sleep(2)  # Cooldown
+                        detected = True
                         break
+
+                # Also check for phonetically similar words using fuzzy matching
+                if not detected:
+                    words = text_lower.split()
+                    for word in words:
+                        if self._is_phonetically_similar_to_wanda(word):
+                            print(f"[WakeWord] Phonetic match: '{word}' -> 'wanda'")
+                            detected = True
+                            break
+
+                if detected and self.on_wake:
+                    self.on_wake()
+                    time.sleep(2)
 
         except Exception as e:
             print(f"[WakeWord] Error: {e}")
+
+    def _is_phonetically_similar_to_wanda(self, word: str) -> bool:
+        import difflib
+
+        similar_words = [
+            "wanda",
+            "wander",
+            "wanderer",
+            "waller",
+            "wonder",
+            "wunder",
+            "wonda",
+            "vanda",
+            "wala",
+        ]
+        if word in similar_words:
+            return True
+        for similar in similar_words:
+            ratio = difflib.SequenceMatcher(None, word, similar).ratio()
+            if ratio >= self.PHONETIC_SIMILARITY_THRESHOLD:
+                return True
+        return False
 
 
 def get_wake_word_detector(

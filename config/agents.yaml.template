@@ -1,7 +1,7 @@
 # ══════════════════════════════════════════════════════════════════════════════
 # WANDA Agent Configuration v1.0.3
 # ══════════════════════════════════════════════════════════════════════════════
-# ALIGNMENT WITH SYSTEM AGENTS (Sisyphus, Prometheus, Atlas)
+# ALIGNMENT WITH SYSTEM AGENTS (Sisyphus, Architect, Software-Engineer)
 # + TEST SUFFIX '1' FOR CONTROLLED AGENTS
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -30,8 +30,8 @@ primary_agents:
     mcp_servers: [filesystem, memory, github, docker, brave, context7]
 
   # 2. SYSTEM ARCHITECT (Immutable Identity)
-  prometheus:
-    name: "Prometheus"
+  architect:
+    name: "Architect"
     symbol: "🏗️"
     layer: 3
     enabled: true
@@ -46,8 +46,8 @@ primary_agents:
     mcp_servers: [memory, filesystem, github, sequential-thinking]
 
   # 3. SYSTEM DEVELOPER (Immutable Identity)
-  atlas:
-    name: "Atlas"
+  software-engineer:
+    name: "Software-Engineer"
     symbol: "👨‍💻"
     layer: 3
     enabled: true
@@ -128,12 +128,12 @@ primary_agents:
 # ══════════════════════════════════════════════════════════════════════════════
 
 sub_agents:
-  frontend_ui_ux: { controlled_by: atlas, model: { primary: "gemini-3-flash" } }
+  frontend_ui_ux: { controlled_by: software-engineer, model: { primary: "gemini-3-flash" } }
   oracle: { controlled_by: librarian, model: { primary: "gemini-3-flash" } }
   explore: { controlled_by: librarian, model: { primary: "gemini-3-flash" } }
-  multimodal_looker: { controlled_by: atlas, model: { primary: "gemini-3-flash" } }
+  multimodal_looker: { controlled_by: software-engineer, model: { primary: "gemini-3-flash" } }
   codebase_locator: { controlled_by: librarian, mode: "READ-ONLY", model: { primary: "gemini-3-flash" } }
-  codebase_analyzer: { controlled_by: prometheus, mode: "READ-ONLY", model: { primary: "gemini-3-flash" } }
+  codebase_analyzer: { controlled_by: architect, mode: "READ-ONLY", model: { primary: "gemini-3-flash" } }
   pattern_finder: { controlled_by: audit, mode: "READ-ONLY", model: { primary: "gemini-3-flash" } }
   metis: { controlled_by: sisyphus, model: { primary: "kimi-k2.5-free" } }
   momus: { controlled_by: sisyphus, model: { primary: "kimi-k2.5-free" } }
@@ -159,4 +159,4 @@ deactivated:
 
 routing:
   default: sisyphus
-  priority: [sisyphus, audit, atlas, prometheus, librarian, writer, brainstormer]
+  priority: [sisyphus, audit, software-engineer, architect, librarian, writer, brainstormer]

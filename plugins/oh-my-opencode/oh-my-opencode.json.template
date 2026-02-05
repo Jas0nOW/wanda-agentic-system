@@ -18,7 +18,7 @@
       "temperature": 0.3,
       "description": "WANDA Orchestrator - Routes tasks to specialized agents"
     },
-    "Prometheus (Planner)": {
+    "Architect (Planner)": {
       "model": "{{ARCHITECT_MODEL}}",
       "temperature": 0.4,
       "description": "Architect - Project structure and design"

@@ -21,13 +21,13 @@
             "avatar": "🎯",
             "accent": "#7c3aed"
         },
-        "prometheus": {
-            "name": "Prometheus",
+        "architect": {
+            "name": "Architect",
             "avatar": "🏗️",
             "accent": "#3b82f6"
         },
-        "atlas": {
-            "name": "Atlas",
+        "software-engineer": {
+            "name": "Software-Engineer",
             "avatar": "👨‍💻",
             "accent": "#10b981"
         },
@@ -61,8 +61,8 @@
     },
     "shortcuts": {
         "ctrl+shift+b": "brainstorm",
-        "ctrl+shift+p": "prometheus",
-        "ctrl+shift+a": "atlas",
+        "ctrl+shift+p": "architect",
+        "ctrl+shift+a": "software-engineer",
         "ctrl+shift+r": "audit"
     }
 }

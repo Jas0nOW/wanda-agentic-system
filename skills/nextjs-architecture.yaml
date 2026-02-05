@@ -3,7 +3,7 @@
 
 name: nextjs-architecture
 version: 1.0.0
-target_agents: [prometheus]
+target_agents: [architect]
 description: Next.js 15 App Router architecture patterns.
 
 rules:

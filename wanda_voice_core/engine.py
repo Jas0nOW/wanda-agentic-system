@@ -176,13 +176,17 @@ class WandaVoiceEngine:
                 if confirmation_enabled:
                     action = await self._confirmation.run(refiner_result, run_id=run_id)
                     result.confirmation_action = action
-                    if action == ConfirmationState.CANCEL:
-                        return result
-                    elif action == ConfirmationState.REDO:
-                        return result
-                    elif action == ConfirmationState.EDIT:
+                    if action == ConfirmationState.SEND:
+                        pass
+                    elif action in (
+                        ConfirmationState.CANCEL,
+                        ConfirmationState.REDO,
+                        ConfirmationState.EDIT,
+                    ):
                         return result
             elif not self.refiner_enabled and confirmation_enabled:
+                # Refiner is disabled but confirmation is enabled
+                # Show the raw text for confirmation
                 refiner_result = RefinerResult(
                     intent="raw",
                     improved_text=text,
@@ -196,13 +200,18 @@ class WandaVoiceEngine:
                     },
                     run_id=run_id,
                 )
+
+                # Run confirmation flow
                 action = await self._confirmation.run(refiner_result, run_id=run_id)
                 result.confirmation_action = action
-                if action == ConfirmationState.CANCEL:
-                    return result
-                elif action == ConfirmationState.REDO:
-                    return result
-                elif action == ConfirmationState.EDIT:
+
+                if action == ConfirmationState.SEND:
+                    pass
+                elif action in (
+                    ConfirmationState.CANCEL,
+                    ConfirmationState.REDO,
+                    ConfirmationState.EDIT,
+                ):
                     return result
             else:
                 result.improved_text = text
@@ -343,16 +352,30 @@ class WandaVoiceEngine:
 
     # --- Clipboard / Typing ---
 
+    def _sanitize_text(self, text: str) -> str:
+        import re
+
+        if not isinstance(text, str):
+            return ""
+        max_length = 10000
+        if len(text) > max_length:
+            text = text[:max_length]
+        text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", text)
+        return text
+
     def copy_to_clipboard(self, text: str) -> bool:
         """Copy text to system clipboard."""
         if not self._clipboard_tool:
+            return False
+        text = self._sanitize_text(text)
+        if not text:
             return False
         try:
             proc = subprocess.Popen(
                 self._clipboard_tool,
                 stdin=subprocess.PIPE,
             )
-            proc.communicate(input=text.encode())
+            proc.communicate(input=text.encode("utf-8"))
             return proc.returncode == 0
         except Exception:
             return False
@@ -361,12 +384,25 @@ class WandaVoiceEngine:
         """Type text into active window using wtype/xdotool."""
         if not self._typing_tool:
             return False
+        text = self._sanitize_text(text)
+        if not text:
+            return False
         try:
-            subprocess.run(
-                [*self._typing_tool, text],
-                timeout=5,
-                check=True,
-            )
+            import shlex
+
+            safe_text = shlex.quote(text)
+            if self._typing_tool[0] == "wtype":
+                subprocess.run(
+                    ["wtype", text],
+                    timeout=5,
+                    check=True,
+                )
+            else:
+                subprocess.run(
+                    ["xdotool", "type", "--", text],
+                    timeout=5,
+                    check=True,
+                )
             return True
         except Exception:
             return False

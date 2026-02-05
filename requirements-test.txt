@@ -1,0 +1,41 @@
+# Test requirements for WANDA Voice Core
+# Install with: pip install -r requirements-test.txt
+
+# Core testing framework
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-asyncio>=0.21.0
+pytest-timeout>=2.1.0
+
+# Mocking and fixtures
+pytest-mock>=3.11.0
+factory-boy>=3.3.0
+faker>=19.0.0
+
+# Performance testing
+psutil>=5.9.0
+memory-profiler>=0.61.0
+
+# Code quality
+black>=23.0.0
+isort>=5.12.0
+flake8>=6.1.0
+mypy>=1.5.0
+pylint>=2.17.0
+
+# Security testing
+bandit>=1.7.5
+safety>=2.3.0
+
+# Pre-commit hooks
+pre-commit>=3.4.0
+
+# Coverage reporting
+coverage>=7.3.0
+codecov>=2.1.0
+
+# Test data generation
+hypothesis>=6.84.0
+
+# Benchmarking
+pytest-benchmark>=4.0.0

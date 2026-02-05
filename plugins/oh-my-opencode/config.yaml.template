@@ -17,15 +17,15 @@ agents:
     model: "{{ORCHESTRATOR_MODEL}}"
     triggers: ["always_active", "/plan"]
     
-  prometheus:
+  architect:
     name: "Prometheus1"
     symbol: "🏗️"
     layer: 3
     model: "{{ARCHITECT_MODEL}}"
     triggers: ["design", "architecture"]
     
-  atlas:
-    name: "Atlas1"
+  software-engineer:
+    name: "Software-Engineer1"
     symbol: "👨‍💻"
     layer: 3
     model: "{{DEVELOPER_MODEL}}"
@@ -72,9 +72,9 @@ workflows:
   ralph_loop:
     description: "3-Phase Autopilot"
     phases:
-      - agent: prometheus
+      - agent: architect
         name: "Design"
-      - agent: atlas
+      - agent: software-engineer
         name: "Implement"
       - agent: audit
         name: "Verify"

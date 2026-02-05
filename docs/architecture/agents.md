@@ -1,4 +1,4 @@
-# WANDA Sovereign AI OS - Agenten & Rollen (v3)
+# WANDA Sovereign AI OS - Agenten & Rollen (v4)
 
 > **Status:** Single Source of Truth (SSOT) für Agenten-Architektur
 > **Stand:** Februar 2026
@@ -6,110 +6,192 @@
 
 Diese Datei definiert die aktive Agenten-Flotte, ihre Hierarchie und die technische Orchestrierung.
 
+---
+
 ## 1. System-Übersicht
 
-- **1 Hauptagent** + **Subagenten-Flotte** in **7 Layers**
-- **Hierarchische Sortierung**: Main (Primary) & Subagenten (Delegation)
-- **7 Kategorien** für dynamische Skill-Zuweisung
-- **15 Plugins** installiert (Unified System)
+- **7 Layers** mit klarer Reihenfolge: Brainstorming → Planning → Architecture → Development → Audit → Continuity → Meta
+- **18 Agenten** in 7 Layern organisiert
+- **Layer 3 Core** enthält 4 Agenten (Architect, Developer, Frontend-UI-UX, Audit)
 - **Session Continuity** via Ledger-System
 
----
-
-## 2. Main Agent (Primary - Sichtbar)
-
-Nur der Commander ist direkt ansteuerbar. Alle anderen Hauptagenten sind deaktiviert.
-
-| Agent | Rolle | Modell | Aufgabe | Mode |
-|:------|:------|:-------|:--------|:-----|
-| **commander** | Orchestrator | GPT-5.2 Codex | Mission-Controller. Routing, Orchestrierung, Policy-Gates. | **Primary** |
+**Wichtig:** Layer 3 (Architecture) wird bei Fehlern NICHT wiederholt - nur Layer 1-2 loop zurück!
 
 ---
 
-## 3. Subagenten-Fleet (Delegation)
+## 2. Die 7 Layers (Korrekte Reihenfolge)
 
-Diese Agenten werden vom Commander bei Bedarf gerufen ("Delegation").
+```
+Layer 1: BRAINSTORMING    → Ideation, NO code
+Layer 2: PLANNING         → Orchestration, Routing  
+Layer 3: ARCHITECTURE     → System Design, Blueprints
+Layer 4: DEVELOPMENT      → Implementation, Code
+Layer 5: AUDIT            → Security, Review, QC
+Layer 6: CONTINUITY       → Session State, Handoffs
+Layer 7: META             → Pre-Planning, Validation
+```
 
+---
+
+## 3. Agenten pro Layer
+
+### Layer 1: Brainstorming (Ideation)
 | Agent | Rolle | Modell | Aufgabe |
 |:------|:------|:-------|:--------|
-| **oracle** | Think Tank | OpenAI GPT 5.2 | Deep Reasoning, Architektur-Validierung. |
-| **librarian** | Researcher | Gemini 3 Flash | RAG, Quellen-Checks, Dokumentation. |
-| **writer** | Tech Writer | Gemini 3 Flash | Technische Doku & Berichte. |
-| **explore** | Mapper | Gemini 3 Flash | Codebase-Mapping & Navigation. |
-| **pattern-hunter** | Code-Guard | GPT 5.2 Codex | Konventionen, Mindmodel, Patterns. |
-| **quality-gate** | Auditor | GPT 5.2 Codex | Verification Evidence, Test-Gates. |
-| **brainstormer** | Ideator | Gemini 3 Flash | Konzept & Ideation. |
-| **frontend-dev** | UI Specialist | Gemini 3 Pro | UI/UX & Design-Tokens (v0_web). |
-| **multimodal-looker** | Visual | Gemini 3 Pro | Bild- & Diagramm-Analyse. |
-| **codebase-locator** | Locator | Gemini 3 Flash | Findet *WO* Dateien liegen. |
-| **codebase-analyzer** | Analyzer | Gemini 3 Flash | Erklärt *WIE* Code funktioniert. |
-| **pattern-finder** | Scout | Gemini 3 Flash | Findet existierende Patterns (DRY). |
-| **ledger-creator** | Continuity | Gemini 3 Flash | Speichert Session-State in Ledgers. |
-| **artifact-searcher** | History | Gemini 3 Flash | Sucht in vergangenen Handoffs/Ledgers. |
-| **mm-orchestrator** | Mindmodel | GPT-5.2 Codex | Mindmodel-Extraktion (MiCode). |
-| **mm-pattern-discoverer** | Mindmodel | GPT-5.2 Codex | Muster-Extraktion (MiCode). |
-| **mm-stack-detector** | Mindmodel | GPT-5.2 Codex | Stack-Erkennung (MiCode). |
-| **mm-dependency-mapper** | Mindmodel | GPT-5.2 Codex | Dependency-Map (MiCode). |
+| **brainstormer** | Ideator | Gemini 3 Pro | Kreative Ideen, Design-Thinking, NO code |
 
-*(Hinweis: `prometheus`, `atlas`, `sisyphus`, `planner`, `executor`, `implementer`, `reviewer`, `worker` sind technisch vorhanden, aber im WANDA-Betrieb deaktiviert/gemerged.)*
+**Trigger:** `@brainstormer`, "brainstorm", "explore ideas"
 
 ---
 
-## 4. Technische Orchestrierung
+### Layer 2: Planning (Orchestration)
+| Agent | Rolle | Modell | Aufgabe |
+|:------|:------|:-------|:--------|
+| **orchestrator** | Router | Gemini 3 Flash | Task-Klassifikation, Agent-Delegation |
 
-### 4.1 Dual-Quota-System (Resource Optimization)
-Das System nutzt eine **Dual-Quota-Strategie** mit klar getrennten Limits:
-1.  **Google Antigravity Quota**: Nutzung via IDE-Auth (Modelle: `google/antigravity-*`).
-2.  **Google CLI Quota**: Nutzung via CLI-Auth (Modelle: `google/gemini-*`).
-*Beide Kontingente sind parallel nutzbar und müssen als getrennte Limits behandelt werden.*
-
-### 4.2 Provider-Level Fallback Chain
-Um Ausfallsicherheit zu gewährleisten, greift eine automatische Fallback-Logik:
-*   **Chain:** `Antigravity` → `Anthropic` → `OpenAI`
-*   **Trigger:** Quota/Provider-Ausfall. Vor dem Switch wird das **IDE vs CLI Quota** geprüft.
+**Trigger:** Immer aktiv als Hauptinterface
 
 ---
 
-## 5. Speicher-Architektur (Memory)
-
-WANDA nutzt eine **3-Layer Speicher-Architektur**:
-
-1.  **Layer 1: Memory MCP (Knowledge Graph)**
-    *   *Ort*: Integrierter MCP Server (`memory`)
-    *   *Zweck*: WANDA System-Wissen, Entitäten, Beziehungen. Persistent lokal.
-2.  **Layer 2: opencode-knowledge Plugin (AGENTS.md)**
-    *   *Ort*: `~/.config/opencode/AGENTS.md`
-    *   *Zweck*: Session-Regeln, Persona-Definitionen (Read-Only Injection).
-3.  **Layer 3: opencode-supermemory Plugin (Cloud Memory)**
-    *   *Ort*: Cloud / `~/.config/opencode/supermemory.jsonc`
-    *   *Zweck*: Langzeit-Fakten ("remember this"), Ähnlichkeitssuche.
+### Layer 3: Core Development (4 Agenten)
+| Agent | Rolle | Modell | Aufgabe |
+|:------|:------|:-------|:--------|
+| **architect** | Designer | Claude 4.5 Opus | System-Design, Blueprints |
+| **developer** | Builder | Claude 4.5 Sonnet | Code-Implementierung, TDD |
+| **frontend_ui_ux** | UI Specialist | Gemini 3 Pro | UI/UX, Design-Tokens |
+| **audit** | Reviewer | Claude 4.5 Opus | Code-Review, Security |
 
 ---
 
-## 6. MCP Server & Tools
-
-Kanonische Liste der MCP Server + Plugins:
-- docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md
+### Layer 4: Specialist (Domain Experts)
+| Agent | Rolle | Modell | Aufgabe |
+|:------|:------|:-------|:--------|
+| **oracle** | Think Tank | Claude 4.5 Opus | Deep Reasoning, Strategie |
+| **librarian** | Researcher | Gemini 3 Flash | RAG, Dokumentation |
+| **writer** | Tech Writer | Gemini 3 Flash | Technische Doku |
+| **explore** | Mapper | Gemini 3 Flash | Codebase-Mapping |
+| **multimodal_looker** | Visual | Gemini 3 Pro | Bild- & Diagramm-Analyse |
 
 ---
 
-## 7. Workflow-Befehle
+### Layer 5: Research (Codebase Analysis)
+| Agent | Rolle | Modell | Aufgabe |
+|:------|:------|:-------|:--------|
+| **codebase_locator** | Locator | Gemini 3 Flash | Findet *WO* Dateien liegen |
+| **codebase_analyzer** | Analyzer | Gemini 3 Flash | Erklärt *WIE* Code funktioniert |
+| **pattern_finder** | Scout | Gemini 3 Flash | Findet existierende Patterns |
+
+---
+
+### Layer 6: Continuity (Session Management)
+| Agent | Rolle | Modell | Aufgabe |
+|:------|:------|:-------|:--------|
+| **ledger_creator** | Continuity | Gemini 3 Flash | Speichert Session-State |
+| **artifact_searcher** | History | Gemini 3 Flash | Sucht in vergangenen Sessions |
+
+---
+
+### Layer 7: Meta (Quality Gates)
+| Agent | Rolle | Modell | Aufgabe |
+|:------|:------|:-------|:--------|
+| **metis** | Pre-Planner | Claude 4.5 Opus | Analysiert Requests vor Planning |
+| **momus** | Plan Reviewer | Claude 4.5 Opus | Bewertet Pläne auf Vollständigkeit |
+
+---
+
+## 4. Workflow & Routing
+
+### Standard Workflow
+```
+Brainstormer (L1) → Orchestrator (L2) → Architect (L3) → Developer (L3) 
+→ Frontend-UI-UX (L3) → Audit (L3) → [Continuity (L6)]
+```
+
+### Quick-Mode Entscheidungen
+
+| Modus | Kriterien | Aktion |
+|:------|:----------|:-------|
+| **TRIVIAL** | Typo, Version bump | Sofort ausführen |
+| **SMALL** | Funktion <20 Zeilen | Kurzer Plan → ausführen |
+| **COMPLEX** | 5+ Dateien, Architektur | Vollständiger 7-Layer Workflow |
+
+---
+
+## 5. MCP Server & Tools
+
+| Server | Zweck |
+|:-------|:------|
+| **brave** | Web-Suche & Research |
+| **filesystem** | Datei-Operationen |
+| **memory** | Knowledge Graph |
+| **sequential-thinking** | Chain-of-Thought |
+| **github** | GitHub API |
+| **context7** | Library Dokumentation |
+| **websearch** | Web-Suche (Exa) |
+| **grep_app** | Code-Suche |
+| **git** | Git Operationen |
+| **playwright** | Browser Automation |
+| **firecrawl** | Web Scraping |
+| **supabase/postgres** | Datenbanken |
+| **vercel** | Deployment |
+| **n8n-pro** | Workflows |
+| **docker** | Container |
+
+---
+
+## 6. Workflow-Befehle
 
 | Befehl | Flow | Beschreibung |
 |:-------|:-----|:-------------|
-| `/ralph-loop` | Commander → Architect → Developer → Audit | **3-Phasen Autopilot** für komplexe Tasks. |
-| `/init` | Context7 → Architect → Structure | **Projekt-Initialisierung** (MiCode Standard). |
-| `/ledger` | Ledger-Creator | **Session Save** (Erstellt Continuity Point). |
-| `@brainstormer` | Brainstormer → Design → Planner | **Design-First Exploration**. |
+| `/ralph-loop` | Architect → Developer → Audit | **3-Phasen Autopilot** |
+| `/init-deep` | Context7 → Architect → Structure | **Projekt-Init** |
+| `/ledger` | Ledger-Creator | **Session Save** |
+| `@brainstormer` | Brainstormer → Architect → Developer | **Design-First** |
 
 ---
 
-## 8. Konfigurations-Dateien (Referenz)
+## 7. Konfigurations-Dateien
 
 | Datei | Ort | Zweck |
 |:------|:----|:------|
-| Agent Config | `~/.config/opencode/oh-my-opencode.json` | 18 Agenten-Definitionen (Plugin Defaults, WANDA deaktiviert Teile) |
-| Main Config | `~/.config/opencode/opencode.json` | Plugins, Modelle, MCP Server |
-| AGENTS.md | `~/.config/opencode/AGENTS.md` | Session Knowledge Base |
+| Agent Prompts | `prompts/agents/*.md` | 18 Agenten-Definitionen |
+| Main Config | `~/.config/opencode/opencode.json` | Plugins, Modelle, MCP |
+| AGENTS.md | `docs/architecture/agents.md` | Diese Datei (SSOT) |
 
-*Letzte Aktualisierung: Februar 2026 (v3.2 - Dual Quota & Fallbacks Added)*
+---
+
+## 8. Agenten-Prompts Verzeichnis
+
+```
+prompts/agents/
+├── brainstormer.md         # Layer 1
+├── orchestrator.md         # Layer 2
+├── architect.md            # Layer 3
+├── developer.md            # Layer 3
+├── frontend_ui_ux.md       # Layer 3
+├── audit.md                # Layer 3
+├── oracle.md               # Layer 4
+├── librarian.md            # Layer 4
+├── writer.md               # Layer 4
+├── explore.md              # Layer 4
+├── multimodal_looker.md    # Layer 4
+├── codebase_locator.md     # Layer 5
+├── codebase_analyzer.md    # Layer 5
+├── pattern_finder.md       # Layer 5
+├── ledger_creator.md       # Layer 6
+├── artifact_searcher.md    # Layer 6
+├── metis.md                # Layer 7
+└── momus.md                # Layer 7
+```
+
+---
+
+## 9. Änderungshistorie
+
+| Version | Datum | Änderungen |
+|:--------|:------|:-----------|
+| **v4.0** | 2026-02-05 | **MAJOR:** 7-Layer Struktur korrigiert, doppelte Agenten entfernt |
+| v3.2 | 2026-02-04 | Dual Quota & Fallbacks |
+| v3.0 | 2026-02-01 | Initiale Architektur |
+
+*Letzte Aktualisierung: 5. Februar 2026 (v4.0 - Layer-Struktur korrigiert)*

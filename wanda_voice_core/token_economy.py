@@ -1,8 +1,11 @@
-"""Token economy: caps, metrics, redaction for WANDA Voice Core."""
+"""Token economy: caps, metrics, redaction for WANDA Voice Core.
+
+NOTE: TokenMetrics is defined in schemas.py to maintain Single Source of Truth.
+Import from there: from wanda_voice_core.schemas import TokenMetrics
+"""
 
 from __future__ import annotations
 import re
-from dataclasses import dataclass
 
 # Hard caps
 MAX_CONTEXT_CHARS = 8000
@@ -91,28 +94,3 @@ def redact_sensitive(text: str) -> str:
     for pattern, replacement in _PATTERNS:
         text = pattern.sub(replacement, text)
     return text
-
-
-@dataclass
-class TokenMetrics:
-    chars_in: int = 0
-    chars_out: int = 0
-    token_est_in: int = 0
-    token_est_out: int = 0
-    latency_ms: float = 0.0
-
-    def update(self, text_in: str, text_out: str, latency_ms: float = 0.0) -> None:
-        self.chars_in = len(text_in)
-        self.chars_out = len(text_out)
-        self.token_est_in = estimate_tokens(text_in)
-        self.token_est_out = estimate_tokens(text_out)
-        self.latency_ms = latency_ms
-
-    def to_dict(self) -> dict:
-        return {
-            "chars_in": self.chars_in,
-            "chars_out": self.chars_out,
-            "token_est_in": self.token_est_in,
-            "token_est_out": self.token_est_out,
-            "latency_ms": self.latency_ms,
-        }

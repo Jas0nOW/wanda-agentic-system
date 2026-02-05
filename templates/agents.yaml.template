@@ -1,11 +1,11 @@
 # ==============================================================================
-# WANDA Agent Configuration v1.0.4
+# WANDA Agent Configuration Template v1.0.5
 # ==============================================================================
-# 7 Primary Agents + 10 Sub-Agents = 17 Total
-# All agents are configurable with model + fallback
+# 7-Layer Architecture | 7 Primary Agents + 11 Sub-Agents = 18 Total
+# This is a TEMPLATE - copy to config/agents.yaml and customize
 # ==============================================================================
 
-version: "1.0.4"
+version: "1.0.5"
 system:
   name: "WANDA"
   description: "Workspace-Aware Neural Development Assistant"
@@ -14,7 +14,7 @@ system:
   workspace: "{{USER_WORKSPACE}}"
 
 # ==============================================================================
-# 9 LAYERS (Workflow Phases)
+# 7 LAYERS (Workflow Phases)
 # ==============================================================================
 layers:
   - id: 1
@@ -22,37 +22,31 @@ layers:
     description: "Ideation, Creativity, Exploration"
   - id: 2
     name: "Planning"
-    description: "Strategy, Task Distribution"
+    description: "Strategy, Task Distribution, Orchestration"
   - id: 3
     name: "Architecture"
-    description: "Project Setup, Structure, SSOT"
+    description: "Project Setup, Structure, SSOT, Implementation"
   - id: 4
-    name: "Development"
-    description: "Frontend + Backend Implementation"
+    name: "Research"
+    description: "Knowledge Management, Documentation, Writing"
   - id: 5
-    name: "Audit"
-    description: "Code Review, Safety, Bugs"
+    name: "Deep Research"
+    description: "Codebase Analysis, Pattern Finding, Navigation"
   - id: 6
-    name: "Refactor"
-    description: "Cleanup, Optimization"
+    name: "Continuity"
+    description: "Session State, Context Preservation"
   - id: 7
-    name: "Testing"
-    description: "Smoke, Integration, E2E"
-  - id: 8
-    name: "User-Approval"
-    description: "User confirms (Final Gate)"
-  - id: 9
-    name: "Deploy"
-    description: "Final Release (only after 8)"
+    name: "Meta"
+    description: "Pre-planning, Quality Gates, System Oversight"
 
 # ==============================================================================
 # PRIMARY AGENTS (7) - User-selectable via @mention
 # ==============================================================================
 primary_agents:
 
-  sisyphus:
-    name: "Sisyphus"
-    role: "Orchestrator"
+  orchestrator:
+    name: "Orchestrator"
+    role: "Main Controller"
     layer: 2
     type: "PRIMARY"
     trigger: "always_active"
@@ -61,7 +55,11 @@ primary_agents:
     fallback: "{{ORCHESTRATOR_FALLBACK}}"
     skills:
       - prompt-engineering-sota
-    prompt_file: "prompts/agents/sisyphus.md"
+    prompt_file: "prompts/agents/orchestrator.md"
+    controls_subagents:
+      - metis
+      - momus
+      - ledger_creator
 
   brainstormer:
     name: "Brainstormer"
@@ -76,8 +74,8 @@ primary_agents:
       - prompt-engineering-sota
     prompt_file: "prompts/agents/brainstormer.md"
 
-  prometheus:
-    name: "Prometheus"
+  architect:
+    name: "Architect"
     role: "Architect"
     layer: 3
     type: "PRIMARY+SUB"
@@ -89,10 +87,12 @@ primary_agents:
       - nextjs-architecture
       - api-design-restful
       - database-patterns
-    prompt_file: "prompts/agents/prometheus.md"
+    prompt_file: "prompts/agents/architect.md"
+    controls_subagents:
+      - codebase_analyzer
 
-  atlas:
-    name: "Atlas"
+  developer:
+    name: "Developer"
     role: "Developer"
     layer: 3
     type: "PRIMARY+SUB"
@@ -105,7 +105,10 @@ primary_agents:
       - tailwind-shadcn-mastery
       - typescript-strict
       - database-patterns
-    prompt_file: "prompts/agents/atlas.md"
+    prompt_file: "prompts/agents/developer.md"
+    controls_subagents:
+      - frontend_ui_ux
+      - multimodal_looker
 
   audit:
     name: "Audit"
@@ -121,6 +124,8 @@ primary_agents:
       - performance-core-vitals
       - testing-vitest-playwright
     prompt_file: "prompts/agents/audit.md"
+    controls_subagents:
+      - pattern_finder
 
   librarian:
     name: "Librarian"
@@ -133,6 +138,11 @@ primary_agents:
     fallback: "{{LIBRARIAN_FALLBACK}}"
     skills: []
     prompt_file: "prompts/agents/librarian.md"
+    controls_subagents:
+      - oracle
+      - explore
+      - artifact_searcher
+      - codebase_locator
 
   writer:
     name: "Writer"
@@ -149,16 +159,17 @@ primary_agents:
     prompt_file: "prompts/agents/writer.md"
 
 # ==============================================================================
-# SUB-AGENTS (10) - Auto-delegated by Primary agents
+# SUB-AGENTS (11) - Auto-delegated by Primary agents
 # ==============================================================================
 sub_agents:
 
+  # Layer 3 Sub-Agents
   frontend_ui_ux:
     name: "Frontend-UI-UX"
     role: "UI/UX Specialist"
     layer: 3
     type: "SUB"
-    parent: "atlas"
+    parent: "developer"
     description: "UI/UX design, responsive layouts, animations"
     model: "{{FRONTEND_MODEL}}"
     fallback: "{{FRONTEND_FALLBACK}}"
@@ -167,7 +178,9 @@ sub_agents:
       - tailwind-shadcn-mastery
       - accessibility-wcag-aa
       - responsive-mobile-first
+    prompt_file: "prompts/agents/frontend_ui_ux.md"
 
+  # Layer 4 Sub-Agents
   oracle:
     name: "Oracle"
     role: "Deep Research"
@@ -178,6 +191,7 @@ sub_agents:
     model: "{{ORACLE_MODEL}}"
     fallback: "{{ORACLE_FALLBACK}}"
     skills: []
+    prompt_file: "prompts/agents/oracle.md"
 
   explore:
     name: "Explore"
@@ -189,39 +203,46 @@ sub_agents:
     model: "{{EXPLORE_MODEL}}"
     fallback: "{{EXPLORE_FALLBACK}}"
     skills: []
+    prompt_file: "prompts/agents/explore.md"
 
   multimodal_looker:
     name: "Multimodal-Looker"
     role: "Visual Analysis"
     layer: 4
     type: "SUB"
-    parent: "atlas"
+    parent: "developer"
     description: "Analyzes images, screenshots, visual content"
     model: "{{LOOKER_MODEL}}"
     fallback: "{{LOOKER_FALLBACK}}"
     skills: []
+    prompt_file: "prompts/agents/multimodal_looker.md"
 
+  # Layer 5 Sub-Agents (READ-ONLY)
   codebase_locator:
     name: "Codebase-Locator"
     role: "File Finder"
     layer: 5
     type: "SUB"
     parent: "librarian"
+    mode: "READ-ONLY"
     description: "Finds files, functions, classes in codebase"
     model: "{{LOCATOR_MODEL}}"
     fallback: "{{LOCATOR_FALLBACK}}"
     skills: []
+    prompt_file: "prompts/agents/codebase_locator.md"
 
   codebase_analyzer:
     name: "Codebase-Analyzer"
     role: "Code Analysis"
     layer: 5
     type: "SUB"
-    parent: "prometheus"
+    parent: "architect"
+    mode: "READ-ONLY"
     description: "Analyzes code structure, dependencies, patterns"
     model: "{{ANALYZER_MODEL}}"
     fallback: "{{ANALYZER_FALLBACK}}"
     skills: []
+    prompt_file: "prompts/agents/codebase_analyzer.md"
 
   pattern_finder:
     name: "Pattern-Finder"
@@ -229,21 +250,26 @@ sub_agents:
     layer: 5
     type: "SUB"
     parent: "audit"
+    mode: "READ-ONLY"
     description: "Finds patterns, anti-patterns, refactoring opportunities"
     model: "{{PATTERN_MODEL}}"
     fallback: "{{PATTERN_FALLBACK}}"
     skills: []
+    prompt_file: "prompts/agents/pattern_finder.md"
 
+  # Layer 6 Sub-Agents
   ledger_creator:
     name: "Ledger-Creator"
     role: "Session State"
     layer: 6
     type: "SUB"
-    parent: "sisyphus"
+    parent: "orchestrator"
+    mode: "background"
     description: "Tracks session state, creates ledgers, maintains context"
     model: "{{LEDGER_MODEL}}"
     fallback: "{{LEDGER_FALLBACK}}"
     skills: []
+    prompt_file: "prompts/agents/ledger_creator.md"
 
   artifact_searcher:
     name: "Artifact-Searcher"
@@ -255,17 +281,55 @@ sub_agents:
     model: "{{ARTIFACT_MODEL}}"
     fallback: "{{ARTIFACT_FALLBACK}}"
     skills: []
+    prompt_file: "prompts/agents/artifact_searcher.md"
 
-  metis_momus:
-    name: "Metis + Momus"
-    role: "Meta Planning"
+  # Layer 7 Sub-Agents
+  metis:
+    name: "Metis"
+    role: "Pre-Planning"
     layer: 7
     type: "SUB"
-    parent: "sisyphus"
-    description: "Pre-planning (Metis) and Plan-review (Momus)"
-    model: "{{META_MODEL}}"
-    fallback: "{{META_FALLBACK}}"
+    parent: "orchestrator"
+    description: "Task decomposition, dependency analysis, pre-planning"
+    model: "{{METIS_MODEL}}"
+    fallback: "{{METIS_FALLBACK}}"
     skills: []
+    prompt_file: "prompts/agents/metis.md"
+
+  momus:
+    name: "Momus"
+    role: "Plan Review"
+    layer: 7
+    type: "SUB"
+    parent: "orchestrator"
+    description: "Plan critique, weakness identification, quality gate"
+    model: "{{MOMUS_MODEL}}"
+    fallback: "{{MOMUS_FALLBACK}}"
+    skills: []
+    prompt_file: "prompts/agents/momus.md"
+
+# ==============================================================================
+# DEACTIVATED AGENTS (Merged into others)
+# ==============================================================================
+deactivated:
+  - sisyphus  # Merged into Orchestrator
+
+# ==============================================================================
+# WORKFLOWS
+# ==============================================================================
+workflows:
+  ralph_loop:
+    description: "3-Phase Autopilot: Design → Implement → Verify"
+    phases:
+      - agent: architect
+        name: "Design"
+        output: "implementation_plan.md"
+      - agent: developer
+        name: "Implement"
+        output: "code changes"
+      - agent: audit
+        name: "Verify"
+        output: "audit_report.md"
 
 # ==============================================================================
 # OLLAMA CONFIGURATION (Optional Enhancer)

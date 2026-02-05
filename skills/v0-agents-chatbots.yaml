@@ -3,7 +3,7 @@
 
 name: v0-agents-chatbots
 version: 1.0.0
-target_agents: [software-engineer, atlas]
+target_agents: [software-engineer]
 description: |
   V0 skill for building agent flows, chatbots, and multi-agent coordination
   with safety, memory, and clear tool boundaries.

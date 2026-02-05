@@ -1,7 +1,7 @@
 # Wanda JARVIS - Complete Configuration
 
-# Mode: jarvis (full) or basic
-mode: jarvis
+# Mode: wanda (full) or basic
+mode: wanda
 
 # Audio & VAD
 audio:
@@ -69,7 +69,7 @@ security:
 # Conversation
 conversation:
   natural_commands: true
-  jarvis_prompts: true
+wanda_prompts: true
 
 # Autonomous Mode
 autonomous:
@@ -86,7 +86,7 @@ briefing:
 # Wake Word Detection (optional)
 wake_word:
   enabled: false  # Set to true to enable "Hey Wanda"
-  model: hey_jarvis  # hey_jarvis | alexa | hey_mycroft
+model: hey_mycroft  # hey_mycroft | alexa
   threshold: 0.5
   use_stt_fallback: true  # Use STT if openwakeword unavailable
 

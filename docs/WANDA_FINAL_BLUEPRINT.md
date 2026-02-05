@@ -24,7 +24,7 @@
 WANDA arbeitet nicht "irgendwie", sondern über standardisierte Skills (Pipelines), die durch Specs definiert sind.
 
 ### Skill A: `v0_web` (Fullstack Builder)
-*   **Trigger:** Chat/Voice: "Baue eine Landingpage.../Webseite..."
+*   **Trigger:** Chat/Voice: "Baue eine Landingpage..."
 *   **Contract:** `.v0/specs/UI_SPEC.yml` (Next.js/Tailwind/shadcn).
 *   **Flow:** Brainstormer (Spec) → Commander (Code) → Quality-Gate (Lint/Build).
 
@@ -38,11 +38,6 @@ WANDA arbeitet nicht "irgendwie", sondern über standardisierte Skills (Pipeline
 *   **Trigger:** Chat/Voice: "Deploy das auf Staging."
 *   **Contract:** `.v0/specs/OPS_SPEC.yml`.
 *   **Flow:** Commander (Docker/Vercel/Supabase) → Quality-Gate (Health Check).
-
-### Skill D: `v0_agents` (AI/Agent Builder)
-*   **Trigger:** Chat/Voice: "ich will ein Chatbot/KI Feature bauen/machen/erstellen"
-*   **Contract:** `.v0/specs/OPS_SPEC.yml`.
-*   **Flow:** Brainstormer (Spec) → Commander (???) → Quality-Gate (Health Check).
 
 ---
 
@@ -84,20 +79,21 @@ Dieser Prozess wird von den Agenten strikt eingehalten, egal ob per Voice oder C
 ### B. OpenCode Config (`~/.config/opencode/`)
 *   **Plugins (15):**
     *   `opencode-antigravity-auth@latest`
-    *   `opencode-antigravity-quota@latest`
+    *   `opencode-openai-codex-auth@latest`
+    *   `oh-my-opencode@latest`
     *   `opencode-knowledge@latest`
     *   `opencode-supermemory@latest`
     *   `opencode-scheduler@latest`
-    *   `opencode-agent-skills@latest`
-    *   `opencode-handoff@latest`
-    *   `opencode-orchestrator@latest`
-    *   `oh-my-opencode@latest`
-    *   `micode@latest`
+    *   `opencode-antigravity-quota@latest`
     *   `@cgasgarth/opencode-for-rust@latest`
-*   **MCPs (SSOT):** See `docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md`.
-    - Docker MCP Registry list (available servers)
-    - OpenCode MCPs (MCP_DOCKER + hostinger-web/vps)
-    - Oh‑My‑OpenCode defaults (context7, grep_app, websearch)
+    *   `micode@latest`
+    *   `opencode-agent-skills@latest`
+    *   `opencode-orchestrator@latest`
+    *   `opencode-handoff@latest`
+    *   `opencode-gemini-auth@latest`
+    *   `@gitlab/opencode-gitlab-auth@latest`
+    *   `opencode-anthropic-auth@latest`
+*   **MCPs:** `brave`, `filesystem`, `memory`, `sequential-thinking`, `github`, `stripe`, `n8n-API`, `n8n-mcp`, `supabase`, `postgres`, `vercel`, `docker`, `playwright`, `firecrawl`, `context7`, `websearch`, `grep_app`, `git`.
 
 ### C. Directory Structure
 *   `~/.v0/specs/`: Ablageort für Specs.

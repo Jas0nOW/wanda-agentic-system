@@ -22,12 +22,17 @@ class GeminiCLIProvider(ProviderBase):
         timeout: int = 90,
         max_retries: int = 2,
         fallback_model: Optional[str] = "pro",
+        local_fallback: bool = True,
+        local_model: str = "qwen3:8b",
     ):
         self.model = model
         self.gemini_path = gemini_path
         self.timeout = timeout
         self.max_retries = max_retries
         self.fallback_model = fallback_model
+        self.local_fallback = local_fallback
+        self.local_model = local_model
+        self._local_provider: Optional[ProviderBase] = None
         self.history: list[dict[str, str]] = []
         self._available: Optional[bool] = None
 
@@ -75,23 +80,50 @@ class GeminiCLIProvider(ProviderBase):
                 self._update_history(prompt, result)
                 return result
 
+        if self.local_fallback:
+            local_result = await self._try_local_fallback(full_prompt)
+            if local_result is not None:
+                self._update_history(prompt, local_result)
+                return local_result
+
         return "Gemini ist gerade nicht erreichbar. Bitte versuche es nochmal."
+
+    async def _try_local_fallback(self, prompt: str) -> Optional[str]:
+        try:
+            from wanda_voice_core.providers.ollama import OllamaProvider
+
+            if self._local_provider is None:
+                print(f"[Gemini] Initializing local fallback: {self.local_model}")
+                self._local_provider = OllamaProvider(model=self.local_model)
+
+            if self._local_provider.is_available():
+                print(f"[Gemini] Using local fallback (Ollama)")
+                return await self._local_provider.send(prompt)
+        except Exception as e:
+            print(f"[Gemini] Local fallback error: {e}")
+        return None
 
     async def _call_gemini(
         self, model: str, prompt: str, timeout: int
     ) -> Optional[str]:
-        """Execute Gemini CLI command."""
+        """Execute Gemini CLI command securely via stdin to avoid process list leaks."""
         proc = None
         try:
             started = time.time()
+            # SECURITY FIX: Use stdin instead of command line argument to prevent
+            # prompt from appearing in process lists (ps, top, etc.)
             proc = await asyncio.create_subprocess_exec(
                 self.gemini_path,
                 model,
-                prompt,
+                "-",  # Read from stdin
+                stdin=asyncio.subprocess.PIPE,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )
-            stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=timeout)
+            # Send prompt via stdin
+            stdout, stderr = await asyncio.wait_for(
+                proc.communicate(input=prompt.encode()), timeout=timeout
+            )
             elapsed = round(time.time() - started, 2)
             if proc.returncode == 0:
                 if stderr:

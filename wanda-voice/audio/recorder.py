@@ -16,13 +16,13 @@ class AudioRecorder:
     def __init__(
         self,
         sample_rate: int = 16000,
-        max_seconds: int = 15,
-        silence_timeout: float = 1.2,
-        silence_threshold: float = 0.01,
-        min_seconds: float = 1.0,
+        max_seconds: int = 30,
+        silence_timeout: float = 2.5,
+        silence_threshold: float = 0.008,
+        min_seconds: float = 0.5,
         vad: Optional[object] = None,
-        min_speech_ms: int = 200,
-        hangover_frames: int = 5,
+        min_speech_ms: int = 150,
+        hangover_frames: int = 8,
         on_auto_stop: Optional[Callable[[np.ndarray], None]] = None,
     ):
         """
@@ -76,10 +76,27 @@ class AudioRecorder:
             # Copy data to avoid overwrite
             self.audio_queue.put(indata.copy())
 
+    def _is_mic_muted(self) -> bool:
+        try:
+            import subprocess
+
+            result = subprocess.run(
+                ["pactl", "list", "sources"], capture_output=True, text=True, timeout=2
+            )
+            if "Mute: yes" in result.stdout:
+                return True
+        except Exception:
+            pass
+        return False
+
     def start_recording(self):
         """Start audio recording."""
         if self.is_recording:
             print("[Audio] Already recording")
+            return
+
+        if self._is_mic_muted():
+            print("[Audio] ❌ Microphone is muted - please unmute to record")
             return
 
         print("[Audio] 🎤 Recording started...")

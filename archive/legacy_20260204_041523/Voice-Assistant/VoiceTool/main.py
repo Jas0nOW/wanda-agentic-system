@@ -22,7 +22,7 @@ try:
     from audio.silero_vad import get_vad
     from audio.interrupt_controller import InterruptController
     from conversation.command_detector import ConversationalCommandDetector
-    from conversation.jarvis_prompts import get_jarvis_prompt
+from conversation.wanda_prompts import get_wanda_prompt
     from conversation.state_machine import StateMachine, WandaMode
     from conversation.context_manager import ContextManager
     from conversation.briefing import BriefingGenerator
@@ -70,7 +70,7 @@ class WandaJARVIS:
         
         # Phase 2+3
         if FULL_MODE:
-            self._init_jarvis()
+        self._init_wanda()
             self._init_phase3()
         
         # State
@@ -105,7 +105,7 @@ class WandaJARVIS:
             max_retries=2
         )
     
-    def _init_jarvis(self):
+    def _init_wanda(self):
         """Phase 2 JARVIS components."""
         self.vad = get_vad("silero")
         self.interrupt = InterruptController(self.vad, self.tts)
@@ -317,8 +317,8 @@ class WandaJARVIS:
             
             # 7. Add JARVIS prompt
             if FULL_MODE:
-                jarvis = get_jarvis_prompt("default")
-                prompt = f"{jarvis}\n\nUser: {prompt}"
+            wanda_prompt = get_wanda_prompt("default")
+            prompt = f"{wanda_prompt}\n\nUser: {prompt}"
             
             # 8. Check context freshness
             if FULL_MODE:
