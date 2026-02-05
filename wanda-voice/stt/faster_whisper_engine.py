@@ -3,27 +3,12 @@
 
 import os
 import locale
-import locale
 import tempfile
 from pathlib import Path
 from typing import Optional
 import numpy as np
 import sounddevice as sd
 from faster_whisper import WhisperModel
-
-
-def _ensure_utf8_locale():
-    if not os.environ.get("LC_ALL"):
-        os.environ["LC_ALL"] = "C.UTF-8"
-    if not os.environ.get("LANG"):
-        os.environ["LANG"] = "C.UTF-8"
-    try:
-        locale.setlocale(locale.LC_ALL, "C.UTF-8")
-    except Exception:
-        pass
-
-
-_ensure_utf8_locale()
 
 
 def _ensure_utf8_locale():
@@ -78,6 +63,7 @@ class FasterWhisperEngine:
         try:
             # compute_type: float16 for GPU, int8 for CPU (faster)
             compute_type = "float16" if self.device == "cuda" else "int8"
+            self.compute_type = compute_type
 
             self.model = WhisperModel(
                 self.model_name,
@@ -110,9 +96,14 @@ class FasterWhisperEngine:
         # Debug: Audio stats
         audio_min, audio_max = audio_data.min(), audio_data.max()
         audio_mean = np.abs(audio_data).mean()
+        duration = len(audio_data) / sample_rate
+        print(
+            f"[STT] Model={self.model_name}, device={self.device}, compute={getattr(self, 'compute_type', '?')}"
+        )
         print(
             f"[STT] Audio stats: min={audio_min:.4f}, max={audio_max:.4f}, mean_abs={audio_mean:.4f}"
         )
+        print(f"[STT] Audio duration: {duration:.2f}s @ {sample_rate}Hz")
 
         # Normalize audio if needed (should be -1.0 to 1.0)
         if audio_max > 1.0 or audio_min < -1.0:
@@ -151,6 +142,9 @@ class FasterWhisperEngine:
                 log_prob_threshold=-1.0,
                 compression_ratio_threshold=2.4,
                 suppress_blank=True,
+            )
+            print(
+                "[STT] Decode settings: beam=5, no_speech=0.6, logprob=-1.0, comp_ratio=2.4"
             )
 
             # Collect segments with confidence filtering
@@ -207,42 +201,6 @@ class FasterWhisperEngine:
                         if unique_ratio < 0.15:
                             continue
                     valid_segments.append(segment.text)
-                text = " ".join(valid_segments)
-                return text.strip()
-            except Exception as retry_error:
-                print(f"[STT] Retry failed: {retry_error}")
-                return ""
-
-        except UnicodeDecodeError as e:
-            print(f"[STT] Transcription error (encoding): {e}")
-            _ensure_utf8_locale()
-            try:
-                segments, info = self.model.transcribe(
-                    tmp_path,
-                    language=language,
-                    beam_size=5,
-                    vad_filter=True,
-                    vad_parameters=dict(min_silence_duration_ms=500),
-                    # Anti-hallucination settings
-                    condition_on_previous_text=False,
-                    no_speech_threshold=0.6,
-                    log_prob_threshold=-1.0,
-                    compression_ratio_threshold=2.4,
-                    suppress_blank=True,
-                )
-
-                valid_segments = []
-                for segment in segments:
-                    if hasattr(segment, "avg_logprob") and segment.avg_logprob < -1.5:
-                        continue
-                    if len(segment.text) > 5:
-                        unique_ratio = len(set(segment.text.lower())) / len(
-                            segment.text
-                        )
-                        if unique_ratio < 0.15:
-                            continue
-                    valid_segments.append(segment.text)
-
                 text = " ".join(valid_segments)
                 return text.strip()
             except Exception as retry_error:
