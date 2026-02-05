@@ -18,12 +18,22 @@ except ImportError:
 # Nur die tatsächlich verfügbaren Stimmen
 VOICES = [
     # Deutschland - Weiblich
-    ("de-DE-SeraphinaMultilingualNeural", "Seraphina", "Premium, multilingual, sehr natürlich", "weiblich"),
+    (
+        "de-DE-SeraphinaMultilingualNeural",
+        "Seraphina",
+        "Premium, multilingual, sehr natürlich",
+        "weiblich",
+    ),
     ("de-DE-KatjaNeural", "Katja", "Professionell, Nachrichtensprecherin", "weiblich"),
     ("de-DE-AmalaNeural", "Amala", "Warm, sympathisch", "weiblich"),
     # Deutschland - Männlich
-    ("de-DE-FlorianMultilingualNeural", "Florian", "Premium, multilingual, sehr natürlich", "männlich"),
-    ("de-DE-ConradNeural", "Conrad", "Tief, JARVIS-like", "männlich"),
+    (
+        "de-DE-FlorianMultilingualNeural",
+        "Florian",
+        "Premium, multilingual, sehr natürlich",
+        "männlich",
+    ),
+    ("de-DE-ConradNeural", "Conrad", "Tief, assistant-like", "männlich"),
     ("de-DE-KillianNeural", "Killian", "Modern, dynamisch", "männlich"),
     # Österreich
     ("de-AT-IngridNeural", "Ingrid (AT)", "Österreichisch, freundlich", "weiblich"),
@@ -43,8 +53,7 @@ async def play_voice(voice_id: str):
         communicate = edge_tts.Communicate(DEMO_TEXT, voice_id)
         await communicate.save(tmp)
         subprocess.run(
-            ["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet", tmp],
-            check=False
+            ["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet", tmp], check=False
         )
     except Exception as e:
         print(f"   Fehler: {e}")
@@ -67,7 +76,7 @@ def main():
         print(f"   [{i}] {name}{star} - {style}")
 
     print("\n👨 Männliche Stimmen:\n")
-    for i, (vid, name, style, _) in enumerate(male, len(female)+1):
+    for i, (vid, name, style, _) in enumerate(male, len(female) + 1):
         star = " ⭐" if "Premium" in style else ""
         print(f"   [{i}] {name}{star} - {style}")
 
