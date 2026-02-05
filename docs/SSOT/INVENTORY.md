@@ -35,5 +35,9 @@
 | `docs/architecture/master-system-architecture.md` | Architektur | Master Architecture 2026 | MCP, Agents, Vercel | Abgleich mit aktuellem Roster |
 | `docs/architecture/opencode-system-kernel.md` | Architektur | Runtime System Kernel | OpenCode | Quelle in ~/.config/opencode/SYSTEM.md |
 | `docs/guides/system-handbook.md` | Guide | System Handbuch v2 | OpenCode | Versionierung vs Blueprint |
+| `docs/voice/ARCH.md` | Voice | Voice Mode Architektur | wanda_voice_core, wanda-voice | Konsistenz mit Code prüfen |
+| `docs/voice/CONFIG.md` | Voice | Konfigurations-Referenz | wanda_voice_core/config.py | Defaults aktuell halten |
+| `docs/voice/TROUBLESHOOTING.md` | Voice | Voice Troubleshooting | Audio/TTS/STT | Mit aktuellen Fixes abgleichen |
+| `docs/voice/OVOS_BRIDGE.md` | Voice | OVOS Bridge Guide | ovos_bridge | API-Version stabil halten |
 | `config/command/antigravity-quota.md` | Config | Antigravity quota command | OpenCode | Sync mit ~/.config/opencode/command |
 | `templates/AGENTS.md.template` | Template | 17 Agents, Sisyphus orchestrator | oh-my-opencode | Widerspricht Roster |
