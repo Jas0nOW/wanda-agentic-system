@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Wanda Setup
-Comment=Configure Wanda JARVIS Voice Assistant
+Comment=Configure Wanda Voice Assistant
 Exec="/home/jannis/Schreibtisch/Work-OS/10_LTL_Core/12_Internal_Tools/12.06_Wanda_Agentic-System/wanda-voice/setup.py"
 Icon=preferences-system
 Terminal=true

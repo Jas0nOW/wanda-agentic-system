@@ -1,5 +1,5 @@
 [Unit]
-Description=Wanda JARVIS Voice Assistant
+Description=Wanda Voice Assistant
 Documentation=https://github.com/yourusername/wanda
 After=graphical-session.target pulseaudio.service pipewire.service
 Wants=graphical-session.target
