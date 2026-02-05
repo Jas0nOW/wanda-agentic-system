@@ -1,0 +1,27 @@
+# V0 Automation (No AI)
+# Deterministic automation with scripts and pipelines
+
+name: v0-automation-no-ai
+version: 1.0.0
+target_agents: [software-engineer, atlas]
+description: |
+  V0 skill for non-AI automation using scripts, CLIs, and pipelines.
+  Focuses on determinism, idempotency, and repeatability.
+
+rules:
+  - Prefer deterministic scripts over probabilistic behavior
+  - Use idempotent operations (safe re-runs)
+  - Capture logs and exit codes for every step
+  - Keep configuration in env or config files, never hardcode secrets
+  - Provide a dry-run mode where feasible
+
+patterns:
+  idempotent_step: |
+    if [ -f "./state.done" ]; then exit 0; fi
+    # do work
+    touch ./state.done
+
+anti_patterns:
+  - "non-repeatable one-off scripts"
+  - "silent failure without logs"
+  - "hardcoded credentials"

@@ -63,8 +63,16 @@ logs/
 *.onnx
 *.pt
 *.bin
+*.carpa
+*.fst
+*.mdl
+*.raw
 wanda_local/models/*.pt
 wanda_local/models/*.bin
+archive/legacy_*/Voice-Assistant/VoiceTool/model/
 
 # Local config overrides (use symlinks instead)
 ~/.config/opencode/auth_store/
+opencode.json
+.claude/
+.ruff_cache/

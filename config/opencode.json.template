@@ -1,17 +1,16 @@
 {
     "$schema": "https://opencode.ai/config.json",
     "plugin": [
+        "oh-my-opencode@3.2.3",
+        "opencode-orchestrator@latest",
         "opencode-antigravity-auth@1.4.3",
         "opencode-antigravity-quota@latest",
+        "opencode-handoff@latest",
+        "opencode-scheduler@latest",
+        "opencode-websearch-cited@latest",
         "opencode-knowledge@latest",
         "opencode-supermemory@latest",
-        "opencode-scheduler@latest",
-        "opencode-agent-skills@latest",
-        "opencode-handoff@latest",
-        "opencode-orchestrator@latest",
-        "oh-my-opencode@latest",
-        "micode@latest",
-        "@cgasgarth/opencode-for-rust@latest"
+        "opencode-agent-skills@latest"
     ],
     "provider": {
         "google": {

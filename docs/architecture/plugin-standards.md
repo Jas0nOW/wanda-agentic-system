@@ -1,24 +1,34 @@
 # WANDA Factory Standard - Plugin Inventory (Februar 2026)
 
 > **Zweck:** Dieses Dokument hält den absoluten Werkszustand (Factory Defaults) der installierten Plugins fest. Es dient als Referenz für die Entscheidung, welche Agenten und Logiken in das finale WANDA-System übernommen werden.
-> **Datenquelle:** Source-Code-Extraktion aus `node_modules` (Cache).
+> **Datenquelle:** `~/.config/opencode/opencode.json` (Runtime).
 > **Hinweis:** WANDA nutzt **Commander** als einzigen Primary. Default-Orchestratoren wie `Sisyphus` bleiben als Plugin-Defaults dokumentiert, sind im System jedoch deaktiviert.
 
 ---
 
 ## Installed Plugins (SSOT)
 
-*   `opencode-antigravity-auth@latest`
-*   `oh-my-opencode@latest`
+Source of truth: `~/.config/opencode/opencode.json`
+
+*   `oh-my-opencode@3.2.3`
+*   `opencode-orchestrator@latest`
+*   `opencode-antigravity-auth@1.4.3`
+*   `opencode-antigravity-quota@latest`
+*   `opencode-handoff@latest`
+*   `opencode-scheduler@latest`
+*   `opencode-websearch-cited@latest`
 *   `opencode-knowledge@latest`
 *   `opencode-supermemory@latest`
-*   `opencode-scheduler@latest`
-*   `opencode-antigravity-quota@latest`
-*   `@cgasgarth/opencode-for-rust@latest`
-*   `micode@latest`
 *   `opencode-agent-skills@latest`
-*   `opencode-orchestrator@latest`
-*   `opencode-handoff@latest`
+
+Optional (currently not in runtime opencode.json):
+*   `micode@latest`
+*   `@cgasgarth/opencode-for-rust@latest`
+
+Known disabled (from Notizen.md):
+*   `opencode-context-analysis@latest`
+*   `opencode-shell-strategy@latest`
+*   `opencode-notifier@latest`
 
 ---
 
@@ -32,7 +42,7 @@
 
 ---
 
-## 2. Plugin: `oh-my-opencode` (v3.2.1)
+## 2. Plugin: `oh-my-opencode` (v3.2.3)
 **Fokus:** Multi-Agent Team-Orchestrierung & UI-Hooks.
 
 ### Agenten & Rollen (Standard)
@@ -61,6 +71,11 @@
 *   **Ultrawork:** Parallelisierung von Tasks in Hintergrund-Sessions.
 *   **Continuation Loop:** Sisyphus wiederholt Aufgaben, bis sie verifiziert sind.
 *   **Hooks:** `comment-checker`, `rules-injector`, `session-recovery`, `context-injector`.
+
+### Default MCPs (Oh‑My‑OpenCode)
+*   `context7`
+*   `grep_app`
+*   `websearch`
 
 ---
 

@@ -60,6 +60,23 @@ wanda voice --simple
 - `wanda voice` uses a Wayland-aware launcher.
 - If GTK or evdev is missing, it falls back to a terminal-based toggle mode.
 
+### Orb UI (Visual)
+
+Install GTK if the orb is missing:
+
+```bash
+sudo apt install -y python3-gi gir1.2-gtk-3.0
+```
+
+### Hands-free Wake Word
+
+Enable wake word for hands-free activation ("Hallo Wanda"):
+
+```yaml
+wake_word:
+  enabled: true
+```
+
 ## 📦 Installation
 
 ### Local
@@ -95,6 +112,18 @@ ollama:
 tts:
   voice: de_DE-eva_k-x_low
   mode: short  # short | full
+
+# STT/TTS only (no LLM)
+pipeline:
+  stt_tts_only: true
+  speak_transcript: true
+  transcript_prefix: "Verstanden: "
+
+# Auto-stop on silence
+audio:
+  silence_timeout: 1.2
+  silence_threshold: 0.01
+  min_seconds: 1.0
 ```
 
 ## 📁 Structure

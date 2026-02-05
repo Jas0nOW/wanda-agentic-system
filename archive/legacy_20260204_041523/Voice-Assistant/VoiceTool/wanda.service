@@ -1,0 +1,28 @@
+[Unit]
+Description=Wanda JARVIS Voice Assistant
+Documentation=https://github.com/yourusername/wanda
+After=graphical-session.target pulseaudio.service pipewire.service
+Wants=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/home/%u/.local/bin/wanda
+Restart=on-failure
+RestartSec=5
+Environment=DISPLAY=:0
+Environment=XDG_RUNTIME_DIR=/run/user/%U
+Environment=PULSE_SERVER=unix:/run/user/%U/pulse/native
+WorkingDirectory=/opt/wanda
+
+# Resource limits
+MemoryMax=2G
+CPUQuota=80%
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=yes
+
+[Install]
+WantedBy=graphical-session.target

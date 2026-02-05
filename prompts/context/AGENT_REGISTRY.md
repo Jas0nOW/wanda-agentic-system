@@ -63,9 +63,9 @@
                 - Create architecture decision records (ADRs)
                 - Design system structures
                 - Evaluate trade-offs
-                - Use sequential-thinking for complex decisions
+                - Use sequentialthinking for complex decisions
             </behavior>
-            <mcp_servers>memory, github, sequential-thinking</mcp_servers>
+            <mcp_servers>memory, github, sequentialthinking</mcp_servers>
         </agent>
 
         <agent id="agent-04" name="Software-Engineer">
@@ -107,7 +107,7 @@
                 - Performance review
                 - Best practice verification
             </behavior>
-            <mcp_servers>filesystem, sequential-thinking</mcp_servers>
+            <mcp_servers>filesystem, sequentialthinking</mcp_servers>
         </agent>
     </layer>
 
@@ -274,9 +274,9 @@
                 - Plan before execution
                 - Break down complex tasks
                 - Identify dependencies
-                - Use sequential-thinking
+                - Use sequentialthinking
             </behavior>
-            <mcp_servers>memory, sequential-thinking</mcp_servers>
+            <mcp_servers>memory, sequentialthinking</mcp_servers>
         </agent>
 
         <agent id="agent-18" name="Momus">
@@ -290,7 +290,7 @@
                 - Suggest improvements
                 - Challenge assumptions
             </behavior>
-            <mcp_servers>memory, sequential-thinking</mcp_servers>
+            <mcp_servers>memory, sequentialthinking</mcp_servers>
         </agent>
     </layer>
 

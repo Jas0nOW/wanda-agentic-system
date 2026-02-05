@@ -1,119 +1,36 @@
-# Wanda JARVIS - Complete Configuration
-
-# Mode: jarvis (full) or basic
 mode: jarvis
-
-# Audio & VAD
 audio:
-  backend: pipewire
   sample_rate: 16000
-  max_seconds: 60
-  vad_engine: silero  # silero | energy
-  vad_threshold: 0.5
-  vad_silence_duration: 2.0
-
-# Trigger
+  vad_engine: silero
+  silence_timeout: 1.2
+  silence_threshold: 0.01
+  min_seconds: 1.0
 trigger:
-  type: focus_hotkey
-  key: rightctrl
-
-# STT (Speech-to-Text)
+  key: pause
 stt:
-  engine: faster-whisper
   model: large-v3-turbo
   device: auto
-
-# TTS (Text-to-Speech)
 tts:
-  engine: piper
-  voice: de_DE-eva_k-x_low
+  voice: seraphina
   mode: short
-  alternatives:
-    - de_DE-karlsson-low
-    - de_DE-kerstin-low
-
-# Output
+  engine: edge
+  voice_key: seraphina
+  voice_id: de-DE-SeraphinaMultilingualNeural
+  voice_name: Seraphina
 output:
   speak: true
   sounds_enabled: true
-
-# Gemini CLI Adapter
-adapters:
-  target: gemini_cli
-  gemini_model: flash
-  timeout: 90
-  max_retries: 2
-  fallback_model: pro
-
-# Ollama (Local LLM - optional)
-ollama:
-  enabled: false  # Set to true after setup
-  model: qwen2.5:32b
-  api_url: http://localhost:11434
-  use_for:
-    - prompt_optimization
-    - delegation
-    - briefing
-    - summarization
-
-# Context Management
-context:
-  max_messages: 20  # Messages before auto-refresh
-  max_windows: 5    # History windows to keep
-  auto_summarize: true
-
-# Security
-security:
-  redact_secrets: false
-
-# Conversation
-conversation:
-  natural_commands: true
-  jarvis_prompts: true
-
-# Autonomous Mode
-autonomous:
-  enabled: true
-  max_tasks: 5
-  progress_updates: true
-
-# Briefing
-briefing:
-  enabled: true
-  include_git: true
-  include_last_session: true
-
-# Wake Word Detection (optional)
 wake_word:
-  enabled: false  # Set to true to enable "Hey Wanda"
-  model: hey_jarvis  # hey_jarvis | alexa | hey_mycroft
-  threshold: 0.5
-  use_stt_fallback: true  # Use STT if openwakeword unavailable
-
-# UI
-ui:
-  orb_enabled: true
-  orb_size: 70
-  orb_animation: true
-
-# Autostart
-autostart:
-  enabled: false  # Enable systemd service
-
-# Telegram Bot (Mobile Access)
-telegram:
-  enabled: false  # Set to true after getting token
-  token: ""  # Get from @BotFather
-  allowed_users: []  # Optional: List of allowed Telegram user IDs
-
-# Push Notifications (ntfy.sh)
-notifications:
   enabled: true
-  server: "https://ntfy.sh"
-  topic: "wanda-private"  # Change to your unique topic!
-
-# Work-OS Integration
-work_os:
-  playground_path: "~/Schreibtisch/Work-OS/20_Playground"
-  experiments_path: "~/Schreibtisch/Work-OS/20_Playground/21_Experiments"
-  ventures_path: "~/Schreibtisch/Work-OS/20_Playground/22_Ventures"
+  threshold: 0.45
+  words:
+    - hey_jarvis
+pipeline:
+  stt_tts_only: false
+  speak_transcript: true
+  transcript_prefix: "Verstanden: "
+adapters:
+  gemini_model: flash
+ollama:
+  enabled: true
+  model: huihui_ai/qwen3-abliterated:8b

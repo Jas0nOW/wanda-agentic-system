@@ -1,0 +1,5 @@
+#!/bin/bash
+# WANDA Voice - Direct voice assistant launcher
+cd "/home/jannis/Schreibtisch/Work-OS/10_LTL_Core/12_Internal_Tools/12.06_Wanda_Agentic-System/wanda-voice"
+source venv/bin/activate
+exec python3 launcher.py "$@"

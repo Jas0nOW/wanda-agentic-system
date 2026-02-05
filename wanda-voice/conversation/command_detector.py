@@ -2,70 +2,92 @@
 """Detects natural language commands in speech."""
 
 from typing import Optional
+import re
 
 
 class ConversationalCommandDetector:
     """Detects natural commands with exact and fuzzy matching."""
-    
+
     COMMANDS = {
         "preview": [
-            "lies mir vor", "lies vor", "vorlesen", 
-            "was hast du verstanden", "zeig mal", "preview",
-            "was habe ich gesagt"
+            "lies mir vor",
+            "lies vor",
+            "vorlesen",
+            "was hast du verstanden",
+            "zeig mal",
+            "preview",
+            "was habe ich gesagt",
         ],
         "send": [
-            "abschicken", "senden", "send", "schick ab",
-            "ok", "ja", "passt", "go", "los", "das passt"
+            "abschicken",
+            "senden",
+            "send",
+            "schick ab",
+            "ok",
+            "ja",
+            "passt",
+            "go",
+            "los",
+            "das passt",
         ],
-        "continue": [
-            "weiter", "mach weiter", "fortsetzen", 
-            "continue", "mehr", "und"
-        ],
-        "redo": [
-            "nochmal", "von vorn", "neu", "restart", 
-            "redo", "von vorne"
-        ],
+        "continue": ["weiter", "mach weiter", "fortsetzen", "continue", "mehr", "und"],
+        "redo": ["nochmal", "von vorn", "neu", "restart", "redo", "von vorne"],
         "cancel": [
-            "stop", "abbrechen", "cancel", "nein", 
-            "vergiss es", "weg damit", "stopp"
-        ]
+            "stop",
+            "abbrechen",
+            "cancel",
+            "nein",
+            "vergiss es",
+            "weg damit",
+            "stopp",
+        ],
     }
-    
+
     def detect_command(self, text: str) -> Optional[str]:
         """
         Detect command in natural speech.
-        
+
         Returns:
             Command name or None if no command detected
         """
         if not text:
             return None
-            
-        text_lower = text.lower().strip()
-        
+
+        text_lower = self._normalize(text)
+
         # Exact match first (highest priority)
         for command, keywords in self.COMMANDS.items():
             if text_lower in keywords:
                 return command
-        
+
         # Start/end match (avoid false positives in longer sentences)
         for command, keywords in self.COMMANDS.items():
             for keyword in keywords:
                 if text_lower.startswith(keyword) or text_lower.endswith(keyword):
                     return command
-        
+
         # Fuzzy match for very short inputs
         if len(text_lower) < 20:
             for command, keywords in self.COMMANDS.items():
                 if any(kw in text_lower for kw in keywords):
                     return command
-        
+
         return None  # No command = user continues speaking
-    
+
+    def _normalize(self, text: str) -> str:
+        text = text.lower().strip()
+        text = text.replace("wunder", "wanda")
+        text = text.replace("wander", "wanda")
+        text = text.replace("wonder", "wanda")
+        text = text.replace("wonda", "wanda")
+        text = re.sub(r"[^a-z0-9äöüß\s]", "", text)
+        text = re.sub(r"\s+", " ", text)
+        return text
+
     def is_confirmation(self, text: str) -> bool:
         """Check if text is a confirmation."""
         return self.detect_command(text) == "send"
-    
+
     def is_cancellation(self, text: str) -> bool:
         """Check if text is a cancellation."""
         return self.detect_command(text) == "cancel"

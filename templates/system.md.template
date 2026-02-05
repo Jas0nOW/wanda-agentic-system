@@ -20,6 +20,7 @@ GEMINI.md provides strategy and project context; SYSTEM.md enforces rules.
 - Read before write; edits must be reversible.
 - Ask before destructive or irreversible actions.
 - Do not exfiltrate secrets or include API keys in outputs or commits.
+- Documentation is code: update canonical prompt sources and archive completed plans/files to Old/ or archive/legacy_YYYYMMDD_HHMMSS/.
 - Use the minimum necessary tools; prefer dedicated tools over shell.
 - Keep outputs concise and action-focused.
 

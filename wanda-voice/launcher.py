@@ -108,6 +108,14 @@ def setup_xwayland_fallback():
     return env
 
 
+def get_python_executable(voice_dir: Path) -> str:
+    """Prefer voice venv Python if available."""
+    venv_python = voice_dir / "venv" / "bin" / "python3"
+    if venv_python.exists():
+        return str(venv_python)
+    return sys.executable
+
+
 def launch_voice_assistant(use_xwayland=False, debug=False):
     """Launch the WANDA voice assistant."""
     print_banner()
@@ -126,11 +134,15 @@ def launch_voice_assistant(use_xwayland=False, debug=False):
     if env_info["session_type"] == "wayland":
         gi_ok = module_available("gi")
         evdev_ok = module_available("evdev")
-        if not gi_ok or not evdev_ok:
+        if not gi_ok:
             print(
-                f"{YELLOW}Wayland fallback: missing GTK/evdev, switching to simple mode{NC}"
+                f"{YELLOW}Wayland fallback: missing GTK, switching to simple mode{NC}"
             )
             return launch_simple_voice()
+        if not evdev_ok:
+            print(
+                f"{YELLOW}Wayland: evdev not available, hotkey disabled (GUI still enabled){NC}"
+            )
 
     # Determine environment setup
     if use_xwayland or env_info["session_type"] != "wayland":
@@ -159,7 +171,8 @@ def launch_voice_assistant(use_xwayland=False, debug=False):
     print()
 
     # Prepare command
-    cmd = [sys.executable, str(voice_dir / "main.py")]
+    python_exe = get_python_executable(voice_dir)
+    cmd = [python_exe, str(voice_dir / "main.py")]
 
     if debug:
         cmd.append("--debug")
@@ -192,12 +205,14 @@ def launch_simple_voice():
     if not voice_dir.exists():
         voice_dir = Path(__file__).parent.parent / "wanda-voice"
 
+    python_exe = get_python_executable(voice_dir)
+
     # Use stdin-based toggle on Wayland when available
     stdin_script = voice_dir / "voice_to_text_stdin.py"
     if stdin_script.exists():
-        cmd = [sys.executable, str(stdin_script)]
+        cmd = [python_exe, str(stdin_script)]
     else:
-        cmd = [sys.executable, str(voice_dir / "voice_to_text.py")]
+        cmd = [python_exe, str(voice_dir / "voice_to_text.py")]
 
     try:
         result = subprocess.run(cmd, cwd=str(voice_dir))

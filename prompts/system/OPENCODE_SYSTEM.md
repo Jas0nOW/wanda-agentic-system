@@ -57,11 +57,9 @@
 </CHAIN_OF_THOUGHT>
 
 <MCP_SERVERS>
-    <server name="filesystem" use="File CRUD, directory traversal"/>
-    <server name="memory" use="Persist learnings, recall context"/>
-    <server name="docker" use="Container management"/>
-    <server name="github" use="Repository operations"/>
-    <server name="brave" use="Web search with citations"/>
+    MCP access is provided via MCP_DOCKER (Docker MCP Gateway).
+    Canonical list:
+    - docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md
 </MCP_SERVERS>
 
 <EFFICIENCY_PROTOCOL>
@@ -81,6 +79,18 @@
         - Token efficiency: maximize signal per token, avoid repetition
     </required>
 </EFFICIENCY_PROTOCOL>
+
+<DOC_GOVERNANCE priority="HIGH">
+    <rule>Documentation is code. Keep canonical sources current and minimal.</rule>
+    <rule>Archive instead of delete: completed plans/files go to Old/ or archive/legacy_YYYYMMDD_HHMMSS/.</rule>
+    <rule>Read before change: files must be read before edits or moves.</rule>
+    <rule>Delete only obvious trash; otherwise move to archive/.</rule>
+    <rule>Backups stay minimal: keep 1-2 versions per file; clean up extras immediately.</rule>
+    <rule>When a task is done or clutter accumulates, clean up and restore order.</rule>
+    <rule>Maintain SSOT: update docs/SSOT/INVENTORY.md and docs/SSOT/CONFLICTS.md on conflicts.</rule>
+    <rule>No prompt dumps in responses; reference file paths instead.</rule>
+    <rule>Canonical reference: docs/architecture/prompt-governance.md</rule>
+</DOC_GOVERNANCE>
 
 <AGENT_ROUTING_AND_PLUGINS>
     - Autonomously route work to the best agent for the step.

@@ -1,0 +1,41 @@
+# V0 Web Development
+# Fast, opinionated web app delivery with guardrails
+
+name: v0-webdevelopment
+version: 1.0.0
+target_agents: [frontend-ui-ux, atlas, software-engineer]
+description: |
+  V0 skill for rapid web development with clean architecture,
+  consistent UI systems, and production-ready defaults.
+
+rules:
+  - Define a clear information architecture before implementation
+  - Establish design tokens (colors, type, spacing) early and reuse everywhere
+  - Use component-driven structure with shared UI primitives
+  - Enforce responsive behavior (mobile-first, no layout shift)
+  - Prefer accessible HTML semantics and keyboard support by default
+  - Document all environment variables and configs in README
+
+patterns:
+  ui_tokens: |
+    :root {
+      --color-bg: #0b0f14;
+      --color-surface: #111826;
+      --color-text: #e8edf3;
+      --color-accent: #2dd4bf;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+    }
+
+  layout_grid: |
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--space-3);
+    }
+
+anti_patterns:
+  - "multiple competing font stacks"
+  - "inline styles for layout"
+  - "no mobile layout testing"

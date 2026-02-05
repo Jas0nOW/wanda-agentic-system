@@ -8,7 +8,7 @@ This document outlines the proposed consolidation of Opencode, OhMyOpencode, MiC
 The system will use `GEMINI.md` as the global system instruction (Kernel). Every agent, regardless of its role, will inherit the WANDA core identity:
 - **Tone**: Terse, efficient, German/English adaptive.
 - **Principles**: Design first, no assumptions, research before code.
-- **Tools**: Access to 14 MCP servers and specialized plugin tools (MiCode AST, OMO Backgrounders).
+- **Tools**: MCP + plugin inventory is defined in `docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md`.
 
 ---
 

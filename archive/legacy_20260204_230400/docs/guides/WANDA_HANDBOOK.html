@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WANDA Sovereign OS v1.0.3 | 7 Primary Agents</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                darkMode: true, background: '#020202', fontFamily: 'JetBrains Mono', fontSize: '14px',
+                primaryColor: '#1a1a1a', primaryTextColor: '#fff', lineColor: '#3b82f6',
+                secondaryColor: '#8b5cf6', tertiaryColor: '#fff'
+            },
+            flowchart: { curve: 'basis', htmlLabels: true, useMaxWidth: true }
+        });
+    </script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&family=Outfit:wght@400;700;900&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        outfit: ['Outfit', 'sans-serif']
+                    },
+                    colors: {
+                        wanda: {
+                            bg: '#020202', card: '#0a0a0a', border: '#27272a',
+                            accent: '#3b82f6', secondary: '#8b5cf6', success: '#10b981',
+                            warning: '#f59e0b', danger: '#ef4444', kimi: '#ff6b35'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #020202;
+            color: #e4e4e7;
+            background-image: radial-gradient(circle at top center, #111 0%, #020202 50%);
+        }
+
+        .glass {
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .neon-border::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #10b981);
+            z-index: -1;
+            border-radius: inherit;
+            opacity: 0.3;
+            filter: blur(5px);
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+
+<body class="antialiased min-h-screen pb-20 font-sans">
+
+    <!-- Navbar -->
+    <header class="fixed top-0 w-full z-50 glass border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-3 h-3 bg-wanda-accent rounded-full shadow-[0_0_20px_#3b82f6] animate-pulse"></div>
+                <h1 class="text-xl font-black tracking-tighter font-outfit uppercase">WANDA <span
+                        class="text-wanda-accent">v1.0.3</span></h1>
+            </div>
+            <nav class="hidden lg:flex gap-8 text-[10px] font-bold font-mono text-gray-500 tracking-[0.2em] uppercase">
+                <a href="#agents" class="hover:text-wanda-accent transition-all">Agents</a>
+                <a href="#architecture" class="hover:text-wanda-accent transition-all">Architecture</a>
+                <a href="#models" class="hover:text-wanda-accent transition-all">Models</a>
+                <a href="#workflow" class="hover:text-wanda-accent transition-all">Workflow</a>
+            </nav>
+            <div
+                class="text-[10px] font-mono text-wanda-success bg-wanda-success/10 px-3 py-1 rounded-full border border-wanda-success/20">
+                CLEAN SYSTEM</div>
+        </div>
+    </header>
+
+    <main class="pt-32 max-w-7xl mx-auto px-6 space-y-24">
+
+        <!-- Hero Section -->
+        <section class="text-center py-12">
+            <h2 class="text-6xl md:text-8xl font-black font-outfit tracking-tighter mb-4">7 PRIMARY AGENTS</h2>
+            <p class="text-gray-500 max-w-2xl mx-auto text-sm uppercase tracking-[0.4em] font-mono">Clean • No
+                Duplicates • Optimized Models</p>
+        </section>
+
+        <!-- KPI Dashboard -->
+        <section id="kpi" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-kimi">
+                <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase">Primary Agents</div>
+                <div class="text-5xl font-black text-white">7</div>
+                <p class="text-[10px] text-gray-600 mt-3 uppercase">Clean Architecture</p>
+            </div>
+            <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-secondary">
+                <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase">MCP Servers</div>
+                <div class="text-5xl font-black text-white">19</div>
+                <p class="text-[10px] text-gray-600 mt-3 uppercase">Tool Bindings</p>
+            </div>
+            <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-success">
+                <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase">Primary Model</div>
+                <div class="text-2xl font-black text-white">Kimi K2.5</div>
+                <p class="text-[10px] text-gray-600 mt-3 uppercase">131K Context</p>
+            </div>
+            <div class="glass p-8 rounded-3xl border-l-4 border-l-wanda-accent">
+                <div class="text-[10px] text-gray-500 font-mono mb-2 uppercase">Fallback</div>
+                <div class="text-2xl font-black text-white">Gemini 3 Flash</div>
+                <p class="text-[10px] text-gray-600 mt-3 uppercase">1M Context</p>
+            </div>
+        </section>
+
+        <!-- 7 Agents Grid -->
+        <section id="agents" class="space-y-8">
+            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase">The 7 Agents</h3>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Orchestrator -->
+                <div class="glass p-8 rounded-3xl border-t-4 border-t-wanda-kimi lg:col-span-3">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="text-4xl">🎯</div>
+                        <div>
+                            <h4 class="text-2xl font-black text-white uppercase">#1 Orchestrator</h4>
+                            <p class="text-xs text-gray-500 font-mono">Main Brain - Controls Everything</p>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-4 text-xs font-mono">
+                        <div><span class="text-gray-500">Primary:</span> <span
+                                class="text-wanda-kimi font-bold">kimi-code-k2p5</span></div>
+                        <div><span class="text-gray-500">Fallback:</span> <span class="text-white">kimi-k2.5-free</span>
+                        </div>
+                        <div><span class="text-gray-500">Trigger:</span> <span class="text-wanda-accent">Always Active,
+                                /plan</span></div>
+                    </div>
+                    <p class="text-gray-500 text-sm mt-4">Task routing, agent coordination, planning, execution, code
+                        generation, debugging, research, documentation - does it all.</p>
+                </div>
+
+                <!-- Brainstormer -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-yellow-500">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">💡</div>
+                        <h4 class="text-lg font-black text-white uppercase">#2 Brainstormer</h4>
+                    </div>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-yellow-400">kimi-k2.5-free</span></div>
+                        <div>Trigger: @brainstormer, "ideas"</div>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-3">Creative ideation, NO code generation</p>
+                </div>
+
+                <!-- Librarian -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-accent">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">📚</div>
+                        <h4 class="text-lg font-black text-white uppercase">#3 Librarian</h4>
+                    </div>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-wanda-accent">gemini-3-flash</span></div>
+                        <div>Trigger: @librarian, "search"</div>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-3">Research, context, documentation lookup</p>
+                </div>
+
+                <!-- Architect -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-secondary">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">🏗️</div>
+                        <h4 class="text-lg font-black text-white uppercase">#4 Architect</h4>
+                    </div>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-wanda-secondary">kimi-k2.5-free</span></div>
+                        <div>Trigger: @architect, "design"</div>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-3">System design, ADRs, trade-off analysis</p>
+                </div>
+
+                <!-- Developer -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-success">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">👨‍💻</div>
+                        <h4 class="text-lg font-black text-white uppercase">#5 Developer</h4>
+                    </div>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-wanda-success">gemini-3-flash</span></div>
+                        <div>Trigger: @dev, "code"</div>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-3">Code implementation, UI, frontend, backend</p>
+                </div>
+
+                <!-- Audit -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-wanda-danger">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">🔍</div>
+                        <h4 class="text-lg font-black text-white uppercase">#6 Audit</h4>
+                    </div>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-wanda-danger">gemini-3-flash</span></div>
+                        <div>Trigger: @audit, "fix", "debug"</div>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-3">Review, debugging, security, bug fixing</p>
+                </div>
+
+                <!-- Writer -->
+                <div class="glass p-6 rounded-2xl border-l-4 border-l-gray-500">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="text-2xl">✍️</div>
+                        <h4 class="text-lg font-black text-white uppercase">#7 Writer</h4>
+                    </div>
+                    <div class="text-[10px] font-mono text-gray-500 space-y-1">
+                        <div>Primary: <span class="text-gray-300">gemini-3-flash</span></div>
+                        <div>Trigger: @writer, "docs"</div>
+                    </div>
+                    <p class="text-gray-500 text-xs mt-3">Documentation, README, changelogs</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Diagram -->
+        <section id="architecture" class="glass p-10 rounded-3xl space-y-8">
+            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase">Agent Architecture</h3>
+            <div class="mermaid">
+                graph TB
+                User([User Input])
+
+                subgraph WANDA["WANDA Agent System v1.0.3"]
+                Orch["🎯 Orchestrator<br />kimi-code-k2p5"]
+
+                Brain["💡 Brainstormer<br />kimi-k2.5-free"]
+                Lib["📚 Librarian<br />gemini-3-flash"]
+                Arch["🏗️ Architect<br />kimi-k2.5-free"]
+                Dev["👨‍💻 Developer<br />gemini-3-flash"]
+                Audit["🔍 Audit<br />gemini-3-flash"]
+                Writer["✍️ Writer<br />gemini-3-flash"]
+                end
+
+                User --> Orch
+                Orch --> Brain
+                Orch --> Lib
+                Orch --> Arch
+                Orch --> Dev
+                Orch --> Audit
+                Orch --> Writer
+                Orch --> Output([Result])
+
+                classDef orchestrator fill:#ff6b35,stroke:#e55a2b,color:#fff;
+                classDef kimi fill:#8b5cf6,stroke:#7c3aed,color:#fff;
+                classDef gemini fill:#3b82f6,stroke:#2563eb,color:#fff;
+
+                class Orch orchestrator;
+                class Brain,Arch kimi;
+                class Lib,Dev,Audit,Writer gemini;
+            </div>
+            <p class="text-center text-xs text-gray-500 font-mono">All agents are both PRIMARY and SUBAGENT capable</p>
+        </section>
+
+        <!-- Workflow -->
+        <section id="workflow" class="glass p-10 rounded-3xl space-y-8">
+            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase">/ralph-loop Workflow</h3>
+            <div class="mermaid">
+                graph LR
+                A[Request] --> O[🎯 Orchestrator]
+                O --> B["1. 🏗️ Architect<br />Design"]
+                B --> C["2. 👨‍💻 Developer<br />Implement"]
+                C --> D["3. 🔍 Audit<br />Verify"]
+                D --> E[Done]
+
+                classDef phase1 fill:#8b5cf6,stroke:#7c3aed,color:#fff;
+                classDef phase2 fill:#10b981,stroke:#059669,color:#fff;
+                classDef phase3 fill:#ef4444,stroke:#dc2626,color:#fff;
+
+                class B phase1;
+                class C phase2;
+                class D phase3;
+            </div>
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div class="p-4">
+                    <div class="text-wanda-secondary font-bold">Phase 1: Design</div>
+                    <div class="text-xs text-gray-500">Architect creates plan</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-wanda-success font-bold">Phase 2: Implement</div>
+                    <div class="text-xs text-gray-500">Developer writes code</div>
+                </div>
+                <div class="p-4">
+                    <div class="text-wanda-danger font-bold">Phase 3: Verify</div>
+                    <div class="text-xs text-gray-500">Audit reviews & approves</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Model Matrix -->
+        <section id="models" class="space-y-8">
+            <h3 class="text-4xl font-black font-outfit text-white text-center uppercase">Model Matrix</h3>
+            <div class="glass rounded-3xl overflow-hidden">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr
+                            class="bg-white/5 font-mono text-[10px] text-gray-500 uppercase tracking-widest border-b border-white/5">
+                            <th class="p-6">Agent</th>
+                            <th class="p-6">Primary Model</th>
+                            <th class="p-6">Fallback Model</th>
+                            <th class="p-6">Context</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-xs font-mono">
+                        <tr class="border-b border-white/5 bg-wanda-kimi/10">
+                            <td class="p-4 font-bold text-white">🎯 Orchestrator</td>
+                            <td class="p-4 text-wanda-kimi font-bold">kimi-code-k2p5</td>
+                            <td class="p-4 text-gray-400">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-500">131K</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="p-4 font-bold text-white">💡 Brainstormer</td>
+                            <td class="p-4 text-wanda-secondary font-bold">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-400">gemini-3-flash</td>
+                            <td class="p-4 text-gray-500">131K</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="p-4 font-bold text-white">📚 Librarian</td>
+                            <td class="p-4 text-wanda-accent font-bold">gemini-3-flash</td>
+                            <td class="p-4 text-gray-400">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-500">1M</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="p-4 font-bold text-white">🏗️ Architect</td>
+                            <td class="p-4 text-wanda-secondary font-bold">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-400">gemini-3-flash</td>
+                            <td class="p-4 text-gray-500">131K</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="p-4 font-bold text-white">👨‍💻 Developer</td>
+                            <td class="p-4 text-wanda-success font-bold">gemini-3-flash</td>
+                            <td class="p-4 text-gray-400">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-500">1M</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="p-4 font-bold text-white">🔍 Audit</td>
+                            <td class="p-4 text-wanda-danger font-bold">gemini-3-flash</td>
+                            <td class="p-4 text-gray-400">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-500">1M</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold text-white">✍️ Writer</td>
+                            <td class="p-4 text-gray-300 font-bold">gemini-3-flash</td>
+                            <td class="p-4 text-gray-400">kimi-k2.5-free</td>
+                            <td class="p-4 text-gray-500">1M</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Merged Agents -->
+        <section class="glass p-8 rounded-3xl">
+            <h3 class="text-2xl font-black text-white mb-6 uppercase">Merged Agents (Disabled)</h3>
+            <p class="text-gray-500 text-sm mb-4">These agents were merged into the 7 primary agents to eliminate
+                duplicates:</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-mono text-gray-600">
+                <div>• Sisyphus → Orchestrator</div>
+                <div>• Oracle → Librarian</div>
+                <div>• Explore → Librarian</div>
+                <div>• Frontend-UI-UX → Developer</div>
+                <div>• Software-Engineer → Developer</div>
+                <div>• Multimodal-Looker → Developer</div>
+                <div>• Metis → Orchestrator</div>
+                <div>• Momus → Audit</div>
+                <div>• Codebase-Locator → Librarian</div>
+                <div>• Codebase-Analyzer → Audit</div>
+                <div>• Pattern-Finder → Audit</div>
+                <div>• Ledger-Creator → Librarian</div>
+                <div>• Artifact-Searcher → Librarian</div>
+            </div>
+        </section>
+
+        <!-- Config File -->
+        <section class="glass p-8 rounded-3xl neon-border relative">
+            <h3 class="text-2xl font-black text-white mb-4 uppercase">📁 Configuration</h3>
+            <p class="text-gray-500 text-sm mb-4">Edit models and agents in:</p>
+            <code class="block bg-black/50 p-4 rounded-xl text-wanda-accent font-mono text-lg">
+                config/agents.yaml
+            </code>
+        </section>
+
+        <!-- MCP Servers -->
+        <section class="space-y-8">
+            <h3 class="text-2xl font-black text-white text-center uppercase">MCP Servers</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">📂</div>
+                    <div class="text-xs font-mono text-gray-400">filesystem</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">🧠</div>
+                    <div class="text-xs font-mono text-gray-400">memory</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">🐙</div>
+                    <div class="text-xs font-mono text-gray-400">github</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">🐳</div>
+                    <div class="text-xs font-mono text-gray-400">docker</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">🔎</div>
+                    <div class="text-xs font-mono text-gray-400">brave</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">📖</div>
+                    <div class="text-xs font-mono text-gray-400">context7</div>
+                </div>
+                <div class="glass p-4 rounded-xl text-center">
+                    <div class="text-2xl mb-2">🎭</div>
+                    <div class="text-xs font-mono text-gray-400">playwright</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-24 py-8 border-t border-white/5 text-center">
+        <p class="text-xs font-mono text-gray-600">WANDA Sovereign AI OS v1.0.3 • Clean 7-Agent Architecture • Kimi K2.5
+            + Gemini 3 Flash</p>
+        <p class="text-xs font-mono text-gray-700 mt-2">© 2026 LtL Digital Solutions</p>
+    </footer>
+
+</body>
+
+</html>

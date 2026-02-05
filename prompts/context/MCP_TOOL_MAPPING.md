@@ -11,6 +11,7 @@
     <!--
     All servers run via: docker mcp gateway run
     Configured in: ~/.gemini/settings.json (mcpServers key)
+    Canonical list: docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md
     -->
 
     <!-- ════════════════════════════════════════════════════════════════════ -->
@@ -40,6 +41,16 @@
             <tool name="delete_entities">Remove outdated knowledge</tool>
         </tools>
         <used_by>Ledger-Creator, Artifact-Searcher, all agents for context</used_by>
+    </server>
+
+    <server name="supermemory" category="core">
+        <purpose>External long-term memory store (optional)</purpose>
+        <tools>
+            <tool name="search">Search memories</tool>
+            <tool name="add">Add memory entries</tool>
+            <tool name="list">List stored memories</tool>
+        </tools>
+        <used_by>System state persistence</used_by>
     </server>
 
     <server name="docker" category="core">
@@ -72,6 +83,16 @@
             <tool name="search_repositories">Search repos</tool>
         </tools>
         <used_by>Software-Engineer, Architect</used_by>
+        <requires_secret>GITHUB_TOKEN</requires_secret>
+    </server>
+
+    <server name="github-official" category="development">
+        <purpose>Official GitHub MCP (alternative)</purpose>
+        <tools>
+            <tool name="get_pull_request">Get PR details</tool>
+            <tool name="create_pull_request">Create PRs</tool>
+        </tools>
+        <used_by>Software-Engineer, Architect (optional)</used_by>
         <requires_secret>GITHUB_TOKEN</requires_secret>
     </server>
 
@@ -137,7 +158,7 @@
         <used_by>Frontend-UI-UX, Multimodal-Looker</used_by>
     </server>
 
-    <server name="n8n-pro" category="automation">
+    <server name="n8n" category="automation">
         <purpose>Workflow automation</purpose>
         <tools>
             <tool name="search_nodes">Search n8n nodes</tool>
@@ -145,6 +166,15 @@
             <tool name="execute_workflow">Trigger workflow</tool>
         </tools>
         <used_by>Automation tasks</used_by>
+    </server>
+
+    <server name="n8n-instance" category="automation">
+        <purpose>Instance-specific automation endpoints</purpose>
+        <tools>
+            <tool name="list_workflows">List workflows</tool>
+            <tool name="get_workflow">Get workflow details</tool>
+        </tools>
+        <used_by>Automation tasks (optional)</used_by>
     </server>
 
     <!-- ════════════════════════════════════════════════════════════════════ -->
@@ -186,6 +216,16 @@
         <requires_secret>VERCEL_API_TOKEN</requires_secret>
     </server>
 
+    <server name="hostinger-mcp-server" category="deployment">
+        <purpose>Hostinger platform operations (optional)</purpose>
+        <tools>
+            <tool name="hosting_listWebsites">List websites</tool>
+            <tool name="hosting_listOrders">List hosting orders</tool>
+        </tools>
+        <used_by>DevOps tasks (optional)</used_by>
+        <requires_secret>HOSTINGER_API_TOKEN</requires_secret>
+    </server>
+
     <!-- ════════════════════════════════════════════════════════════════════ -->
     <!-- PAYMENT SERVERS                                                       -->
     <!-- ════════════════════════════════════════════════════════════════════ -->
@@ -205,7 +245,7 @@
     <!-- REASONING SERVERS                                                     -->
     <!-- ════════════════════════════════════════════════════════════════════ -->
 
-    <server name="sequential-thinking" category="reasoning">
+    <server name="sequentialthinking" category="reasoning">
         <purpose>Step-by-step problem solving</purpose>
         <tools>
             <tool name="sequentialthinking">Multi-step reasoning with revision support</tool>
@@ -222,10 +262,10 @@
     
     <agent name="Brainstormer" servers="memory"/>
     <agent name="Sisyphus" servers="memory, docker"/>
-    <agent name="Architect" servers="memory, github, sequential-thinking"/>
+    <agent name="Architect" servers="memory, github, sequentialthinking"/>
     <agent name="Software-Engineer" servers="filesystem, github, git, context7"/>
     <agent name="Frontend-UI-UX" servers="filesystem, playwright, vercel"/>
-    <agent name="Audit" servers="filesystem, sequential-thinking"/>
+    <agent name="Audit" servers="filesystem, sequentialthinking"/>
     <agent name="Oracle" servers="brave, firecrawl, context7"/>
     <agent name="Writer" servers="filesystem, memory"/>
     <agent name="Librarian" servers="memory, context7"/>
@@ -236,8 +276,8 @@
     <agent name="Pattern-Finder" servers="filesystem" mode="READ-ONLY"/>
     <agent name="Ledger-Creator" servers="memory"/>
     <agent name="Artifact-Searcher" servers="memory, filesystem"/>
-    <agent name="Metis" servers="memory, sequential-thinking"/>
-    <agent name="Momus" servers="memory, sequential-thinking"/>
+    <agent name="Metis" servers="memory, sequentialthinking"/>
+    <agent name="Momus" servers="memory, sequentialthinking"/>
 </AGENT_TO_MCP_MAPPING>
 
 <ACTIVATION_GUIDE>
@@ -260,6 +300,7 @@
         - SUPABASE_ACCESS_TOKEN
         - VERCEL_API_TOKEN
         - STRIPE_API_KEY
+        - HOSTINGER_API_TOKEN
     </required_secrets>
 </ACTIVATION_GUIDE>
 

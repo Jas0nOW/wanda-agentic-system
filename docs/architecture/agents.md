@@ -88,27 +88,8 @@ WANDA nutzt eine **3-Layer Speicher-Architektur**:
 
 ## 6. MCP Server & Tools
 
-| Server | Zweck |
-|:-------|:------|
-| **brave** | Web-Suche & Research |
-| **filesystem** | Datei-Operationen (Read/Write/Edit) |
-| **memory** | Knowledge Graph Persistenz |
-| **sequential-thinking** | Chain-of-Thought (CoT) Reasoning |
-| **github** | GitHub API Integration |
-| **context7** | Library Dokumentation (SOTA) |
-| **websearch** | Web-Suche (Exa) |
-| **grep_app** | Code-Suche (grep.app) |
-| **exa** | Web-Datenzugriff (Exa MCP) |
-| **git** | Git Operationen (Commit/Diff/Log) |
-| **playwright** | Browser Automation |
-| **firecrawl** | Web Scraping |
-| **supabase** | Datenbank-Zugriff |
-| **postgres** | Datenbank-Zugriff |
-| **vercel** | Deployment Management |
-| **n8n-pro** | Workflow Automatisierung |
-| **n8n-mcp** | Node-Doku & Workflow-Truth-Source |
-| **stripe** | Billing & Zahlungs-APIs |
-| **docker** | Container/Runtime Management |
+Kanonische Liste der MCP Server + Plugins:
+- docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md
 
 ---
 

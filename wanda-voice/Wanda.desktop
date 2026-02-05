@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Wanda JARVIS
+Comment=Sovereign AI Voice Assistant
+Exec="/home/jannis/Schreibtisch/Work-OS/10_LTL_Core/12_Internal_Tools/12.06_Wanda_Agentic-System/wanda-voice/wanda"
+Icon=audio-input-microphone
+Terminal=true
+Type=Application
+Categories=Utility;Accessibility;

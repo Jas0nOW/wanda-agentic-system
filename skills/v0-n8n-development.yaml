@@ -1,0 +1,29 @@
+# V0 n8n Development
+# Workflow-first automation engineering
+
+name: v0-n8n-development
+version: 1.0.0
+target_agents: [software-engineer, atlas]
+description: |
+  V0 skill for n8n workflow design, validation, and deployment.
+  Emphasizes reliability, observability, and safe operations.
+
+rules:
+  - Start with a workflow map (triggers, transforms, outputs)
+  - Use explicit error handling paths for every external call
+  - Validate workflows before deploy
+  - Keep credentials in n8n credentials store (never inline secrets)
+  - Prefer minimal, composable workflows over monolith flows
+
+patterns:
+  error_branch: |
+    // Add Error Trigger + notification node for failures
+    // Route errors to Slack/Email with execution metadata
+
+  validation: |
+    // Run n8n_validate_workflow before activation
+
+anti_patterns:
+  - "silent failure without notifications"
+  - "inline API keys in node parameters"
+  - "complex flows without documentation"

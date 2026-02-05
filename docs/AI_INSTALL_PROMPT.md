@@ -23,8 +23,13 @@ Install the WANDA Agentic System from GitHub:
       Create ~/.config/opencode/antigravity-accounts.json with:
       {"accounts": [{"email": "user@email.com", "token": "YOUR_TOKEN"}]}
    
-   b) Install OpenCode plugins:
-      npm install -g oh-my-opencode@3.2.1 micode@latest
+   b) Install OpenCode plugins (SSOT list):
+      See docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md
+
+   c) Create OpenCode config and command:
+      cp ~/.wanda-system/config/opencode.json.template ~/.config/opencode/opencode.json
+      mkdir -p ~/.config/opencode/command
+      cp ~/.wanda-system/config/command/antigravity-quota.md ~/.config/opencode/command/antigravity-quota.md
 
 5. Start the system:
    - Agent System: opencode --profile experimental
@@ -38,17 +43,14 @@ Report any errors and I will help troubleshoot.
 ## What Gets Installed
 
 ### OpenCode Configuration
-- `~/.config/opencode/profiles/` - All agent profiles
-- `~/.config/opencode/profiles/experimental/opencode.json` - 17 agents
+- `~/.config/opencode/opencode.json` - Base config (from template)
+- `~/.config/opencode/oh-my-opencode.json` - Agent routing
+- `~/.config/opencode/SYSTEM.md` - System kernel
+- `~/.config/opencode/command/antigravity-quota.md` - Quota command
 - `~/.gemini/GEMINI.md` - System kernel prompt
 
 ### Plugins (via npm)
-- `oh-my-opencode@3.2.1` - Agent orchestration
-- `micode@latest` - Code intelligence
-- `opencode-supermemory@latest` - Memory persistence
-- `opencode-handoff@latest` - Session handoff
-- `opencode-scheduler@latest` - Task scheduling
-- `opencode-knowledge@latest` - Local knowledge
+- Canonical list: docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md
 
 ### Voice Assistant
 - `~/.wanda-system/wanda-voice/` - All voice modules

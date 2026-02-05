@@ -14,7 +14,13 @@
 | `docs/architecture/technical.md` | Architektur | `.v0/` Struktur, Runner, Memory | `.v0` | Konflikt zu `~/.v0` |
 | `docs/architecture/agents.md` | Agents | Commander primary, Dual-Quota, MCPs | OpenCode Plugins | Fallback-Chain vs B1 |
 | `docs/architecture/agent-roster.md` | Roster | Commander primary, Subagenten, deaktivierte Main | MiCode, oh-my-opencode | Muss kanonisch bleiben |
-| `docs/architecture/plugin-standards.md` | Plugin Inventar | 15 Plugins, Defaults, Konflikte | OpenCode Plugins | opencode-orchestrator Bedeutung |
+| `docs/architecture/plugin-standards.md` | Plugin Inventar | Runtime Plugins + Defaults | OpenCode Plugins | opencode-orchestrator Bedeutung |
+| `docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md` | MCP + Plugin SSOT | Runtime MCPs, Registry, Defaults | opencode.json, docker registry | Aktuell halten nach Updates |
+| `docs/SSOT/PLUGIN_CANDIDATES.md` | Plugin Backlog | Candidate plugins + Auth options | OpenCode ecosystem, awesome list | Deduplizieren vs runtime |
+| `docs/SSOT/AUTH_MATRIX.md` | Auth SSOT | Provider auth coverage + decisions | OpenCode ecosystem, awesome list | Auth-Strategy finalisieren |
+| `docs/SSOT/LSP_INVENTORY.md` | LSP SSOT | LSP config and defaults | OpenCode LSP docs | LSPs pro Sprache definieren |
+| `docs/SSOT/MODEL_ASSIGNMENT_MATRIX.md` | Model SSOT | Agent→Model mapping + providers | Agent registry + providers docs | Provider selection finalisieren |
+| `docs/SSOT/INSTALLER_FLOW_SPEC.md` | Installer SSOT | Full installer flow + edge cases | AI_INSTALLATION + Notizen | Installer state machine fixen |
 | `docs/research/research-agent-architecture.md` | Research | 7-Layer Modell, Security | MCP | Konzeptual, nicht SSOT |
 | `docs/research/research-agent-creation-guide.md` | Research | Agent-Build Playbook | MCP, LangChain | Konzeptual |
 | `docs/research/research-agent-reduction.md` | Research | Reduzierte Flotte (14) | oh-my-opencode | Konflikt zu Roster/Template |
@@ -23,5 +29,11 @@
 | `docs/research/research-sota-optimization.md` | Research | Konsolidierung, MCP Audit | MCP | Empfehlungen in SSOT ueberfuehren |
 | `docs/research/research-v0-builder-platform.md` | Research | v0 Skills, Contracts, Router | `.v0` | Umsetzung in echte Struktur |
 | `docs/research/research-voice-gateway.md` | Research | Voice Gateway Specs | Moltbot/Clawdbot | Rebrand/CLI verifizieren |
+| `docs/research/voice-system-notes.md` | Research | Voice-Feature Spec & Issues | wanda-voice | Priorisieren vs aktuelle Roadmap |
 | `docs/research/research-sources.md` | Research | Quellenliste | Web | Dedup + Aktualisierung |
+| `docs/research/RESEARCH_MODEL_RECOMMENDATIONS.md` | Research | Modell-Auswahl + Validierung | Providers + Auth | Benchmarks nachziehen |
+| `docs/architecture/master-system-architecture.md` | Architektur | Master Architecture 2026 | MCP, Agents, Vercel | Abgleich mit aktuellem Roster |
+| `docs/architecture/opencode-system-kernel.md` | Architektur | Runtime System Kernel | OpenCode | Quelle in ~/.config/opencode/SYSTEM.md |
+| `docs/guides/system-handbook.md` | Guide | System Handbuch v2 | OpenCode | Versionierung vs Blueprint |
+| `config/command/antigravity-quota.md` | Config | Antigravity quota command | OpenCode | Sync mit ~/.config/opencode/command |
 | `templates/AGENTS.md.template` | Template | 17 Agents, Sisyphus orchestrator | oh-my-opencode | Widerspricht Roster |

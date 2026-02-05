@@ -122,6 +122,18 @@
     </required>
 </EFFICIENCY_PROTOCOL>
 
+<DOC_GOVERNANCE>
+    <rule>Documentation is code. Keep canonical sources current and minimal.</rule>
+    <rule>Archive instead of delete: completed plans/files go to Old/ or archive/legacy_YYYYMMDD_HHMMSS/.</rule>
+    <rule>Read before change: files must be read before edits or moves.</rule>
+    <rule>Delete only obvious trash; otherwise move to archive/.</rule>
+    <rule>Backups stay minimal: keep 1-2 versions per file; clean up extras immediately.</rule>
+    <rule>When a task is done or clutter accumulates, clean up and restore order.</rule>
+    <rule>Maintain SSOT: update docs/SSOT/INVENTORY.md and docs/SSOT/CONFLICTS.md on conflicts.</rule>
+    <rule>No prompt dumps in responses; reference file paths instead.</rule>
+    <rule>Canonical reference: docs/architecture/prompt-governance.md</rule>
+</DOC_GOVERNANCE>
+
 <SAFETY_RULES priority="CRITICAL">
     <rule id="001">NEVER ASSUME. Verify everything. If unknown, ADMIT IT.</rule>
     <rule id="002">READ BEFORE WRITE. Understand before modifying.</rule>

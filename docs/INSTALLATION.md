@@ -70,23 +70,14 @@ docker mcp gateway status
 docker mcp gateway catalog
 ```
 
-### MCP Server Mapping
+### MCP Server Inventory (SSOT)
 
-| Server | Kategorie | Zweck | Secrets erforderlich |
-|--------|-----------|-------|---------------------|
-| `MCP_DOCKER` | Hub | Zentrale Gateway | - |
-| `filesystem` | Core | Datei-Operationen | - |
-| `memory` | Core | Wissens-Speicher | - |
-| `github` | Dev | Repository-Ops | `GITHUB_TOKEN` |
-| `brave` | Research | Web-Suche | `BRAVE_API_KEY` |
-| `playwright` | Automation | Browser-Tests | - |
-| `sequential-thinking` | Reasoning | Step-by-Step | - |
-| `context7` | Research | Library-Docs | - |
-| `firecrawl` | Research | Web-Scraping | `FIRECRAWL_API_KEY` |
-| `supabase` | Database | Supabase-Ops | `SUPABASE_ACCESS_TOKEN` |
-| `vercel` | Deploy | Vercel-Deploy | `VERCEL_API_TOKEN` |
-| `stripe` | Payment | Stripe-API | `STRIPE_API_KEY` |
-| `n8n-pro` | Automation | Workflow-Engine | - |
+Die kanonische Liste der MCP Server und Plugins steht hier:
+- docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md
+
+Hinweis:
+- Docker MCP Registry listet die verfügbaren Server.
+- OpenCode nutzt zusätzlich Oh‑My‑OpenCode Default MCPs: context7, grep_app, websearch.
 
 ### Secrets konfigurieren
 
@@ -110,7 +101,7 @@ source ~/.bashrc
 
 ### ~/.gemini/settings.json
 
-Diese Datei konfiguriert Gemini CLI mit allen MCP Servern:
+Diese Datei konfiguriert Gemini CLI mit MCP_DOCKER als Gateway:
 
 ```json
 {
@@ -122,36 +113,6 @@ Diese Datei konfiguriert Gemini CLI mit allen MCP Servern:
     "MCP_DOCKER": {
       "command": "docker",
       "args": ["mcp", "gateway", "run"]
-    },
-    "filesystem": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-filesystem", "$HOME"]
-    },
-    "memory": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-memory"]
-    },
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-github"],
-      "env": { "GITHUB_TOKEN": "$GITHUB_TOKEN" }
-    },
-    "brave": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-brave-search"],
-      "env": { "BRAVE_API_KEY": "$BRAVE_API_KEY" }
-    },
-    "playwright": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-playwright"]
-    },
-    "sequential-thinking": {
-      "command": "npx",
-      "args": ["-y", "@anthropic/mcp-sequential-thinking"]
-    },
-    "context7": {
-      "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp"]
     }
   }
 }
@@ -164,31 +125,31 @@ Wird vom Installer personalisiert mit:
 - `{{WORKSPACE}}` → Dein Arbeitsordner
 - `{{LANGUAGE}}` → Deine Sprache (de/en)
 
-### ~/.config/opencode/opencode.jsonc
+### ~/.config/opencode/opencode.json
 
-Symlink zu: `~/.wanda-system/wanda_cloud/profiles/stable/opencode.jsonc`
+Base config for OpenCode. Start from:
+- `~/.wanda-system/config/opencode.json.template`
+
+Secrets (z. B. Hostinger API Tokens) should be injected via env vars or local-only edits.
+
+Weitere lokale Dateien:
+- `~/.config/opencode/oh-my-opencode.json`
+- `~/.config/opencode/SYSTEM.md`
+- `~/.config/opencode/command/antigravity-quota.md`
+
+Repo mirror:
+- `docs/architecture/opencode-system-kernel.md`
+- `config/command/antigravity-quota.md`
 
 ---
 
 ## OpenCode Plugins
 
-Der Installer installiert automatisch:
+Die kanonische Plugin-Liste steht hier:
+- docs/SSOT/MCP_AND_PLUGIN_INVENTORY.md
 
-```bash
-npm install -g oh-my-opencode@3.2.1
-```
-
-Weitere empfohlene Plugins (manuell):
-
-```bash
-npm install -g opencode-antigravity-auth
-npm install -g opencode-antigravity-quota
-npm install -g envsitter-guard
-npm install -g opencode-handoff
-npm install -g opencode-websearch-cited
-npm install -g opencode-shell-strategy
-npm install -g opencode-context-analysis
-```
+Hinweis:
+- Oh‑My‑OpenCode aktiviert standardmäßig MCPs: context7, grep_app, websearch.
 
 ---
 
@@ -310,6 +271,10 @@ gemini
 ├── install.sh                 # Personalisierter Installer
 ├── docs/
 │   └── INSTALLATION.md        # Diese Datei
+├── config/
+│   ├── opencode.json.template
+│   └── command/
+│       └── antigravity-quota.md
 ├── prompts/
 │   ├── system/
 │   │   ├── OPENCODE_SYSTEM.md

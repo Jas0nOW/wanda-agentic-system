@@ -1,0 +1,104 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  "agents": {
+    "sisyphus": {
+      "model": "google/antigravity-gemini-3-flash"
+    },
+    "brainstormer": {
+      "model": "google/antigravity-gemini-3-pro"
+    },
+    "architect": {
+      "model": "google/antigravity-claude-opus-4-5-thinking",
+      "variant": "high"
+    },
+    "software-engineer": {
+      "model": "google/antigravity-claude-sonnet-4-5"
+    },
+    "audit": {
+      "model": "google/antigravity-claude-opus-4-5-thinking",
+      "variant": "high"
+    },
+    "oracle": {
+      "model": "google/antigravity-claude-opus-4-5-thinking",
+      "variant": "high"
+    },
+    "librarian": {
+      "model": "google/antigravity-gemini-3-flash"
+    },
+    "writer": {
+      "model": "google/antigravity-gemini-3-flash"
+    },
+    "explore": {
+      "model": "google/antigravity-gemini-3-flash"
+    },
+    "multimodal-looker": {
+      "model": "google/antigravity-gemini-3-pro"
+    },
+    "frontend-ui-ux": {
+      "model": "google/antigravity-gemini-3-pro"
+    },
+    "codebase-locator": {
+      "model": "google/antigravity-gemini-3-flash"
+    },
+    "codebase-analyzer": {
+      "model": "google/antigravity-gemini-3-flash"
+    },
+    "pattern-finder": {
+      "model": "google/antigravity-gemini-3-flash"
+    },
+    "ledger-creator": {
+      "model": "google/antigravity-gemini-3-flash"
+    },
+    "artifact-searcher": {
+      "model": "google/antigravity-gemini-3-flash"
+    },
+    "metis": {
+      "model": "google/antigravity-claude-opus-4-5-thinking",
+      "variant": "high"
+    },
+    "momus": {
+      "model": "google/antigravity-claude-opus-4-5-thinking",
+      "variant": "high"
+    },
+    "atlas": {
+      "model": "google/antigravity-claude-sonnet-4-5"
+    },
+    "prometheus": {
+      "model": "google/antigravity-claude-opus-4-5-thinking",
+      "variant": "high"
+    }
+  },
+  "categories": {
+    "visual-engineering": {
+      "model": "google/antigravity-gemini-3-pro"
+    },
+    "ultrabrain": {
+      "model": "google/antigravity-claude-opus-4-5-thinking",
+      "variant": "high"
+    },
+    "deep": {
+      "model": "google/antigravity-gemini-3-pro",
+      "variant": "medium"
+    },
+    "artistry": {
+      "model": "google/antigravity-gemini-3-pro",
+      "variant": "high"
+    },
+    "quick": {
+      "model": "google/antigravity-gemini-3-flash"
+    },
+    "unspecified-low": {
+      "model": "google/antigravity-gemini-3-flash"
+    },
+    "unspecified-high": {
+      "model": "google/antigravity-gemini-3-pro"
+    },
+    "writing": {
+      "model": "google/antigravity-gemini-3-flash"
+    }
+  },
+  "disabled_agents": [
+    "atlas",
+    "prometheus"
+  ]
+}
