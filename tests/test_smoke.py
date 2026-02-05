@@ -5,6 +5,8 @@ Basic tests to verify the voice pipeline and safety systems.
 """
 
 import pytest
+
+torch = pytest.importorskip("torch")
 from pathlib import Path
 
 
@@ -14,7 +16,7 @@ class TestSafetyChecker:
     def test_denylist_blocks_rm_rf_root(self):
         """Ensure rm -rf / is blocked."""
         from wanda_local.src.safety import SafetyChecker, SafetyLevel
-        
+
         checker = SafetyChecker()
         result = checker.check("rm -rf /")
         assert result.level == SafetyLevel.DENY
@@ -22,7 +24,7 @@ class TestSafetyChecker:
     def test_denylist_blocks_cat_shadow(self):
         """Ensure cat /etc/shadow is blocked."""
         from wanda_local.src.safety import SafetyChecker, SafetyLevel
-        
+
         checker = SafetyChecker()
         result = checker.check("cat /etc/shadow")
         assert result.level == SafetyLevel.DENY
@@ -30,7 +32,7 @@ class TestSafetyChecker:
     def test_confirmlist_requires_confirmation_for_git_force(self):
         """Ensure git push --force requires confirmation."""
         from wanda_local.src.safety import SafetyChecker, SafetyLevel
-        
+
         checker = SafetyChecker()
         result = checker.check("git push --force")
         assert result.level == SafetyLevel.CONFIRM
@@ -38,7 +40,7 @@ class TestSafetyChecker:
     def test_allowlist_allows_git_status(self):
         """Ensure git status is allowed."""
         from wanda_local.src.safety import SafetyChecker, SafetyLevel
-        
+
         checker = SafetyChecker()
         result = checker.check("git status")
         assert result.level == SafetyLevel.ALLOW
@@ -46,7 +48,7 @@ class TestSafetyChecker:
     def test_allowlist_allows_npm_install(self):
         """Ensure npm install is allowed."""
         from wanda_local.src.safety import SafetyChecker, SafetyLevel
-        
+
         checker = SafetyChecker()
         result = checker.check("npm install")
         assert result.level == SafetyLevel.ALLOW
@@ -60,10 +62,10 @@ class TestOllamaGateway:
     async def test_gateway_returns_valid_json(self):
         """Ensure gateway returns structured JSON."""
         from wanda_local.src.gateway import OllamaGateway
-        
+
         gateway = OllamaGateway(model="brainstorm-36b")
         result = await gateway.process("Create a new React app")
-        
+
         assert "intent" in result
         assert "refined_prompt" in result
         assert "target_agent" in result
