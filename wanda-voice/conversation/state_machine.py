@@ -29,6 +29,12 @@ class StateMachine:
         "stopp",
         "schlaf",
         "wanda schlaf",
+        "gute nacht",
+        "gute nacht wanda",
+        "tschau",
+        "tschau wanda",
+        "bis später",
+        "bis später wanda",
     ]
 
     RESUME_COMMANDS = [
@@ -43,6 +49,10 @@ class StateMachine:
         "wandastart",
         "wunderstart",
         "wanderstart",
+        "guten morgen",
+        "guten morgen wanda",
+        "bist du da",
+        "bist du wach",
     ]
 
     AUTONOMOUS_TRIGGERS = [

@@ -17,6 +17,9 @@ class ConversationalCommandDetector:
             "zeig mal",
             "preview",
             "was habe ich gesagt",
+            "nochmal",
+            "wiederholen",
+            "wiederhole",
         ],
         "send": [
             "abschicken",
@@ -32,6 +35,12 @@ class ConversationalCommandDetector:
         ],
         "continue": ["weiter", "mach weiter", "fortsetzen", "continue", "mehr", "und"],
         "redo": ["nochmal", "von vorn", "neu", "restart", "redo", "von vorne"],
+        "repeat_last": [
+            "lies mir das nochmal vor",
+            "wiederhole die antwort",
+            "sag das nochmal",
+            "letzte antwort",
+        ],
         "cancel": [
             "stop",
             "abbrechen",
@@ -40,6 +49,17 @@ class ConversationalCommandDetector:
             "vergiss es",
             "weg damit",
             "stopp",
+        ],
+        "refiner_on": [
+            "refiner an",
+            "refiner ein",
+            "prompt verbesserer an",
+            "verbesserer an",
+        ],
+        "refiner_off": [
+            "refiner aus",
+            "prompt verbesserer aus",
+            "verbesserer aus",
         ],
     }
 
