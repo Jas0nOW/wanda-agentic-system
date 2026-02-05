@@ -1,0 +1,23 @@
+# OVOS + WANDA Bridge - Docker Compose (Placeholder)
+# See https://openvoiceos.github.io/ovos-docker/ for full OVOS Docker setup.
+
+version: "3.8"
+
+services:
+  # OVOS Core (placeholder - adjust image/config for your setup)
+  ovos-core:
+    image: smartgic/ovos-core:latest
+    container_name: ovos-core
+    restart: unless-stopped
+    volumes:
+      - ovos-config:/home/ovos/.config/mycroft
+      - ./wanda_bridge_skill:/home/ovos/.local/share/mycroft/skills/wanda-bridge.wanda
+    network_mode: host
+    environment:
+      - PULSE_SERVER=unix:/run/user/1000/pulse/native
+    volumes:
+      - /run/user/1000/pulse:/run/user/1000/pulse:ro
+      - ~/.config/pulse/cookie:/home/ovos/.config/pulse/cookie:ro
+
+volumes:
+  ovos-config:
