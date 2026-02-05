@@ -39,7 +39,8 @@ sudo apt-get install -y \
     python3-dev \
     gir1.2-gtk-3.0 \
     portaudio19-dev \
-    libportaudio2
+    libportaudio2 \
+    ffmpeg
 
 echo -e "${CYAN}Creating Python virtual environment...${NC}"
 if [ ! -d "venv" ]; then
@@ -55,7 +56,9 @@ pip install \
     numpy \
     vosk \
     faster-whisper \
+    edge-tts \
     piper-tts \
+    openwakeword \
     evdev \
     PyGObject
 

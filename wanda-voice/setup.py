@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Wanda JARVIS - Setup & Configuration Wizard
+Wanda - Setup & Configuration Wizard
 Vollständiger Installer für alle Systeme.
 """
 
@@ -14,6 +14,7 @@ from pathlib import Path
 # HARDWARE DETECTION
 # ============================================================================
 
+
 def get_system_info() -> dict:
     """Detect CPU, RAM, GPU, VRAM."""
     info = {
@@ -22,7 +23,7 @@ def get_system_info() -> dict:
         "ram_gb": 0,
         "gpu": None,
         "vram_gb": 0,
-        "tier": "cpu"
+        "tier": "cpu",
     }
 
     # CPU
@@ -50,8 +51,14 @@ def get_system_info() -> dict:
     # GPU (NVIDIA)
     try:
         result = subprocess.run(
-            ["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv,noheader,nounits"],
-            capture_output=True, text=True, timeout=5
+            [
+                "nvidia-smi",
+                "--query-gpu=name,memory.total",
+                "--format=csv,noheader,nounits",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
         )
         if result.returncode == 0:
             parts = result.stdout.strip().split(",")
@@ -89,32 +96,32 @@ def get_system_info() -> dict:
 OLLAMA_MODELS = {
     "high": {
         "models": ["qwen3:32b", "llama3.3:70b-instruct-q4_K_M", "deepseek-r1:32b"],
-        "description": "32B+ Parameter (20GB+ VRAM)"
+        "description": "32B+ Parameter (20GB+ VRAM)",
     },
     "medium": {
         "models": ["qwen3:14b", "llama3.3:latest", "mistral-nemo:12b"],
-        "description": "12-14B Parameter (10-20GB VRAM)"
+        "description": "12-14B Parameter (10-20GB VRAM)",
     },
     "low": {
         "models": ["qwen3:8b", "llama3.2:latest", "gemma3:9b"],
-        "description": "7-9B Parameter (5-10GB VRAM)"
+        "description": "7-9B Parameter (5-10GB VRAM)",
     },
     "minimal": {
         "models": ["qwen3:4b", "phi4:latest", "gemma3:4b"],
-        "description": "3-4B Parameter (3-5GB VRAM)"
+        "description": "3-4B Parameter (3-5GB VRAM)",
     },
     "cpu-high": {
         "models": ["qwen3:8b-q4_K_M", "llama3.2:8b-q4_K_M"],
-        "description": "8B quantisiert (CPU + 32GB RAM)"
+        "description": "8B quantisiert (CPU + 32GB RAM)",
     },
     "cpu": {
         "models": ["qwen3:4b-q4_K_M", "phi4:q4_K_M"],
-        "description": "4B quantisiert (CPU + 16GB RAM)"
+        "description": "4B quantisiert (CPU + 16GB RAM)",
     },
     "cpu-low": {
         "models": ["qwen3:1.7b", "phi3:mini"],
-        "description": "1-2B Parameter (CPU + 8GB RAM)"
-    }
+        "description": "1-2B Parameter (CPU + 8GB RAM)",
+    },
 }
 
 
@@ -123,11 +130,15 @@ OLLAMA_MODELS = {
 # ============================================================================
 
 EDGE_VOICES = {
-    "seraphina": ("de-DE-SeraphinaMultilingualNeural", "Seraphina", "Premium, sehr natürlich"),
+    "seraphina": (
+        "de-DE-SeraphinaMultilingualNeural",
+        "Seraphina",
+        "Premium, sehr natürlich",
+    ),
     "amala": ("de-DE-AmalaNeural", "Amala", "Warm, sympathisch"),
     "florian": ("de-DE-FlorianMultilingualNeural", "Florian", "Premium männlich"),
     "katja": ("de-DE-KatjaNeural", "Katja", "Professionell"),
-    "conrad": ("de-DE-ConradNeural", "Conrad", "Tief, JARVIS-like"),
+    "conrad": ("de-DE-ConradNeural", "Conrad", "Tief, assistant-like"),
     "killian": ("de-DE-KillianNeural", "Killian", "Modern, dynamisch"),
     "ingrid": ("de-AT-IngridNeural", "Ingrid (AT)", "Österreichisch"),
     "jonas": ("de-AT-JonasNeural", "Jonas (AT)", "Österreichisch"),
@@ -142,7 +153,10 @@ FAVORITE_VOICES = ["seraphina", "amala", "florian"]
 # INPUT HELPER
 # ============================================================================
 
-def get_input(prompt: str, valid_options: list, default: str = None, allow_back: bool = True) -> str:
+
+def get_input(
+    prompt: str, valid_options: list, default: str = None, allow_back: bool = True
+) -> str:
     """
     Get validated user input.
     Returns: choice or "back" or None (for default)
@@ -173,12 +187,16 @@ def get_input(prompt: str, valid_options: list, default: str = None, allow_back:
 
         # Invalid
         print(f"   ❌ Ungültige Eingabe: '{choice}'")
-        print(f"   Gültig: {', '.join(sorted(valid_options))}" + (" oder [b]ack" if allow_back else ""))
+        print(
+            f"   Gültig: {', '.join(sorted(valid_options))}"
+            + (" oder [b]ack" if allow_back else "")
+        )
 
 
 # ============================================================================
 # SETUP CLASS
 # ============================================================================
+
 
 class WandaSetup:
     """Interactive setup wizard."""
@@ -201,6 +219,7 @@ class WandaSetup:
                 # Try YAML
                 try:
                     import yaml
+
                     return yaml.safe_load(content)
                 except:
                     return json.loads(content)
@@ -210,7 +229,7 @@ class WandaSetup:
 
     def _default_config(self) -> dict:
         return {
-            "mode": "jarvis",
+            "mode": "wanda",
             "audio": {"sample_rate": 16000, "vad_engine": "silero"},
             "trigger": {"key": "rightctrl"},
             "stt": {"model": "large-v3-turbo", "device": "auto"},
@@ -220,7 +239,7 @@ class WandaSetup:
                 "voice_key": "seraphina",
                 "voice_id": "de-DE-SeraphinaMultilingualNeural",
                 "voice_name": "Seraphina",
-                "mode": "short"
+                "mode": "short",
             },
             "output": {"speak": True, "sounds_enabled": True},
             "adapters": {"gemini_model": "flash"},
@@ -252,7 +271,7 @@ class WandaSetup:
 
     def _print_header(self):
         print("\n" + "=" * 60)
-        print("🎙️  WANDA JARVIS - Setup & Konfiguration")
+print("🎙️  WANDA - Setup & Konfiguration")
         print("=" * 60)
 
     def _show_hardware(self):
@@ -265,7 +284,9 @@ class WandaSetup:
             print(f"   GPU: {hw['gpu']} ({hw['vram_gb']} GB VRAM)")
         else:
             print("   GPU: Keine NVIDIA GPU erkannt")
-        print(f"   Tier: {hw['tier'].upper()} - {OLLAMA_MODELS.get(hw['tier'], {}).get('description', '')}")
+        print(
+            f"   Tier: {hw['tier'].upper()} - {OLLAMA_MODELS.get(hw['tier'], {}).get('description', '')}"
+        )
 
     def _full_setup(self):
         """Complete installation."""
@@ -299,27 +320,43 @@ class WandaSetup:
             "edge-tts",
             "faster-whisper",
             "piper-tts",
+            "openwakeword",
             "evdev",
             "requests",
             "pexpect",
         ]
 
         for pkg in packages:
-            result = subprocess.run(
-                [pip, "install", "-q", pkg],
-                capture_output=True
-            )
+            result = subprocess.run([pip, "install", "-q", pkg], capture_output=True)
             status = "✅" if result.returncode == 0 else "⚠️"
             print(f"   {status} {pkg}")
 
         # PyTorch with CUDA if GPU available
         if self.hw_info["gpu"]:
             print("\n   📥 PyTorch mit CUDA...")
-            subprocess.run([pip, "install", "-q", "torch", "--index-url",
-                          "https://download.pytorch.org/whl/cu121"], capture_output=True)
+            subprocess.run(
+                [
+                    pip,
+                    "install",
+                    "-q",
+                    "torch",
+                    "--index-url",
+                    "https://download.pytorch.org/whl/cu121",
+                ],
+                capture_output=True,
+            )
         else:
-            subprocess.run([pip, "install", "-q", "torch", "--index-url",
-                          "https://download.pytorch.org/whl/cpu"], capture_output=True)
+            subprocess.run(
+                [
+                    pip,
+                    "install",
+                    "-q",
+                    "torch",
+                    "--index-url",
+                    "https://download.pytorch.org/whl/cpu",
+                ],
+                capture_output=True,
+            )
         print("   ✅ PyTorch")
 
         # Check groups
@@ -413,7 +450,9 @@ exec python3 main.py "$@"
             print("\n   [0] Alle 10 Stimmen")
             print("   💡 Demo: 1d, 2d, 3d")
 
-            choice = get_input("\nWähle (1): ", ["0", "1", "2", "3"], "1", allow_back=False)
+            choice = get_input(
+                "\nWähle (1): ", ["0", "1", "2", "3"], "1", allow_back=False
+            )
 
             # Demo
             if choice.endswith("d"):
@@ -442,7 +481,7 @@ exec python3 main.py "$@"
                 "voice_key": key,
                 "voice_id": vid,
                 "voice_name": name,
-                "mode": "short"
+                "mode": "short",
             }
             print(f"\n✅ Stimme: {name}")
             return "next"
@@ -462,7 +501,7 @@ exec python3 main.py "$@"
 
             print("\n   💡 Demo: 1d, 2d, ... 10d")
 
-            valid = [str(i) for i in range(1, len(keys)+1)]
+            valid = [str(i) for i in range(1, len(keys) + 1)]
             choice = get_input("\nWähle oder [b]ack: ", valid, None, allow_back=True)
 
             if choice == "back":
@@ -488,7 +527,7 @@ exec python3 main.py "$@"
                 "voice_key": key,
                 "voice_id": vid,
                 "voice_name": name,
-                "mode": "short"
+                "mode": "short",
             }
             print(f"\n✅ Stimme: {name}")
             return "next"
@@ -531,7 +570,9 @@ asyncio.run(main())
 
         # Check Ollama
         try:
-            result = subprocess.run(["ollama", "list"], capture_output=True, text=True, timeout=5)
+            result = subprocess.run(
+                ["ollama", "list"], capture_output=True, text=True, timeout=5
+            )
             if result.returncode != 0:
                 print("\n⚠️  Ollama nicht aktiv. Starte mit: ollama serve")
                 self.config["ollama"] = {"enabled": False, "model": ""}
@@ -551,7 +592,9 @@ asyncio.run(main())
 
         if not installed:
             print("\n⚠️  Keine Modelle installiert.")
-            rec = OLLAMA_MODELS.get(self.hw_info["tier"], {}).get("models", ["qwen3:4b"])[0]
+            rec = OLLAMA_MODELS.get(self.hw_info["tier"], {}).get(
+                "models", ["qwen3:4b"]
+            )[0]
             print(f"   Empfohlen: ollama pull {rec}")
             self.config["ollama"] = {"enabled": False, "model": ""}
             return "next"
@@ -568,7 +611,9 @@ asyncio.run(main())
             print("   [3] Custom Model eingeben")
             print("   [0] Ollama deaktivieren")
 
-            choice = get_input("\nWähle (1): ", ["0", "1", "2", "3"], "1", allow_back=True)
+            choice = get_input(
+                "\nWähle (1): ", ["0", "1", "2", "3"], "1", allow_back=True
+            )
 
             if choice == "back":
                 return "back"
@@ -603,7 +648,7 @@ asyncio.run(main())
                     curr = " ← aktuell" if m == current else ""
                     print(f"   [{i}] {m}{curr}")
 
-                valid = [str(i) for i in range(1, len(installed)+1)]
+                valid = [str(i) for i in range(1, len(installed) + 1)]
                 sel = get_input("\nWähle: ", valid, "1", allow_back=True)
 
                 if sel == "back":
@@ -637,7 +682,7 @@ asyncio.run(main())
             curr = " ← aktuell" if key == current else ""
             print(f"   [{i}] {key}{curr}")
 
-        valid = [str(i) for i in range(1, len(keys)+1)]
+        valid = [str(i) for i in range(1, len(keys) + 1)]
         choice = get_input("\nWähle (1): ", valid, "1", allow_back=True)
 
         if choice == "back":
@@ -655,6 +700,7 @@ asyncio.run(main())
 
         try:
             import yaml
+
             with open(self.config_path, "w") as f:
                 yaml.dump(self.config, f, default_flow_style=False, allow_unicode=True)
         except ImportError:
@@ -676,7 +722,9 @@ asyncio.run(main())
 
         print("\n🚀 Starte WANDA:")
         print("   wanda-voice")
-        print(f"\n   oder: cd {self.project_dir} && source venv/bin/activate && python3 main.py")
+        print(
+            f"\n   oder: cd {self.project_dir} && source venv/bin/activate && python3 main.py"
+        )
 
         print("\n⚙️  Konfiguration ändern:")
         print(f"   python3 {self.project_dir}/setup.py")

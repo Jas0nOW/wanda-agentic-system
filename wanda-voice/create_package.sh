@@ -4,7 +4,7 @@
 set -e
 
 VERSION="3.0.0"
-PACKAGE_NAME="wanda-jarvis-${VERSION}"
+PACKAGE_NAME="wanda-voice-${VERSION}"
 DIST_DIR="dist"
 
 echo "📦 Creating Wanda distribution package..."
@@ -23,10 +23,10 @@ cp main.py setup.py install.sh wanda.service requirements.txt README.md \
 
 # Create clean config (without secrets)
 cat > "$DIST_DIR/$PACKAGE_NAME/wanda.config.yaml" << 'EOF'
-# Wanda JARVIS Configuration
+# Wanda Configuration
 # Run setup.py to configure
 
-mode: jarvis
+mode: wanda
 
 audio:
   sample_rate: 16000
@@ -70,7 +70,7 @@ find "$DIST_DIR/$PACKAGE_NAME" -name "*.secret" -delete
 
 # Create INSTALL instructions
 cat > "$DIST_DIR/$PACKAGE_NAME/INSTALL.md" << 'EOF'
-# Wanda JARVIS Installation
+# Wanda Installation
 
 ## Prerequisites
 
@@ -105,8 +105,8 @@ cat > "$DIST_DIR/$PACKAGE_NAME/INSTALL.md" << 'EOF'
 
 ```bash
 # Extract package
-unzip wanda-jarvis-*.zip
-cd wanda-jarvis-*
+unzip wanda-voice-*.zip
+cd wanda-voice-*
 
 # Run setup wizard
 python3 setup.py
