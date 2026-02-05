@@ -19,7 +19,6 @@ class WakeWordDetector:
     BUILTIN_MODELS = [
         "alexa",
         "hey_mycroft",
-        "hey_jarvis",
     ]
 
     def __init__(
@@ -38,7 +37,7 @@ class WakeWordDetector:
             threshold: Detection threshold (0-1)
             sample_rate: Audio sample rate
         """
-        self.wake_words = wake_words or ["hey_jarvis"]
+        self.wake_words = wake_words or []
         self.on_wake = on_wake
         self.threshold = threshold
         self.sample_rate = sample_rate
@@ -55,6 +54,9 @@ class WakeWordDetector:
         try:
             from openwakeword.model import Model
 
+            if not self.wake_words:
+                self.model = None
+                return
             # Load specified wake word models
             self.model = Model(
                 wakeword_models=self.wake_words, inference_framework="onnx"
@@ -162,8 +164,6 @@ class SimpleWakeWordDetector:
         "hey wanda",
         "hallo wanda",
         "wanda",
-        "hey jarvis",
-        "jarvis",
         "okay wanda",
         "ok wanda",
         "wanda start",
