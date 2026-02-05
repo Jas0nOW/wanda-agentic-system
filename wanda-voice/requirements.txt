@@ -8,12 +8,15 @@ numpy>=2.0
 evdev==1.9.2
 pyyaml>=6.0
 
-# JARVIS Phase 2: SOTA VAD + Session
+# Wanda Phase 2: SOTA VAD + Session
 torch>=2.0
 pexpect>=4.9
 
 # Phase 3: HTTP for Ollama
 requests>=2.31
+
+# REST API (Wanda Voice Core)
+aiohttp>=3.9
 
 # GTK3 for visual orb (via system: sudo apt install python3-gi)
 PyGObject>=3.42
@@ -22,7 +25,7 @@ PyGObject>=3.42
 # silero-vad>=5.1
 
 # Optional: Wake Word
-# openwakeword>=0.6.0
+openwakeword>=0.6.0
 
 # Mobile Access (Telegram Bot)
 python-telegram-bot>=21.0

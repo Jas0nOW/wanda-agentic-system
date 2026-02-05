@@ -191,7 +191,8 @@ def launch_voice_assistant(use_xwayland=False, debug=False):
 
 
 def launch_simple_voice():
-    """Launch simplified voice mode without GUI (most compatible)."""
+    """Launch simplified voice mode without GUI (most compatible).
+    Uses main.py --simple which delegates to WandaVoiceEngine."""
     print_banner()
     print(f"{YELLOW}Starting WANDA Voice in simple mode (no GUI){NC}")
     print(f"{CYAN}This mode works on all desktop environments including Wayland{NC}")
@@ -205,14 +206,11 @@ def launch_simple_voice():
     if not voice_dir.exists():
         voice_dir = Path(__file__).parent.parent / "wanda-voice"
 
-    python_exe = get_python_executable(voice_dir)
+    if not voice_dir.exists():
+        voice_dir = Path(__file__).parent
 
-    # Use stdin-based toggle on Wayland when available
-    stdin_script = voice_dir / "voice_to_text_stdin.py"
-    if stdin_script.exists():
-        cmd = [python_exe, str(stdin_script)]
-    else:
-        cmd = [python_exe, str(voice_dir / "voice_to_text.py")]
+    python_exe = get_python_executable(voice_dir)
+    cmd = [python_exe, str(voice_dir / "main.py"), "--simple"]
 
     try:
         result = subprocess.run(cmd, cwd=str(voice_dir))
