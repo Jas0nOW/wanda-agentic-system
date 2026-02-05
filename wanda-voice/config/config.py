@@ -13,14 +13,18 @@ class Config:
     DEFAULT_CONFIG = {
         "mode": "chat",
         "intent": "auto",
-        "trigger": {"type": "focus_hotkey", "key": "rightctrl"},
+        "trigger": {"type": "focus_hotkey", "key": "rightctrl", "mode": "toggle"},
+        "listening": {"always_on": False},
         "audio": {
             "backend": "pipewire",
-            "sample_rate": 44100,
-            "max_seconds": 15,
+            "sample_rate": 16000,
+            "max_seconds": 60,
+            "vad_engine": "silero",
             "silence_timeout": 1.2,
             "silence_threshold": 0.01,
             "min_seconds": 1.0,
+            "min_speech_ms": 200,
+            "hangover_frames": 5,
         },
         "stt": {
             "engine": "faster-whisper",
@@ -29,6 +33,7 @@ class Config:
         },
         "confirm": {"enabled": True, "edit_mode": "inline"},
         "preprocess": {"enabled": True, "rewrite": "template"},
+        "refiner": {"enabled": True},
         "tts": {
             "engine": "piper",
             "voice": "de_DE-eva_k-x_low",

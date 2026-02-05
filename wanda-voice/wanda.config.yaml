@@ -1,12 +1,16 @@
 mode: wanda
 audio:
   sample_rate: 16000
+  max_seconds: 60
   vad_engine: silero
   silence_timeout: 1.2
   silence_threshold: 0.01
   min_seconds: 1.0
+  min_speech_ms: 200
+  hangover_frames: 5
 trigger:
-  key: pause
+  key: rightctrl
+  mode: toggle
 stt:
   model: large-v3-turbo
   device: auto
@@ -20,6 +24,8 @@ tts:
 output:
   speak: true
   sounds_enabled: true
+listening:
+  always_on: true
 wake_word:
   enabled: true
   threshold: 0.45
@@ -28,8 +34,10 @@ pipeline:
   stt_tts_only: false
   speak_transcript: true
   transcript_prefix: "Verstanden: "
+refiner:
+  enabled: true
 adapters:
   gemini_model: flash
 ollama:
-  enabled: true
+  enabled: false
   model: huihui_ai/qwen3-abliterated:8b
