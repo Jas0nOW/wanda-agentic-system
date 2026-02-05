@@ -1,4 +1,4 @@
-mode: jarvis
+mode: wanda
 audio:
   sample_rate: 16000
   vad_engine: silero
@@ -23,8 +23,7 @@ output:
 wake_word:
   enabled: true
   threshold: 0.45
-  words:
-    - hey_jarvis
+  words: []
 pipeline:
   stt_tts_only: false
   speak_transcript: true
