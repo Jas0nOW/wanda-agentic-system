@@ -1,163 +1,68 @@
-# 🎙️ WANDA JARVIS - Sovereign AI Voice Assistant
+# 🎙️ WANDA Voice Mode
 
-Voice-powered AI assistant that controls your CLI tools (Gemini, OpenCode, Claude) with 3 operating modes.
+WANDA Voice Mode is the desktop voice assistant frontend. It wires audio I/O, hotkeys, and GUI to the headless engine in `wanda_voice_core/`.
 
-## ✨ Features
+## Features
 
-- **Voice-to-AI**: Speak naturally, get AI responses read back
-- **3 Modes**: Active (assisted), CLI-Proxy (inject to tools), Autonomous (full auto)
-- **Smart Context**: Auto-refresh conversations, preserve knowledge
-- **Local LLM**: Optional Ollama integration for prompt optimization
-- **Multi-CLI**: Works with Gemini, OpenCode, Claude, Codex
-- **German/English**: Bilingual support
+- Always-on or hotkey voice capture (Right Ctrl)
+- Silence auto-stop + voice confirmation
+- GUI mode (Orb + LogWindow) and `--simple` mode
+- Provider routing (Gemini CLI primary, Ollama optional)
+- Text insertion into active window (clipboard + paste)
 
-## 🚀 Quick Start
+## Quick Start
+
+From repo root:
 
 ```bash
-# 1. Clone/navigate to directory
-cd VoiceToolMVP
-
-# 2. Run setup wizard
-python3 setup.py
-
-# 3. Start Wanda
-./wanda
+python3 wanda-voice/launcher.py           # GUI mode
+python3 wanda-voice/launcher.py --simple  # No GUI
 ```
 
-Wayland safe startup:
+If installed system-wide:
 
 ```bash
+wanda voice
 wanda voice --simple
 ```
 
-## 📋 Voice Commands
+## Configuration
 
-| Command | Action |
-|---------|--------|
-| `Wanda Pause` | Sleep mode |
-| `Hallo Wanda` | Wake up |
-| `Vollautonom` | Autonomous mode |
-| `Lies mir vor` | Read last response |
-| `Stopp` | Cancel current action |
+Config file search order:
 
-## ⚙️ Requirements
+1. `./wanda_voice.yaml`
+2. `~/.wanda/voice.yaml`
+3. `~/.wanda-system/wanda-voice/wanda.config.yaml`
 
-### System
-- Python 3.10+
-- PipeWire/PulseAudio
-- Microphone
+See `docs/voice/CONFIG.md` for the full reference.
 
-### AI Tools (at least one)
-- [Gemini CLI](https://ai.google.dev/gemini-api/docs/gemini-cli)
-- [OpenCode](https://github.com/opencode-ai/opencode)
-- [Claude Code](https://github.com/anthropics/claude-code)
+## Commands
 
-### Optional
-- [Ollama](https://ollama.com/) for local LLM
+Voice confirmation commands after readback:
 
-### Wayland Notes
+- "Abschicken" → send
+- "Verändern" → re-record/edit flow
+- "Nochmal" → redo
+- "Abbrechen" → cancel
 
-- `wanda voice` uses a Wayland-aware launcher.
-- If GTK or evdev is missing, it falls back to a terminal-based toggle mode.
+## API + OVOS
 
-### Orb UI (Visual)
+- REST API: `python -m wanda_voice_core.api`
+- OVOS bridge: `docs/voice/OVOS_BRIDGE.md`
 
-Install GTK if the orb is missing:
+## Troubleshooting
 
-```bash
-sudo apt install -y python3-gi gir1.2-gtk-3.0
-```
+See `docs/voice/TROUBLESHOOTING.md` for audio, hotkey, and provider issues.
 
-### Hands-free Wake Word
-
-Enable wake word for hands-free activation ("Hallo Wanda"):
-
-```yaml
-wake_word:
-  enabled: true
-```
-
-## 📦 Installation
-
-### Local
-```bash
-python3 setup.py
-./wanda
-```
-
-### Global
-```bash
-sudo ./install.sh
-wanda  # from anywhere
-```
-
-### Systemd (autostart)
-```bash
-cp wanda.service ~/.config/systemd/user/
-systemctl --user enable wanda
-systemctl --user start wanda
-```
-
-## 🔧 Configuration
-
-Edit `wanda.config.yaml`:
-
-```yaml
-# Ollama for local intelligence
-ollama:
-  enabled: true
-  model: qwen2.5:32b
-
-# TTS settings  
-tts:
-  voice: de_DE-eva_k-x_low
-  mode: short  # short | full
-
-# STT/TTS only (no LLM)
-pipeline:
-  stt_tts_only: true
-  speak_transcript: true
-  transcript_prefix: "Verstanden: "
-
-# Auto-stop on silence
-audio:
-  silence_timeout: 1.2
-  silence_threshold: 0.01
-  min_seconds: 1.0
-```
-
-## 📁 Structure
+## Structure
 
 ```
-VoiceToolMVP/
-├── main.py           # Entry point
-├── setup.py          # Setup wizard
-├── wanda             # Launcher script
-├── wanda.config.yaml # Configuration
-├── adapters/         # CLI + Ollama adapters
-├── audio/            # Recording + VAD
-├── conversation/     # Commands, context, state
-├── modes/            # Autonomous mode
-├── stt/              # Speech-to-text
-├── tts/              # Text-to-speech
-└── ui/               # Sounds + feedback
+wanda-voice/
+├── main.py          # Frontend entry (audio, hotkeys, GUI)
+├── launcher.py      # Wayland-aware launcher
+├── audio/           # Recorder, VAD, wake word
+├── conversation/    # Commands, state machine
+├── stt/             # STT engines
+├── tts/             # TTS engines
+└── ui/              # Orb + LogWindow
 ```
-
-## 🎯 Modes
-
-### 1️⃣ Active Mode
-You're at keyboard, Wanda assists. Say "Wanda Pause" to sleep.
-
-### 2️⃣ CLI-Proxy Mode
-Voice input goes to active CLI tool. Responses read via TTS.
-
-### 3️⃣ Autonomous Mode
-Say "Vollautonom" - Wanda takes over, delegates tasks, reports progress.
-
-## 📄 License
-
-MIT
-
----
-
-Made with ❤️ for sovereign AI workflows
