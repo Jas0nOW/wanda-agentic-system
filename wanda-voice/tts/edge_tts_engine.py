@@ -13,6 +13,7 @@ from pathlib import Path
 
 try:
     import edge_tts
+
     EDGE_TTS_AVAILABLE = True
 except ImportError:
     EDGE_TTS_AVAILABLE = False
@@ -27,19 +28,19 @@ GERMAN_VOICES = {
         "name": "Seraphina",
         "gender": "weiblich",
         "style": "Premium, multilingual, sehr natürlich",
-        "recommended": True
+        "recommended": True,
     },
     "katja": {
         "id": "de-DE-KatjaNeural",
         "name": "Katja",
         "gender": "weiblich",
-        "style": "Professionell, Nachrichtensprecherin"
+        "style": "Professionell, Nachrichtensprecherin",
     },
     "amala": {
         "id": "de-DE-AmalaNeural",
         "name": "Amala",
         "gender": "weiblich",
-        "style": "Warm, sympathisch"
+        "style": "Warm, sympathisch",
     },
     # Deutschland - Männlich
     "florian": {
@@ -47,45 +48,45 @@ GERMAN_VOICES = {
         "name": "Florian",
         "gender": "männlich",
         "style": "Premium, multilingual, sehr natürlich",
-        "recommended_male": True
+        "recommended_male": True,
     },
     "conrad": {
         "id": "de-DE-ConradNeural",
         "name": "Conrad",
         "gender": "männlich",
-        "style": "Tief, JARVIS-like"
+        "style": "Tief, assistant-like",
     },
     "killian": {
         "id": "de-DE-KillianNeural",
         "name": "Killian",
         "gender": "männlich",
-        "style": "Modern, dynamisch"
+        "style": "Modern, dynamisch",
     },
     # Österreich
     "ingrid": {
         "id": "de-AT-IngridNeural",
         "name": "Ingrid",
         "gender": "weiblich",
-        "style": "Österreichisch, freundlich"
+        "style": "Österreichisch, freundlich",
     },
     "jonas": {
         "id": "de-AT-JonasNeural",
         "name": "Jonas",
         "gender": "männlich",
-        "style": "Österreichisch, klar"
+        "style": "Österreichisch, klar",
     },
     # Schweiz
     "leni": {
         "id": "de-CH-LeniNeural",
         "name": "Leni",
         "gender": "weiblich",
-        "style": "Schweizerdeutsch, sanft"
+        "style": "Schweizerdeutsch, sanft",
     },
     "jan": {
         "id": "de-CH-JanNeural",
         "name": "Jan",
         "gender": "männlich",
-        "style": "Schweizerdeutsch, ruhig"
+        "style": "Schweizerdeutsch, ruhig",
     },
 }
 
@@ -106,14 +107,18 @@ class EdgeTTSEngine:
             pitch: Pitch adjustment (e.g., "+5Hz", "-10Hz")
         """
         self.voice_key = voice.lower()
-        self.voice_id = GERMAN_VOICES.get(self.voice_key, {}).get("id", "de-DE-KatjaNeural")
+        self.voice_id = GERMAN_VOICES.get(self.voice_key, {}).get(
+            "id", "de-DE-KatjaNeural"
+        )
         self.rate = rate
         self.pitch = pitch
         self.available = EDGE_TTS_AVAILABLE
 
         if self.available:
             voice_info = GERMAN_VOICES.get(self.voice_key, {})
-            print(f"[TTS] Edge Neural: {voice_info.get('name', voice)} ({voice_info.get('style', '')})")
+            print(
+                f"[TTS] Edge Neural: {voice_info.get('name', voice)} ({voice_info.get('style', '')})"
+            )
         else:
             print("[TTS] Edge TTS nicht verfügbar - installiere: pip install edge-tts")
 
@@ -121,10 +126,7 @@ class EdgeTTSEngine:
         """Generate speech asynchronously."""
         try:
             communicate = edge_tts.Communicate(
-                text,
-                self.voice_id,
-                rate=self.rate,
-                pitch=self.pitch
+                text, self.voice_id, rate=self.rate, pitch=self.pitch
             )
             await communicate.save(output_path)
             return True
@@ -177,7 +179,7 @@ class EdgeTTSEngine:
             for end in [". ", "! ", "? ", "\n"]:
                 idx = text.find(end, 100)
                 if idx > 0 and idx < 400:
-                    text = text[:idx+1]
+                    text = text[: idx + 1]
                     break
             else:
                 text = text[:300] + "..."
@@ -192,7 +194,7 @@ class EdgeTTSEngine:
             subprocess.run(
                 ["ffplay", "-nodisp", "-autoexit", "-loglevel", "quiet", audio_path],
                 check=False,
-                timeout=60
+                timeout=60,
             )
         except FileNotFoundError:
             # Fallback to mpv
@@ -200,7 +202,7 @@ class EdgeTTSEngine:
                 subprocess.run(
                     ["mpv", "--no-video", "--really-quiet", audio_path],
                     check=False,
-                    timeout=60
+                    timeout=60,
                 )
             except FileNotFoundError:
                 print("[TTS] Kein Audio-Player gefunden (ffplay/mpv)")
@@ -216,6 +218,7 @@ class EdgeTTSEngine:
     def speak_async(self, text: str, mode: str = "short"):
         """Speak in background thread."""
         import threading
+
         thread = threading.Thread(target=self.speak, args=(text, mode), daemon=True)
         thread.start()
         return thread
@@ -275,5 +278,7 @@ if __name__ == "__main__":
         print(f"   {key}: {desc}")
 
     print("\n🎙️ Test mit Katja...")
-    engine.speak("Hallo! Ich bin Wanda, deine persönliche KI-Assistentin. Wie kann ich dir heute helfen?")
+    engine.speak(
+        "Hallo! Ich bin Wanda, deine persönliche KI-Assistentin. Wie kann ich dir heute helfen?"
+    )
     print("✅ Done")
