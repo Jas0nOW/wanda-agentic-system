@@ -20,6 +20,9 @@ class AudioRecorder:
         silence_timeout: float = 1.2,
         silence_threshold: float = 0.01,
         min_seconds: float = 1.0,
+        vad: Optional[object] = None,
+        min_speech_ms: int = 200,
+        hangover_frames: int = 5,
         on_auto_stop: Optional[Callable[[np.ndarray], None]] = None,
     ):
         """
@@ -37,10 +40,17 @@ class AudioRecorder:
         self.silence_timeout = silence_timeout
         self.silence_threshold = silence_threshold
         self.min_seconds = min_seconds
+        self.vad = vad
+        self.min_speech_ms = min_speech_ms
+        self.hangover_frames = hangover_frames
         self.on_auto_stop = on_auto_stop
         self._record_start = None
         self._last_voice = None
         self._monitor_thread = None
+        self._speech_start = None
+        self._stop_lock = threading.Lock()
+        self._stop_reason = None
+        self._last_audio = None
 
         print(
             f"[Audio] Recorder initialized ({sample_rate}Hz, max {max_seconds}s, silence {silence_timeout}s)"
@@ -54,7 +64,12 @@ class AudioRecorder:
         if self.is_recording:
             try:
                 energy = float(np.abs(indata).mean())
-                if energy >= self.silence_threshold:
+                if self.vad:
+                    try:
+                        self.vad.push_audio(indata.copy().flatten())
+                    except Exception:
+                        pass
+                if energy >= self.silence_threshold and not self.vad:
                     self._last_voice = time.time()
             except Exception:
                 pass
@@ -71,6 +86,15 @@ class AudioRecorder:
         self.is_recording = True
         self._record_start = time.time()
         self._last_voice = self._record_start
+        self._speech_start = None
+        self._stop_reason = None
+        self._last_audio = None
+
+        if self.vad:
+            try:
+                self.vad.reset()
+            except Exception:
+                pass
 
         # Clear queue
         while not self.audio_queue.empty():
@@ -109,24 +133,47 @@ class AudioRecorder:
         while self.is_recording:
             try:
                 now = time.time()
-                if self._record_start and now - self._record_start > self.max_seconds:
-                    self._auto_stop()
-                    return
-                if (
-                    self._last_voice
-                    and now - self._last_voice > self.silence_timeout
-                    and now - (self._record_start or now) > self.min_seconds
-                ):
-                    self._auto_stop()
+                reason = self._should_auto_stop(now)
+                if reason:
+                    self._auto_stop(reason)
                     return
             except Exception:
                 pass
             time.sleep(0.1)
 
-    def _auto_stop(self):
-        if not self.is_recording:
-            return
+    def _should_auto_stop(self, now: float) -> Optional[str]:
+        if self._record_start and now - self._record_start > self.max_seconds:
+            return "max_seconds"
+        if self.vad:
+            if self.vad.is_user_speaking():
+                if self._speech_start is None:
+                    self._speech_start = now
+                self._last_voice = now
+            record_start = self._record_start if self._record_start is not None else now
+            if (
+                self._speech_start is not None
+                and self.vad.silence_exceeded()
+                and now - self._speech_start >= (self.min_speech_ms / 1000.0)
+                and now - record_start > self.min_seconds
+            ):
+                return "silence_vad"
+        else:
+            record_start = self._record_start if self._record_start is not None else now
+            if (
+                self._last_voice
+                and now - self._last_voice > self.silence_timeout
+                and now - record_start > self.min_seconds
+            ):
+                return "silence_energy"
+        return None
+
+    def _auto_stop(self, reason: str):
+        with self._stop_lock:
+            if not self.is_recording:
+                return
+            self._stop_reason = reason
         audio = self.stop_recording()
+        self._last_audio = audio
         if audio is not None and self.on_auto_stop:
             self.on_auto_stop(audio)
 
@@ -137,14 +184,17 @@ class AudioRecorder:
         Returns:
             numpy array of audio data (float32), or None if no data
         """
-        if not self.is_recording:
-            print("[Audio] Not recording")
-            return None
+        with self._stop_lock:
+            if not self.is_recording:
+                print("[Audio] Not recording")
+                return None
 
-        print("[Audio] ⏸️  Recording stopped")
+        reason = self._stop_reason or "manual"
+        print(f"[Audio] ⏸️  Recording stopped ({reason})")
         self.is_recording = False
         self._record_start = None
         self._last_voice = None
+        self._speech_start = None
 
         # Collect audio data from queue
         audio_chunks = []
@@ -175,12 +225,33 @@ class AudioRecorder:
             self.stream = None
         print("[Audio] Cleanup done")
 
+    def consume_last_audio(self) -> Optional[np.ndarray]:
+        audio = self._last_audio
+        self._last_audio = None
+        return audio
+
+    def get_last_stop_reason(self) -> Optional[str]:
+        reason = self._stop_reason
+        self._stop_reason = None
+        return reason
+
+    def set_vad(self, vad: Optional[object]) -> None:
+        """Attach or replace VAD instance."""
+        self.vad = vad
+
 
 # Hotkey handler (evdev-based, for global hotkey)
 class HotkeyHandler:
     """Handle hotkey triggers using evdev."""
 
-    def __init__(self, key: str = "rightctrl", on_toggle: Callable = None):
+    def __init__(
+        self,
+        key: str = "rightctrl",
+        mode: str = "toggle",
+        on_toggle: Optional[Callable] = None,
+        on_press: Optional[Callable] = None,
+        on_release: Optional[Callable] = None,
+    ):
         """
         Initialize hotkey handler.
 
@@ -189,7 +260,10 @@ class HotkeyHandler:
             on_toggle: Callback function called on toggle
         """
         self.key = key
+        self.mode = mode
         self.on_toggle = on_toggle
+        self.on_press = on_press
+        self.on_release = on_release
         self.running = False
         self.thread = None
         self.stdin_thread = None
@@ -246,10 +320,10 @@ class HotkeyHandler:
                     if key.scancode == key_code:
                         if key.keystate == key.key_down and not ctrl_pressed:
                             ctrl_pressed = True
-                            if self.on_toggle:
-                                self.on_toggle()
+                            self._handle_key_event("down")
                         elif key.keystate == key.key_up:
                             ctrl_pressed = False
+                            self._handle_key_event("up")
 
         except ImportError:
             print("[Hotkey] evdev not available, hotkey disabled")
@@ -276,8 +350,24 @@ class HotkeyHandler:
                 break
             cmd = line.strip().lower()
             if cmd in ("", "t", "toggle"):
-                if self.on_toggle:
-                    self.on_toggle()
+                if self.mode == "hold":
+                    if self.on_press:
+                        self.on_press()
+                    if self.on_release:
+                        self.on_release()
+                else:
+                    if self.on_toggle:
+                        self.on_toggle()
+
+    def _handle_key_event(self, edge: str) -> None:
+        if self.mode == "hold":
+            if edge == "down" and self.on_press:
+                self.on_press()
+            elif edge == "up" and self.on_release:
+                self.on_release()
+        else:
+            if edge == "down" and self.on_toggle:
+                self.on_toggle()
 
     def _resolve_key_code(self, ecodes):
         """Resolve key name to evdev key code with aliases."""
